@@ -1,0 +1,22 @@
+/*!
+ * @theme rust 
+ * @auto-scaling true
+ */
+
+@import 'uncover';
+@import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fira+Sans&display=swap');
+
+h1, h2, h3 {
+    font-family: "Alfa Slab One", serif;
+}
+
+section p {
+    font-family: 'Fira Sans', sans-serif;
+    text-align: center;
+}
+
+code {
+    font-family: 'Fira Sans', sans-serif;
+    text-align: left;
+}
