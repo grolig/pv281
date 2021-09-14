@@ -213,7 +213,7 @@ To řeší:
 ---
 # Konkurence
 
-Při paralelním programování často dochází k všemožným problémům. Při překladu jsou díky síle překladače (rozumějte statickým kontrolám) poskytuje podstatně větší jistotu.
+Při paralelním programování často dochází k všemožným problémům. Při překladu, díky síle překladače (rozumějte statickým kontrolám), poskytuje podstatně větší jistotu.
 
 ---
 # Další výhody
