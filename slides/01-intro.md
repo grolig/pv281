@@ -4,7 +4,6 @@ title: PV281 Programming in Rust
 description: Programming in Rust Intro Session
 theme: rust
 paginate: true
-_paginate: false
 ---
 ![w:512 h:512](./assets/rust-logo-1.png)
 # <!--fit--> PV281: Programování v Rustu
@@ -14,7 +13,7 @@ _paginate: false
 
 ---
 
-# <!--fit--> PŘENÁŠKY
+# <!--fit--> PŘEDNÁŠKY
 **2h** týdně
 
 Přednášející: **Grolig, Pitner**
@@ -25,7 +24,7 @@ Během přenášky projdeme teorii a základní příklady.
 
 ![w:512 h:128](./assets/dropbox-logo.png)
 
-Jsou nahávané a dostupné na:
+Jsou nahrávané a dostupné na:
 https://www.dropbox.com/sh/cvlth71b81x4raf/AABmXNUWMq-QSjNz4sbDOs2Ea?dl=0
 
 ---
@@ -93,7 +92,7 @@ Minimum pro úspěšné zakončení předmětu: **75**
 # <!--fit-->HODNOCENÍ: Code Review
 ### Každé code review je za 2 body
 * Opravující hodnotí kvalitu code review z pohledu:
-  + odhalených neodstatků
+  + odhalených nedostatků
   + úroveň komunikace
   + kvalita vysvětlení
 
@@ -126,7 +125,7 @@ Minimum pro úspěšné zakončení předmětu: **75**
 * Práce s databází
 * Webové frameworky
 * GRPC protokol
-* Spoluáce s jinými jazyky (C, Python, Javascript)
+* Spolupráce s jinými jazyky (C, Python, Javascript)
 * Desktopové aplikace
 * Webassembly
 
@@ -219,7 +218,7 @@ Při paralelním programování často dochází k všemožným problémům. Př
 ---
 # Další výhody
 * jazyk nemá dědičnost, místo toho vyžaduje kompozici
-* moderní a pokrokovy tooling
+* moderní a pokrokový tooling
   + balíčkovací manager
   + neexistující null
   + dokumentování kódu
@@ -515,7 +514,7 @@ fn main() {
         _ => (),
     }
 }
-
+```
 ---
 # Nekonečná smyčka
 
@@ -543,7 +542,6 @@ fn main() {
     println!("LIFTOFF!!!");
 }
 ```
-
 
 ---
 # <!--fit-->To je pro dnešek vše.
