@@ -18,7 +18,7 @@ paginate: true
 
 Přednášející: **Grolig, Pitner**
 
-Během přenášky projdeme teorii a základní příklady.
+Během přednášky projdeme teorii a základní příklady.
 
 ---
 
@@ -230,7 +230,7 @@ Při paralelním programování často dochází k všemožným problémům. Př
 ---
 # Nevýhody
 * Pomalý překlad
-* Stále ještě není tolik knihoven, abysme rychle zvládli všechno.
+* Stále ještě není tolik knihoven, abychom rychle zvládli všechno.
 * Často více psaní než v jiných jazycích
 
 
@@ -276,7 +276,7 @@ stable:  vydávána jednou za 6 týdnů (následujících po betě)
 ---
 # Problémy verzování
 
-Dřive nebyly všechny features dostupné ve stabilní verzi. Tvůrci frameworků proto sahali po nightly a ta musela být používaná i v projektu. 
+Dříve nebyly všechny features dostupné ve stabilní verzi. Tvůrci frameworků proto sahali po nightly a ta musela být používaná i v projektu. 
 
 Dnes už to neplatí a použití nightly verze se snažíme vyhnout.
 
@@ -358,8 +358,8 @@ source = "git+https://github.com/rust-lang-nursery/rand.git#9f35b8e439eeedd60b94
 +-- Cargo.lock
 +-- Cargo.toml
 +-- src/
-│   +-- lib.rs <----------------------------------- zakladní soubor knihovny
-│   +-- main.rs <---------------------------------- zakladní spustitelný soubor
+│   +-- lib.rs <----------------------------------- základní soubor knihovny
+│   +-- main.rs <---------------------------------- základní spustitelný soubor
 │   +-- bin/ <------------------------------------- veškeré další spustitelné soubory
 │       +-- named-executable.rs
 │       +-- another-executable.rs
@@ -376,7 +376,7 @@ source = "git+https://github.com/rust-lang-nursery/rand.git#9f35b8e439eeedd60b94
 │   +-- multi-file-example/
 │       +-- main.rs
 │       +-- ex_module.rs
-+-- tests/ <--------------------------------------- intergrační testy
++-- tests/ <--------------------------------------- integrační testy
     +-- some-integration-tests.rs
     +-- multi-file-test/
         +-- main.rs
@@ -423,7 +423,7 @@ fn main() {
 | 32 bitů  | f32 |
 | 64 bitů  | f64 |
 
-defaultní je f64
+výchozí je f64
 
 ---
 # Boolovské typy
