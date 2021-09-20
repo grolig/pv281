@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "build": "rimraf dist && npm run -s og-image && npm run -s deck",
-    "deck": "marp --no-stdin 01-intro.md -o dist/index.html && cpy \"assets/**/*\" dist/assets",
+    "deck": "marp --no-stdin 02-basics.md -o dist/index.html && cpy \"assets/**/*\" dist/assets",
     "now-build": "npm run -s deck",
-    "og-image": "marp 01-intro.md -o dist/og-image.jpg",
+    "og-image": "marp 02-basics.md -o dist/og-image.jpg",
     "start": "marp -ps ."
   },
   "author": "",
