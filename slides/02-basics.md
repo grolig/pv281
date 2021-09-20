@@ -10,12 +10,12 @@ paginate: true
 
 ---
 
-# <!--fit--> Obsah
+# Obsah
 Cargo
 
 Binding & Shadowing
 
-Paměťový model & Borrow checkered
+Paměťový model & Borrow checker
 
 Práce s řetězci
 
@@ -39,7 +39,7 @@ Publikuje balíčky
 cargo new nazev_projektu
 ```
 
-V základu se zalží projekt pro aplikaci (binary)
+V základu se založí projekt pro aplikaci (binary)
 
 ---
 
@@ -53,7 +53,6 @@ cargo new nazev_projektu --lib
 
 # Založení projektu v existující složce
 
-V existující složce
 ```shell
 mkdir nazev_projektu
 cd nazev_projektu
@@ -304,7 +303,25 @@ fn main() {
 
 # Rozdělení paměti (C programy)
 
-![](./assets\02-images\memory_layout.png)
+![](./assets/02-images/memory_layout.png)
+
+---
+
+# Virtuální paměť
+
+Dnes se řeší praktický jen stránkováním. To je víceúrovňové. Dříve se používala i segmentace a nebo kombinace segmentace se stránkováním.
+
+---
+
+![](./assets/02-images/paging-page-tables.svg)
+
+---
+
+![](./assets/02-images/twolevel-page-table.svg)
+
+---
+
+![](./assets/02-images/x86_64-page-table-translation-steps.svg)
 
 ---
 
@@ -324,7 +341,7 @@ Velikost vlánka: sys::thread::DEFAULT_MIN_STACK_SIZE
 
 ---
 
-![](./assets\02-images\program-stack.png)
+![w:512 h:512](./assets\02-images\program-stack.png)
 
 ---
 
@@ -627,6 +644,86 @@ fn main() {
         println!("And the same as text: '{}'", my_str);
     }
 }
+```
+
+---
+
+# <!--fit--> Struktury
+
+---
+
+# Definice struktury
+
+```rust 
+struct User {
+    username: String,
+    email: String,
+    sign_in_count: u64,
+    active: bool,
+}
+
+fn main() {
+    // ...
+}
+```
+
+---
+
+# Použití struktury
+
+```rust 
+struct User { 
+    //... 
+}
+
+fn main() {
+    let mut user1 = User {
+        email: String::from("someone@example.com"),
+        username: String::from("someusername123"),
+        active: true,
+        sign_in_count: 1,
+    };
+
+    user1.email = String::from("anotheremail@example.com");
+}
+
+```
+
+---
+
+# Funkce pro vytvoření struktury
+
+```rust 
+fn build_user(email: String, username: String) -> User {
+    User {
+        email,
+        username,
+        active: true,
+        sign_in_count: 1,
+    }
+}
+```
+
+---
+
+# Vytvoření z již existující struktury
+
+```rust 
+fn main() {
+    let user1 = User {
+        email: String::from("someone@example.com"),
+        username: String::from("someusername123"),
+        active: true,
+        sign_in_count: 1,
+    };
+
+    let user2 = User {
+        email: String::from("another@example.com"),
+        username: String::from("anotherusername567"),
+        ...user1
+    };
+}
+
 ```
 
 ---
