@@ -736,12 +736,152 @@ fn main() {
     let yaml = load_yaml!("cli.yaml");
     let matches = App::from(yaml).get_matches();
 
-    // zpracování mateches jako v předchozím příkladu
+    // zpracování matches jako v předchozím příkladu
 }
 ```
 
 ---
 
+# Stdin
+
+```rust
+use std::io;
+
+let mut input = String::new();
+match io::stdin().read_line(&mut input) {
+    Ok(n) => {
+        println!("{} bytes read", n);
+        println!("{}", input);
+    }
+    Err(error) => println!("error: {}", error),
+}
+```
+
+---
+
+# Stdin
+
+```rust
+#![feature(stdin_forwarders)]
+use std::io;
+
+let lines = io::stdin().lines();
+for line in lines {
+    println!("got a line: {}", line.unwrap());
+}
+```
+
+---
+
+# <!--fit--> Práce se soubory
+
+---
+
+# Vytvoření souboru a zápis
+
+```rust
+use std::fs::File;
+use std::io::prelude::*;
+
+fn main() -> std::io::Result<()> {
+    let mut file = File::create("foo.txt")?;
+    file.write_all(b"Hello, world!")?;
+    Ok(())
+}
+```
+
+---
+
+# Načtení obsahu ze souboru
+
+```rust
+use std::fs::File;
+use std::io::prelude::*;
+
+fn main() -> std::io::Result<()> {
+    let mut file = File::open("foo.txt")?;
+    let mut contents = String::new();
+    file.read_to_string(&mut contents)?;
+    assert_eq!(contents, "Hello, world!");
+    Ok(())
+}
+```
+
+---
+
+# Práce přes buffer
+
+```rust
+use std::fs::File;
+use std::io::BufReader;
+use std::io::prelude::*;
+
+fn main() -> std::io::Result<()> {
+    let file = File::open("foo.txt")?;
+    let mut buf_reader = BufReader::new(file);
+    let mut contents = String::new();
+    buf_reader.read_to_string(&mut contents)?;
+    assert_eq!(contents, "Hello, world!");
+    Ok(())
+}
+```
+
+---
+
+# Načtení řádky
+
+```rust
+use std::fs::File;
+use std::io::{self, prelude::*, BufReader};
+
+fn main() -> io::Result<()> {
+    let file = File::open("foo.txt")?;
+    let reader = BufReader::new(file);
+
+    for line in reader.lines() {
+        println!("{}", line?);
+    }
+
+    Ok(())
+}
+```
+
+---
+
+# Synchronizace na disk
+
+```rust
+use std::fs::File;
+use std::io::prelude::*;
+
+fn main() -> std::io::Result<()> {
+    let mut f = File::create("foo.txt")?;
+    f.write_all(b"Hello, world!")?;
+
+    f.sync_all()?;
+    Ok(())
+}
+```
+
+---
+
+# Flush bufferu
+
+```rust
+use std::io::prelude::*;
+use std::io::BufWriter;
+use std::fs::File;
+
+fn main() -> std::io::Result<()> {
+    let mut buffer = BufWriter::new(File::create("foo.txt")?);
+
+    buffer.write_all(b"some bytes")?;
+    buffer.flush()?;
+    Ok(())
+}
+```
+
+---
 # <!--fit--> Dotazy?
 
 ---
