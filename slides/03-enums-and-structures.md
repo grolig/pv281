@@ -636,12 +636,12 @@ use clap::Clap;
 #[clap(version = "1.0", author = "L.G.")]
 struct Opts {
     /// Sets a custom config file. Could have been an Option<T> with no default too
-    #[clap(short = "c", long = "config", default_value = "default.conf")]
+    #[clap(short = 'c', long = "config", default_value = "default.conf")]
     config: String,
     /// Some input. Because this isn't an Option<T> it's required to be used
     input: String,
     /// A level of verbosity, and can be used multiple times
-    #[clap(short = "v", long = "verbose", parse(from_occurrences))]
+    #[clap(short = 'v', long = "verbose", parse(from_occurrences))]
     verbose: i32,
 }
 ```
