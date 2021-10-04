@@ -342,7 +342,7 @@ Je implementován jako ring buffer. Tj. nemusí mít kontinuální prostor v pam
 
 # Ring buffer
 
-![w:512 h:512](./assets/04-images/circular-buffer.svg)
+![w:512 h:200](./assets/04-images/circular-buffer.png)
 
 ---
 
@@ -406,6 +406,8 @@ fn main() {
 
 ```
 
+---
+
 # Hashtable - ukázka 2
 
 ```rust
@@ -434,9 +436,7 @@ fn main() {
             None => println!("{} is unreviewed.", book)
         }
     }
-
 }
-
 ```
 
 ---
@@ -474,34 +474,8 @@ fn main() {
     // Remove a book.
     books.remove("The Odyssey");
 }
-```
 
----
 
-# Hašová množina
-
-```rust
-fn main() {
-    use std::collections::HashSet;
-    // Type inference lets us omit an explicit type signature (which
-    // would be `HashSet<String>` in this example).
-    let mut books = HashSet::new();
-
-    // Add some books.
-    books.insert("A Dance With Dragons".to_string());
-    books.insert("To Kill a Mockingbird".to_string());
-    books.insert("The Odyssey".to_string());
-    books.insert("The Great Gatsby".to_string());
-
-    // Check for a specific one.
-    if !books.contains("The Winds of Winter") {
-        println!("We have {} books, but The Winds of Winter ain't one.",
-                books.len());
-    }
-
-    // Remove a book.
-    books.remove("The Odyssey");
-}
 ```
 
 ---
@@ -543,6 +517,8 @@ fn main() {
     let stat = player_stats.entry("attack").or_insert(100);
     *stat += random_stat_buff();
 }
+
+
 ```
 
 ---
@@ -569,6 +545,21 @@ fn main() {
                 movie_reviews.len());
     }
 
+    // on next slide...
+}
+
+
+```
+
+---
+
+# BTreeMap
+
+```rust
+fn main() {
+    // code from pred slide ...
+
+
     // oops, this review has a lot of spelling mistakes, let's delete it.
     movie_reviews.remove("The Blues Brothers");
 
@@ -589,6 +580,8 @@ fn main() {
         println!("{}: \"{}\"", movie, review);
     }
 }
+
+
 ```
 
 ---
@@ -618,6 +611,19 @@ fn main() {
     heap.push(5);
     heap.push(2);
 
+    // continues on nect slide 
+}
+
+```
+
+---
+
+# Halda
+
+```rust
+fn main() {
+    // continued from prev slide
+
     // Now peek shows the most important item in the heap.
     assert_eq!(heap.peek(), Some(&5));
 
@@ -642,6 +648,8 @@ fn main() {
     // The heap should now be empty.
     assert!(heap.is_empty())
 }
+
+
 ```
 
 ---
