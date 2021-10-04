@@ -240,7 +240,7 @@ fn main() {
 
 # Take
 
-1. Přeskočí n prvků
+1. Vezme n prvků
 
 ```rust
 fn main() {
@@ -443,7 +443,7 @@ fn main() {
 
 # Množina
 
-Množinu často vuyžíváme v algoritmech, které si zaznamenávají prošlé prvky.
+Množinu často využíváme v algoritmech, které si zaznamenávají prošlé prvky.
 Ale jinak kdykoliv, kdy potřebujeme mít hodnotu uloženou pouze jednou.
 
 Nejrychlejší implementace je HashSet. To platí ale jen do chvíle než potřebujeme mít položky sežezené. Potom už použijeme BTreeMap.
@@ -611,7 +611,7 @@ fn main() {
     heap.push(5);
     heap.push(2);
 
-    // continues on nect slide 
+    // continues on next slide 
 }
 
 ```
