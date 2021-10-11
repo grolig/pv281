@@ -1034,7 +1034,7 @@ pub fn add_one(x: i32) -> i32 {
 
 ---
 
-TODO: Obrázek vygenerované dokumentace
+![w:768 h:512](./assets/05-images/doc-1.png)
 
 ---
 
@@ -1074,7 +1074,7 @@ pub mod utils {
 
 ---
 
-TODO: Obrázek vygenerované dokumentace
+![w:768 h:512](./assets/05-images/doc-2.png)
 
 ---
 
