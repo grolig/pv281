@@ -23,7 +23,7 @@ paginate: true
 
 # Generika
 
-Umožňuje obecnou definici pro ruzné typy položek u struktur, výčtů nebo metod.
+Umožňuje obecnou definici pro různé typy položek u struktur, výčtů nebo metod.
 
 ---
 
@@ -164,7 +164,7 @@ Smart Pointer - chování odpovídá základnímu pointeru, ale dle varianty má
 
 # Smart Pointer
 
-Smart Pointer implementuje trait Deref a Drop. Z toho je jasné, že je to struktura. Je vlastníkem dat na která odkazuje.
+Smart Pointer implementuje trait Deref a Drop. Z toho je jasné, že je to struktura. Je vlastníkem dat, na která odkazuje.
 
 Pozn.: String je smart pointer. Datové struktury jsou smart pointery.
 
@@ -239,7 +239,7 @@ Hodí se nám ve chvíli, kdy potřebujeme udělat rekurzivní struktury.
 
 ```rust
 enum List {
-   Cons(i32, Box),
+   Cons(i32, Box<List>),
    Nil,
 }
 
@@ -255,7 +255,7 @@ let list = Cons(1, Box::new(Cons(2, Box::new(Cons(3, Box::new(Nil))))));
 
 # Cell<T>
 
-Umožňuje mutaci uvnitř imutabilní stuktury. Má funkce get a set. Get vrací kopii dat.
+Umožňuje mutaci uvnitř imutabilní struktury. Má funkce get a set. Get vrací kopii dat.
 
 Je vhodná pro menší data - z důvodů vracení kopie.
 
