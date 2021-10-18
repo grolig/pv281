@@ -1,0 +1,2 @@
+## Bodovaná úloha: Fitness knihovna
+Vytvořte knihovnu pro fitness aplikace, která poskytuje informace o uživateli. Aplikace počítá BMI s leduje jeho historii, dále ukládá historie srdečního tepu, měření tlaku aj. Informace je možné vypsat za předchozí týden se zobrazením rozdílu oproti minulému dni. Dále je možné zobrazit rozdíl před měsícem a před rokem. Pro knihovnu vytvořte testy a dokumentaci.
