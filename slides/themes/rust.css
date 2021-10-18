@@ -333,6 +333,8 @@ section::after {
 }
 @import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Fira+Sans&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fira+Mono&display=swap');
+
 
 h1,h2,h3 {
     font-family: "Alfa Slab One", serif;
@@ -344,6 +346,10 @@ section {
 }
 
 code, pre {
-    font-family: 'Fira Sans', sans-serif;
+    font-family: 'Fira Mono', monospace;
     text-align: left;
+}
+
+pre code svg[data-marp-fitting=svg] {
+  max-height: calc(50vh - 1em);
 }

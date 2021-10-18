@@ -13,11 +13,10 @@ paginate: true
 # Obsah
 
 1. Lifetimes
-2. Smart Pointer
-3. Moduly
-4. Crates
-5. Testování
-6. Dokumentace
+2. Plánování procesů
+3. Paralelismus v Rustu
+4. Úvod do async
+
 
 ---
 
@@ -28,7 +27,6 @@ Je konstrukce překladače, která říká zda je borrow validní. Dříve byl n
 ---
 
 # Lifetime
-
 ```rust 
 fn main() {
     let i = 3; // Lifetime for `i` starts. ────────────────┐
@@ -48,13 +46,11 @@ fn main() {
     //                                                     │
 }   // Lifetime ends. ─────────────────────────────────────┘
 
-
 ```
 
 ---
 
 # Explicitní anotace lifetimu
-
 ```rust
 // `print_refs` bere dvě reference na  `i32`, které mají
 // lifetime `'a` a `'b`. Oba musí žít minimálně stejné 
@@ -62,13 +58,11 @@ fn main() {
 fn print_refs<'a, 'b>(x: &'a i32, y: &'b mut i32) {
     println!("x is {} and y is {}", x, y);
 }
-
 ```
 
 ---
 
 # Lifetime s generikou
-
 ```rust
 use std::fmt::Display;
 
@@ -87,7 +81,6 @@ where
         y
     }
 }
-
 ```
 
 ---
@@ -99,7 +92,6 @@ Pokud v předchozím příkladu nepoužijeme lifetime, tak příklad nejde přel
 ---
 
 # Coercion
-
 ```rust
 // Here, Rust infers a lifetime that is as short as possible.
 // The two references are then coerced to that lifetime.
@@ -123,13 +115,11 @@ fn main() {
         println!("{} is the first", choose_first(&first, &second));
     };
 }
-
 ```
 
 ---
 
 # Další příklad generiky
-
 ```rust
 // Here a reference to `T` is taken where `T` implements
 // `Debug` and all *references* in `T` outlive `'a`. In
@@ -138,13 +128,11 @@ fn print_ref<'a, T>(t: &'a T) where
     T: Debug + 'a {
     println!("`print_ref`: t is {:?}", t);
 }
-
 ```
 
 ---
 
 # Lifetime u struktur
-
 ```rust
 // A type `Borrowed` which houses a reference to an
 // `i32`. The reference to `i32` must outlive `Borrowed`.
@@ -172,13 +160,11 @@ fn main() {
     println!("x is borrowed in {:?}", reference);
     println!("y is *not* borrowed in {:?}", number);
 }
-
 ```
 
 ---
 
 # Lifetime traitu
-
 ```rust
 // A struct with annotation of lifetimes.
 #[derive(Debug)]
@@ -199,7 +185,6 @@ fn main() {
     let b: Borrowed = Default::default();
     println!("b is {:?}", b);
 }
-
 ```
 
 ---
@@ -360,7 +345,6 @@ Existují modely one-to-one, one-to-many a many-to-many.
 ---
 
 # Práce s thready v Rustu
-
 ```rust
 use std::thread;
 use std::time::Duration;
@@ -378,13 +362,11 @@ fn main() {
         thread::sleep(Duration::from_millis(1));
     }
 }
-
 ```
 
 ---
 
 # Práce s thready v Rustu
-
 ```rust
 use std::thread;
 use std::time::Duration;
@@ -404,13 +386,11 @@ fn main() {
 
     handle.join().unwrap();
 }
-
 ```
 
 ---
 
-# Přenos dat mezi thready pomocí kanálů
-
+# Přenos dat pomocí kanálů
 ```rust
 use std::sync::mpsc;
 use std::thread;
@@ -426,13 +406,11 @@ fn main() {
     let received = rx.recv().unwrap();
     println!("Got: {}", received);
 }
-
 ```
 
 ---
 
 # Mutex
-
 ```rust
 use std::sync::Mutex;
 
@@ -446,13 +424,11 @@ fn main() {
 
     println!("m = {:?}", m);
 }
-
 ```
 
 ---
 
 # Arc<T>
-
 ```rust
 use std::sync::{Arc, Mutex};
 use std::thread;
@@ -477,7 +453,6 @@ fn main() {
 
     println!("Result: {}", *counter.lock().unwrap());
 }
-
 ```
 
 ---
@@ -485,7 +460,6 @@ fn main() {
 # RwLock<T>
 
 Umožňuje n čtenářů a jednoho zapisujícího. Mutex to neřeší.
-
 ```rust
 use std::sync::RwLock;
 
@@ -505,7 +479,6 @@ let lock = RwLock::new(5);
     *w += 1;
     assert_eq!(*w, 6);
 }
-
 ```
 
 ---
@@ -513,7 +486,6 @@ let lock = RwLock::new(5);
 # Bariéra
 
 Zasynchronizuje vlákna tak, aby všehna začala zároveň
-
 ```rust
 use std::sync::{Arc, Barrier};
 use std::thread;
@@ -534,7 +506,67 @@ for _ in 0..10 {
 for handle in handles {
     handle.join().unwrap();
 }
+```
 
+---
+
+# Úvod do asynchronního programování
+
+---
+
+# Asynchronní programování
+
+Koncept pro psaní konkurentních programů využívající malého množství OS vláken například pro I/O operace.
+
+V Rustu platí:
+Je jedno i vícevláknový.
+Async nic nestojí.
+Nemá runtime.
+
+---
+
+# Cargo.toml
+
+```toml
+[dependencies]
+futures = "0.3"
+
+```
+
+---
+
+# async, .await
+
+```rust
+use futures::executor::block_on;
+
+async fn hello_world() {
+    println!("hello, world!");
+}
+
+fn main() {
+    let future = hello_world(); // Nothing is printed
+    block_on(future); // `future` is run and "hello, world!" is printed
+}
+```
+
+---
+
+# async, .await
+
+```rust
+// `foo()` returns a type that implements `Future<Output = u8>`.
+// `foo().await` will result in a value of type `u8`.
+async fn foo() -> u8 { 5 }
+
+fn bar() -> impl Future<Output = u8> {
+    // This `async` block results in a type that implements
+    // `Future<Output = u8>`.
+    async {
+        let x: u8 = foo().await;
+        x + 5
+    }
+}
 ```
 
 ---
