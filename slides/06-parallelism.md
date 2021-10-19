@@ -22,7 +22,7 @@ paginate: true
 
 # Lifetime
 
-Je konstrukce překladače, která říká zda je borrow validní. Dříve byl nutností, dneska už není třeba moc často používat. Kód by měl jít napsat většinou i bez specifikace lifetimu.
+Je konstrukce překladače, která říká, zda je borrow validní. Dříve byl nutností, dneska už není třeba moc často používat. Kód by měl jít napsat většinou i bez specifikace lifetimu.
 
 ---
 
@@ -87,7 +87,7 @@ where
 
 # Lifetime s generikou
 
-Pokud v předchozím příkladu nepoužijeme lifetime, tak příklad nejde přeložit. Překladač netuší jestli bude návratová hodnota má lifetime x nebo y. 
+Pokud v předchozím příkladu nepoužijeme lifetime, tak příklad nejde přeložit. Překladač netuší, jestli bude návratová hodnota mít lifetime x nebo y. 
 
 ---
 
@@ -203,7 +203,7 @@ Pro běžné příklady určuje lifecycle sám překladač. Dělá to podle nás
 
 # 'static
 
-Snažte se mu vyhnout. Dává životnost po celý běh programu. Hodí se například pro chyvé hlášky.
+Snažte se mu vyhnout. Dává životnost po celý běh programu. Hodí se například pro chybové hlášky.
 
 ---
 
@@ -215,7 +215,7 @@ Snažte se mu vyhnout. Dává životnost po celý běh programu. Hodí se např�
 
 Každý proces má vlastní paměťový prostor. Tj. vlastní stack a vlastní heap.
 Přepínaní kontextu je drahé.
-Komunikace mezi procesy je pomalejší (sdílená paměť, msg queue, socktety...).
+Komunikace mezi procesy je pomalejší (sdílená paměť, msg queue, sockety...).
 Celkově na zdroje má větší náročnost.
 
 ---
@@ -224,8 +224,8 @@ Celkově na zdroje má větší náročnost.
 
 Vlákna sdílí pamět (konkrétně heap).
 Přepínání kontextu je drahé, ale levnější než u procesů.
-Komunikace mezi vlákny je rychlá - díky sdílene haldě.
-Vlákna jsou mámě náročná na zdroje systému.
+Komunikace mezi vlákny je rychlá - díky sdílené haldě.
+Vlákna jsou méně náročná na zdroje systému.
 
 ---
 
@@ -243,7 +243,7 @@ https://www.cs.uic.edu/~jbell/CourseNotes/OperatingSystems/4_Threads.html
 
 1. Thread má prioritu 0-31 (nejvyšší)
 2. Vlákno má přidělené časové rámce. Časové rámce jsou dávány v rámci round-robin
-3. Rámec tvá na klientkých Win 2 hodinové cykly. Na serverových 12. Jeden cyklus je na většině x64 systému asi 15ms.
+3. Rámec trvá na klientských Win 2 hodinové cykly. Na serverových 12. Jeden cyklus je na většině x64 systému asi 15ms.
 4. Pokud není ve vyšší prioritě kdo by běžel, prioritu dostane nižší level 
 5. Pokud běží nižší proces a najednou je k dispozici s vyšší prioritou, tak mu systém sebere čas
 
@@ -292,7 +292,7 @@ Ready - plánovač pro běh bere pouze tato vlákna.
 
 Deferred ready - vlákna naplánovaná na konkrétním procesoru, ale ještě nezaplánovaná. Existuje kvůli minimalizaci locku na plánovací databázi.
 
-Standby - vlánko přípravené na běh na konkrétním porsoru. Jakmile to bude možné, tak dojde k přepnutí kontextu. Na jádro je jen jedno standby vlákno. Může být přeskočeno prempcí nebo pokud bude vlákno s vyšší prioritou spustitelné.
+Standby - vlákno přípravené na běh na konkrétním procesoru. Jakmile to bude možné, tak dojde k přepnutí kontextu. Na jádro je jen jedno standby vlákno. Může být přeskočeno prempcí nebo pokud bude vlákno s vyšší prioritou spustitelné.
 
 Running Once - stav při přepnutí kontextu
 
@@ -300,7 +300,7 @@ Waiting - vlákno na něco čeká. Buď samo pomocí synchronizačního prostře
 
 Gate Waiting - čeká na gate dispatcher objektu. 
 
-Transition - Vlánko by mohlo být ready, ale systém odstránkoval zásobník z paměti, tak se čeká než ho zase dá zpět do paměti.
+Transition - Vlákno by mohlo být ready, ale systém odstránkoval zásobník z paměti, tak se čeká, než ho zase dá zpět do paměti.
 
 Terminated - skončil a může být dealokován
 
@@ -332,7 +332,7 @@ SMP - je to jedno, kde to bude běžet
 
 # Green Thread
 
-Abysme zvýšili čas, který program pracu a snížili prostředky potřebné při přepínání, tak můžeme využít green thready.
+Abysme zvýšili čas, který program pracuje a snížili prostředky potřebné při přepínání, tak můžeme využít green thready.
 
 V programu využíváme vlastní vlákna a plánování nad systémovým. Na jednom systémovém vlákně můžeme přepínat několik vlastních.
 
