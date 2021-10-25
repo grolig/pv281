@@ -99,11 +99,11 @@ fn main() {
 
 ---
 
-![w:512 h:512](./assets/07-images/work_stealing.png)
+![w:700 h:400](./assets/07-images/work_stealing.png)
 
 ---
 
-![w:512 h:512](./assets/07-images/message_passing.png)
+![w:700 h:300](./assets/07-images/message_passing.png)
 
 ---
 
