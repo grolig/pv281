@@ -1,0 +1,2 @@
+## Bodovaná úloha: Večeřící filozofové
+Vytvořte vícevláknovou aplikaci večeřící filozofové. V aplikaci je n filozofů a n hůlek. Filozof je reprezentovaný jedním vláknem. Hůlka představuje sdílený zdroj. Každý filozof přemýšlí, jí nebo čeká na hůlku. Čas každé operace je náhodný mezi 500ms až 5000ms. Reprezentujte jej uspáním threadu.
