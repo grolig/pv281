@@ -77,8 +77,6 @@ async fn main() {
 
 ---
 
----
-
 # Makro tokio::main
 
 ```rust
@@ -101,9 +99,19 @@ fn main() {
 
 ---
 
+![w:512 h:512](./assets/07-images/work_stealing.png)
+
+---
+
+![w:512 h:512](./assets/07-images/message_passing.png)
+
+---
+
 # Práce se soubory
 
-Práce se soubory je paralelní, ale není skutečeně asynronní na úrovni OS. Tokio spustí souborové oprace jako blokující v samostatných vláknech.
+Práce se soubory je paralelní, ale není skutečeně asynronní na úrovni OS. Tokio spustí souborové operace jako blokující v samostatných vláknech.
+
+Pozn. neblokující operace v crate tokio_uring
 
 ---
 
@@ -490,6 +498,9 @@ struct Resource {
 ---
 
 OSI a TCP/IP
+
+![w:900 h:500](./assets/07-images/network_stack.png)
+
 
 ---
 
