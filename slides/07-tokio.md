@@ -39,7 +39,7 @@ Výhodou je výkon, spolehlivost, odzkoušenost a flexibilita.
 
 # K čemu nepoužívat Tokio
 
-## Paralení výpočty
+## Paralelní výpočty
 Tokio je určené pro scénáře, kdy jednotlivé úlohy čekají na IO. Pokud potřebujete paralelizovat výpočty, můžete využít rayon nebo sami pracovat s thready. Rayon a Tokio můžete mixovat dohromady.
 
 ## Single request
@@ -109,7 +109,7 @@ fn main() {
 
 # Práce se soubory
 
-Práce se soubory je paralelní, ale není skutečeně asynronní na úrovni OS. Tokio spustí souborové operace jako blokující v samostatných vláknech.
+Práce se soubory je paralelní, ale není skutečeně asynchronní na úrovni OS. Tokio spustí souborové operace jako blokující v samostatných vláknech.
 
 Pozn. neblokující operace v crate tokio_uring
 
@@ -393,7 +393,7 @@ fn main() {
 
 ---
 
-# cammelCase fieldy
+# camelCase fieldy
 
 ```rust
 #[derive(Serialize)]
@@ -722,7 +722,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
 ---
 
-# Čtení ze streamu
+# Psaní do streamu
 
 ```rust
 use tokio::io::Interest;
