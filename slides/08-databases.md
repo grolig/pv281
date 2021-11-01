@@ -80,6 +80,48 @@ volumes:
 
 ---
 
+# PlantUML
+
+```
+@startuml
+' hide the spot
+hide circle
+
+' avoid problems with angled crows feet
+skinparam linetype ortho
+
+entity "Entity01" as e01 {
+  *e1_id : number <<generated>>
+  --
+  *name : text
+  description : text
+}
+
+entity "Entity02" as e02 {
+  *e2_id : number <<generated>>
+  --
+  *e1_id : number <<FK>>
+  other_details : text
+}
+
+entity "Entity03" as e03 {
+  *e3_id : number <<generated>>
+  --
+  e1_id : number <<FK>>
+  other_details : text
+}
+
+e01 ||..o{ e02
+e01 |o..o{ e03
+@enduml
+```
+
+---
+
+![w:512 h:512](./assets/8-images/plantuml.png)
+
+---
+
 # Postgres
 
 klasická relační SQL databáze
@@ -368,17 +410,11 @@ pub fn establish_connection() -> PgPool {
 
 # SQLx
 
-SQLx is an async, pure Rust† SQL crate featuring compile-time checked queries without a DSL.
+SQLx je crate ke kontole dotazu během kompilace. Nepoužívá žádný DSL.
 
-Truly Asynchronous. Built from the ground-up using async/await for maximum concurrency.
+Podporuje PostgreSQL, MySQL, SQLite, and MSSQL.
 
-Compile-time checked queries (if you want). See SQLx is not an ORM.
-
-Database Agnostic. Support for PostgreSQL, MySQL, SQLite, and MSSQL.
-
-Pure Rust. The Postgres and MySQL/MariaDB drivers are written in pure Rust using zero unsafe†† code.
-
-Runtime Agnostic. Works on different runtimes (async-std / tokio / actix) and TLS backends (native-tls, rustls).
+Podporuje různé asynchronní runtimy (async-std / tokio / actix) a TLS backendy (native-tls, rustls).
 
 ---
 
@@ -390,6 +426,220 @@ Runtime Agnostic. Works on different runtimes (async-std / tokio / actix) and TL
 sqlx = { version = "0.5", features = [ "runtime-tokio-rustls" ] }
 # async-std + native-tls
 sqlx = { version = "0.5", features = [ "runtime-async-std-native-tls" ] }
+```
+
+---
+
+```rust
+use sqlx::mysql::MySqlPoolOptions;
+use std::env;
+
+#[tokio::main]
+async fn main() -> Result<(), sqlx::Error> {
+    let pool = MySqlPoolOptions::new()
+        .max_connections(5)
+        .connect(&env::var("DATABASE_URL")?).await?;
+
+    let row: (i64,) = sqlx::query_as("SELECT ?")
+        .bind(150_i64)
+        .fetch_one(&pool).await?;
+
+    assert_eq!(row.0, 150);
+
+    Ok(())
+}
+
+```
+
+---
+
+```rust
+use sqlx::postgres::PgPoolOptions;
+
+#[async_std::main]
+async fn main() -> Result<(), sqlx::Error> {
+    let pool = PgPoolOptions::new()
+        .max_connections(5)
+        .connect("postgres://postgres:password@localhost/test").await?;
+
+    let row: (i64,) = sqlx::query_as("SELECT $1")
+        .bind(150_i64)
+        .fetch_one(&pool).await?;
+
+    assert_eq!(row.0, 150);
+
+    Ok(())
+}
+
+```
+
+---
+
+# Command
+
+```rust
+sqlx::query("DELETE FROM table").execute(&mut conn).await?;
+sqlx::query("DELETE FROM table").execute(&pool).await?;
+
+```
+
+---
+
+# Verifikovné při kompilace
+
+```rust
+let countries = sqlx::query!(
+        "
+SELECT country, COUNT(*) as count
+FROM users
+GROUP BY country
+WHERE organization = ?
+        ",
+        organization
+    )
+    .fetch_all(&pool) // -> Vec<{ country: String, count: i64 }>
+    .await?;
+
+// countries[0].country
+// countries[0].count
+
+```
+
+---
+
+# query_as! do struktury
+
+```rust
+// no traits are needed
+struct Country { country: String, count: i64 }
+
+let countries = sqlx::query_as!(Country,
+        "
+SELECT country, COUNT(*) as count
+FROM users
+GROUP BY country
+WHERE organization = ?
+        ",
+        organization
+    )
+    .fetch_all(&pool) // -> Vec<Country>
+    .await?;
+
+// countries[0].country
+// countries[0].count
+
+```
+
+---
+
+# Funkce pro praci s DB
+
+```rust
+async fn list_todos(pool: &SqlitePool) -> anyhow::Result<()> {
+    let recs = sqlx::query!(
+        r#"
+SELECT id, description, done
+FROM todos
+ORDER BY id
+        "#
+    )
+    .fetch_all(pool)
+    .await?;
+
+    for rec in recs {
+        println!(
+            "- [{}] {}: {}",
+            if rec.done { "x" } else { " " },
+            rec.id,
+            &rec.description,
+        );
+    }
+
+    Ok(())
+}
+```
+
+---
+
+# Repository pattern
+
+```rust
+#[async_trait]
+pub trait TodoRepo {
+    async fn add_todo(&self, description: String) -> anyhow::Result<i64>;
+    async fn complete_todo(&self, id: i64) -> anyhow::Result<bool>;
+    async fn list_todos(&self) -> anyhow::Result<()>;
+}
+
+struct PostgresTodoRepo {
+    pg_pool: Arc<PgPool>,
+}
+
+impl PostgresTodoRepo {
+    fn new(pg_pool: PgPool) -> Self {
+        Self {
+            pg_pool: Arc::new(pg_pool),
+        }
+    }
+}
+
+```
+
+---
+
+# Repository pattern
+
+```rust
+#[async_trait]
+impl TodoRepo for PostgresTodoRepo {
+    async fn add_todo(&self, description: String) -> anyhow::Result<i64> {
+        let rec = sqlx::query!(
+            r#"
+            INSERT INTO todos ( description )
+            VALUES ( $1 )
+            RETURNING id
+            "#,
+            description
+        )
+        .fetch_one(&*self.pg_pool)
+        .await?;
+
+        Ok(rec.id)
+    }
+
+    async fn complete_todo(&self, id: i64) -> anyhow::Result<bool> {
+        let rows_affected = sqlx::query!(
+            r#"
+            UPDATE todos
+            SET done = TRUE
+            WHERE id = $1
+            "#,
+            id
+        )
+        .execute(&*self.pg_pool)
+        .await?
+        .rows_affected();
+
+        Ok(rows_affected > 0)
+    }
+}
+
+```
+
+---
+
+# Migrations
+
+```rust
+use sqlx::migrate::Migrator;
+use std::path::Path;
+
+static EMBEDDED: Migrator = sqlx::migrate!("tests/migrate/migrations");
+
+async fn main() -> anyhow::Result<()> {
+    let runtime = Migrator::new(Path::new("tests/migrate/migrations")).await?;
+}
+
 ```
 
 ---
