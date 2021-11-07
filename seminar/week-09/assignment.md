@@ -1,0 +1,2 @@
+## Bodovaná úloha: eshop
+Vytvořte databázi pro eshop. Eshop má produkty, které jsou zařazené do kategorií. Produkt může být ve více kategoriích. Každá kategorie může obsahovat podkategorie. Vyřešte správně možnost přeceňování produktů. V eshopu musíte vést zákazníky (fyzická osoba nebo firma). Dále vyřešte objednávky včetně stavu jejich realizace a doručovací adresu. V systému musí být možné kdykoliv vygenerovat fakturu na základě objednávky i přes veškeré možné změny u cen, zákaznických informací nebo produktů v budoucnu.
