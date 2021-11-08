@@ -118,7 +118,7 @@ e01 |o..o{ e03
 
 ---
 
-![w:512 h:512](./assets/8-images/plantuml.png)
+![w:512 h:512](./assets/08-images/plantuml.png)
 
 ---
 
@@ -213,7 +213,7 @@ vytvoří databázi, pokud neexistuje a složku na migrace
 
 # Migrace
 
-verzují změny ve struktuře databáze a umožňují zmigrovat data mezi verzema
+verzují změny ve struktuře databáze a umožňují zmigrovat data mezi verzemi
 
 ```sh
 diesel migration generate create_messages
@@ -485,7 +485,7 @@ sqlx::query("DELETE FROM table").execute(&pool).await?;
 
 ---
 
-# Verifikovné při kompilace
+# Verifikování při kompilaci
 
 ```rust
 let countries = sqlx::query!(
@@ -532,7 +532,7 @@ WHERE organization = ?
 
 ---
 
-# Funkce pro praci s DB
+# Funkce pro práci s DB
 
 ```rust
 async fn list_todos(pool: &SqlitePool) -> anyhow::Result<()> {
