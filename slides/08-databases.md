@@ -400,7 +400,7 @@ pub fn establish_connection() -> PgPool {
          .expect("DATABASE_URL must be set");
          
     PgConnection::establish(&database_url)
-        .expect(&format!("Error connecting to {}", database_url))
+        .expect(&format!("Error connecting to {}", database_url));
         
     init_pool(&database_url).expect("Failed to create pool")
 }
