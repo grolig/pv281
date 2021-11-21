@@ -21,6 +21,13 @@ paginate: true
 
 ---
 
+<!-- _class: invert + plantuml -->
+
+@startuml
+Bob->Alice : Hello!
+@enduml
+
+---
 
 # <!--fit--> Dotazy?
 
