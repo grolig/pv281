@@ -1,2 +1,2 @@
 ## Bodovaná úloha: eshop
-Nad databází eshopu z minulého týdne vytvořte Actix aplikací a v ní template, která vypíše položky menu. Pří kliknutí na položku menu se vypíšou produkty, které pod tuto položku náleží (další template). Aby stránka vypadala rozumně, použijte libovolný CSS framework.
+V aplikaci z minulého týdne nahraďte REST api implementací gRPC serveru. Propojení s Askamou není nutné nijak řešit.
