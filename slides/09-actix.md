@@ -381,7 +381,7 @@ async fn index(form: web::Form<FormData>) -> HttpResponse {
 /configurations
 ```
 
-## Jeden záznam - získání, update, smazání
+## Operace nad jedním záznamem
 ```
 /devices/{id}
 /configurations/{id}
@@ -394,7 +394,8 @@ async fn index(form: web::Form<FormData>) -> HttpResponse {
 ```
 ---
 
-# <!--fit--> Pro pojmenování endpointu používáme jen podstatná jména, nikdy nepoužíváme slovesa!
+# <!--fit--> Pro pojmenování endpointu používáme jen podstatná jména,
+# <!--fit--> nikdy nepoužíváme slovesa!
 
 ---
 
