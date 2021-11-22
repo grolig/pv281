@@ -35,13 +35,13 @@ Zprávy jsou předávány v binární serializované podobě. Kontrakt (struktur
 
 # Why gRPC vs REST?
 
-![w:512 h:512](./assets/10-images/grpc-vs-rest.png)
+![w:1024 h:512](./assets/10-images/grpc-vs-rest.png)
 
 ---
 
 # Why Rust for gRPC?
 
-![w:512 h:512](./assets/10-images/grpc-fw-benchmark.png)
+![w:1024 h:512](./assets/10-images/grpc-fw-benchmark.png)
 
 ---
 
@@ -177,6 +177,47 @@ message SalesOrder
    google.protobuf.Timestamp DeliveryDate = 2;
 }
 ```
+
+---
+
+# Chybové kódy
+
+```
+const (
+	OK Code = 0
+	Canceled Code = 1
+	Unknown Code = 2
+	InvalidArgument Code = 3
+	DeadlineExceeded Code = 4
+	NotFound Code = 5
+	AlreadyExists Code = 6
+	PermissionDenied Code = 7
+	ResourceExhausted Code = 8
+	FailedPrecondition Code = 9
+	Aborted Code = 10
+	OutOfRange Code = 11
+	Unimplemented Code = 12
+	Internal Code = 13
+	Unavailable Code = 14
+	DataLoss Code = 15
+	Unauthenticated Code = 16
+)
+```
+
+---
+
+# GRPC web
+
+- přechodová vrstva mezi prohlížečem a GRPC serverem
+- často využívá proxy
+- komunikuje přes HTTP2 s možností fallbacku na HTTP1 (chunky)
+
+---
+
+# Identity Server
+
+- open-source řešení Ory Kratos
+- pro OAuth2 Ory Hydra
 
 ---
 
@@ -439,6 +480,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 ```
+
+---
+
+# REST gateway před GRPC
 
 ---
 
