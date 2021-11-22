@@ -20,6 +20,8 @@ paginate: true
 
 # Koncept okna
 
+![w:512 h:512](./assets/11-images/window.png)
+
 ---
 
 # <!--fit--> GTK 4
