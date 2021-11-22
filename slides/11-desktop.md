@@ -24,6 +24,24 @@ paginate: true
 
 ---
 
+# Header bar
+
+![w:512 h:512](./assets/11-images/header-bar.png)
+
+---
+
+# Sidebar
+
+![w:512 h:512](./assets/11-images/side-bar.png)
+
+---
+
+# Taby
+
+![w:512 h:512](./assets/11-images/tabs.png)
+
+---
+
 # <!--fit--> GTK 4
 
 ---
