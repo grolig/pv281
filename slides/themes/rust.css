@@ -354,3 +354,11 @@ code, pre {
 pre code svg[data-marp-fitting=svg] {
   max-height: calc(50vh - 1em);
 }
+
+section.plantuml {
+  background-color: white !important;
+}
+
+section.plantuml > img {
+    width: -webkit-fill-available;
+}
