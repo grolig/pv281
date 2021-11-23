@@ -163,13 +163,13 @@ safe-|- HEAD    -|
 
 # Actor Pattern
 
-Jedná se o jeden ze způsobů, jak vytvářet paralelní systémy. Tento vzor se ukázal jako vysoce efektivní (například pohání Halo servery). V rámci systému máme actora, který představuje konkurentní výpočet. Actor má svoji svoji adresu na které přijímá zprávy. Zpráva představuje volání actora (může to být volání jeho funkce nebo zpráva v message bus systému). Tím se spustí samotné vykonání. Actor si drží svůj vlastní stav, nemůže ovlivnit stav ostatních. Actor může vytvořit další actory, případně zaslat ostatním zprávy (což omezuje potřebu zamykání).
+Jedná se o jeden ze způsobů, jak vytvářet paralelní systémy. Tento vzor se ukázal jako vysoce efektivní (například pohání Halo servery). V rámci systému máme actora, který představuje konkurentní výpočet. Actor má svoji svoji adresu, na které přijímá zprávy. Zpráva představuje volání actora (může to být volání jeho funkce nebo zpráva v message bus systému). Tím se spustí samotné vykonání. Actor si drží svůj vlastní stav, nemůže ovlivnit stav ostatních. Actor může vytvořit další actory, případně zaslat ostatním zprávy (což omezuje potřebu zamykání).
 
 ---
 
 # Actix
 
-Jde o extrémně rychlý webový framework (actix-web) dříve postavený na actor patternu (actix). Dnes využívá uvnitř tokio. 
+Jde o extrémně rychlý webový framework (actix-web), dříve postavený na actor patternu (actix). Dnes využívá uvnitř tokio. 
 
 ---
 
@@ -283,10 +283,8 @@ async fn main() -> std::io::Result<()> {
   <title>Actix web</title>
 </head>
 <body>
-  <h1>Hi, {{ name }}!</h1>
-  <p>
-    {{ text }}
-  </p>
+  <h1>My best website!</h1>
+  <p>Welcome, traveler.</p>
 </body>
 </html>
 ```
