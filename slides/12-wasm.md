@@ -14,12 +14,14 @@ paginate: true
 
 1. Úvod do Webassembly
 2. Yew
+3. Stav aplikace
+4. Funkce prohlížeče
 
 ---
 
 # Webassembly
 
-Jedná se o binární instrukční formát (mezijazyk) pro zásobníkový virtualní stroj. Čili jde o cílový kód pro jiné jazyky. Primárně je určený pro běh ve webovém prohlížeči současně s Javascriptem.
+Jedná se o binární instrukční formát (mezijazyk) pro zásobníkový virtuální stroj. Čili jde o cílový kód pro jiné jazyky. Primárně je určený pro běh ve webovém prohlížeči současně s Javascriptem.
 
 ---
 
@@ -89,6 +91,25 @@ Dokumentace a množství příkladů ještě není dostatečné. Komunita zatím
 ---
 
 # Pricipy z ELMu
+
+<!-- _class: invert + plantuml -->
+
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+Component(store, "Store", "Drží aplikační stav")
+Component(view, "View", "Zobrazuje UI komponentu")
+Component(update, "Update", "Zpráva obsahující událost")
+Component(reducer, "Reducer", "Stavový automat, který vrací nový stav")
+
+Rel_L(store, view, "vykreslení")
+Rel_L(view, update, "událost/zaslání zprávy")
+Rel_L(update, reducer, "přijímá ke zpracování")
+Rel(reducer, store, "změní")
+
+@enduml
+
 
 ---
 
