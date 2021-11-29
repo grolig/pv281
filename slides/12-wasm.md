@@ -270,6 +270,104 @@ Ref využíváme pro manipulaci s elementem přímo na úrovni DOM. To se hodí 
 
 ---
 
+# Callbacky
+
+```rust
+pub enum Msg {
+    Increment,
+    Decrement,
+}
+
+pub struct Model {
+    link: ComponentLink<Self>,
+    value: i64,
+}
+
+impl Component for Model {
+    type Message = Msg;
+    type Properties = ();
+
+    fn create(_props: Self::Properties, link: ComponentLink<Self>) -> Self {
+        Self { link, value: 0 }
+    }
+
+    fn update(&mut self, msg: Self::Message) -> ShouldRender {
+        match msg {
+            Msg::Increment => {
+                self.value += 1;
+                ConsoleService::log("plus one");
+                true
+            }
+            Msg::Decrement => {
+                self.value -= 1;
+                ConsoleService::log("minus one");
+                true
+            }
+        }
+    }
+}
+```
+
+---
+
+# Callbacky
+
+```rust
+pub enum Msg {
+    Increment,
+    Decrement,
+}
+
+pub struct Model {
+    link: ComponentLink<Self>,
+    value: i64,
+}
+
+impl Component for Model {
+    fn change(&mut self, _props: Self::Properties) -> ShouldRender {
+        false
+    }
+
+    fn view(&self) -> Html {
+        html! {
+            <div>
+                <nav class="menu">
+                    <button onclick=self.link.callback(|_| Msg::Increment)>
+                        { "Increment" }
+                    </button>
+                    <button onclick=self.link.callback(|_| Msg::Decrement)>
+                        { "Decrement" }
+                    </button>
+                    <button onclick=self.link.batch_callback(|_| vec![Msg::Increment, Msg::Increment])>
+                        { "Increment Twice" }
+                    </button>
+                </nav>
+                <p>
+                    <b>{ "Current value: " }</b>
+                    { self.value }
+                </p>
+                <p>
+                    <b>{ "Rendered at: " }</b>
+                    { String::from(Date::new_0().to_string()) }
+                </p>
+            </div>
+        }
+    }
+}
+```
+
+--- 
+
+# Inicializace aplikace
+
+```rust
+fn main() {
+    yew::start_app::<Model>();
+}
+```
+
+---
+
 # Klienstký routing
 
 ---
@@ -631,6 +729,75 @@ spawn_local(async move {
 ```
 
 ---
+
+# WebGL
+
+Plusy
+- skvělá rychost
+- neomezené možnosti
+
+Mínusy
+- moc práce na vytvoření aplikace
+- podpora prohlížečů
+
+---
+
+# WebGL
+
+```rust
+impl Model {
+    fn render_gl(&mut self, timestamp: f64, link: &Scope<Self>) {
+        let gl = self.gl.as_ref().expect("GL Context not initialized!");
+
+        let vert_code = include_str!("./basic.vert");
+        let frag_code = include_str!("./basic.frag");
+
+        // This list of vertices will draw two triangles to cover the entire canvas.
+        let vertices: Vec<f32> = vec![
+            -1.0, -1.0, 1.0, -1.0, -1.0, 1.0, -1.0, 1.0, 1.0, -1.0, 1.0, 1.0,
+        ];
+        let vertex_buffer = gl.create_buffer().unwrap();
+        let verts = js_sys::Float32Array::from(vertices.as_slice());
+
+        gl.bind_buffer(GL::ARRAY_BUFFER, Some(&vertex_buffer));
+        gl.buffer_data_with_array_buffer_view(GL::ARRAY_BUFFER, &verts, GL::STATIC_DRAW);
+
+        let vert_shader = gl.create_shader(GL::VERTEX_SHADER).unwrap();
+        gl.shader_source(&vert_shader, vert_code);
+        gl.compile_shader(&vert_shader);
+
+        let frag_shader = gl.create_shader(GL::FRAGMENT_SHADER).unwrap();
+        gl.shader_source(&frag_shader, frag_code);
+        gl.compile_shader(&frag_shader);
+
+        let shader_program = gl.create_program().unwrap();
+        gl.attach_shader(&shader_program, &vert_shader);
+        gl.attach_shader(&shader_program, &frag_shader);
+        gl.link_program(&shader_program);
+
+        gl.use_program(Some(&shader_program));
+
+        // Attach the position vector as an attribute for the GL context.
+        let position = gl.get_attrib_location(&shader_program, "a_position") as u32;
+        gl.vertex_attrib_pointer_with_i32(position, 2, GL::FLOAT, false, 0, 0);
+        gl.enable_vertex_attrib_array(position);
+
+        // Attach the time as a uniform for the GL context.
+        let time = gl.get_uniform_location(&shader_program, "u_time");
+        gl.uniform1f(time.as_ref(), timestamp as f32);
+
+        gl.draw_arrays(GL::TRIANGLES, 0, 6);
+
+        let handle = {
+            let link = link.clone();
+            request_animation_frame(move |time| link.send_message(Msg::Render(time)))
+        };
+
+        // A reference to the new handle must be retained for the next render to run.
+        self._render_loop = Some(handle);
+    }
+}
+```
 
 # <!--fit--> Dotazy?
 
