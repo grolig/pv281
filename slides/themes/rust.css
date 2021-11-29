@@ -352,7 +352,7 @@ code, pre {
 }
 
 pre code svg[data-marp-fitting=svg] {
-  max-height: calc(50vh - 1em);
+  max-height: calc(40vh - 1em);
 }
 
 section.plantuml {
