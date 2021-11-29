@@ -1,0 +1,2 @@
+## Bodovaná úloha: eshop
+Vytvořte desktopovou aplikaci (pomocí Tauri nebo GTK), která umožní přidání produktu pomocí gRPC do eshopu. Bude se jednat o jednoduchý formulář pro zadání všech nutných položek. Zároveň aplikace vypíše všechny produkty v eshopu, která získává gRPC dotazem.
