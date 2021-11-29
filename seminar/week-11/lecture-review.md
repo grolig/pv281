@@ -13,4 +13,4 @@ Použijte databázovou strukturu aplikace pro objednání k lékaři. Nad repozi
 Dle assignment.md.
 
 ## Bonusová úloha: Účetní systém
-Pro učetní systém z minulého týdne vytvořte gRPC server.
+Pro účetní systém z minulého týdne vytvořte gRPC server.
