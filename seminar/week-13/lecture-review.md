@@ -8,7 +8,7 @@
 4. Funkce prohlížeče
 
 ## Vzorová aplikace
-Aplikaci pro objednání k lékaři převeďte do WASM.
+Využijte REST server a šablony z dřívějška a vytvoře WASM klienta, který umožní přidání pacienta a schůzky.
 
 ## Bodovaná aplikace
 Dle assignment.md.
