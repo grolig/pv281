@@ -1,0 +1,18 @@
+* {
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    margin: 0;
+}
+
+.app {
+    width: 100vw;
+    height: 100vh;
+    text-align: center;
+}

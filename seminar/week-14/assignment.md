@@ -1,0 +1,2 @@
+## Bodovaná úloha: eshop
+Vytvořte GrapqhQL schéma pro zobrazení produktů a kategorií s možností získat kategorie s jejich produkty v rámci jednoho dotazu. Vytvořte mutace pro přidání kategorie a produktu. Můžete to vytvořit nad existujícím Rest API/gRPC nebo i přímo nad databází.

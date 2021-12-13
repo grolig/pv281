@@ -1,0 +1,2 @@
+## Bodovaná úloha: eshop
+Vytvořte WASM variantu košíku. Vypište si nejprve produkty na stránku (je možné znovupoužít šablony a API z předchozích příkladů), přidejte tlačítko na přidání do košíku. Po přidání se produkt objeví v košíku s počtem kusů. Počet kusů jde měnit kliknutím na +/-.
