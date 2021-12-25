@@ -13,7 +13,7 @@
 Vytvořte GraphQL server pro objednání k lékaři. Bude obsahovat schéma pro výpis schůzek a mutaci pro založení schůzky. Přidejte playground.
 
 ## Bodovaná aplikace
-Dle assignment.md.
+Tento týden už není.
 
 ## Bonusová úloha: Účetní systém
 Pro účetní systém vytvořte GraphQL server.
