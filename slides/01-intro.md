@@ -58,47 +58,26 @@ Minimum pro úspěšné zakončení předmětu: **75**
 ---
 # HODNOCENÍ: Cvičení
 
-* 10 bodů aktivita na cvičení
-* \+ bonusové body
-* neřešíme absenci, ale v případě absence není možné získat body
+* Bonusové body
+* Neřešíme absenci, musíte ale mít zapsanou skupinu
 
 ---
-# HODNOCENÍ: Úkoly
-* 26 bodů domácí úkoly
-* 12 bodů za code review
+# HODNOCENÍ: Iterace
+* 6 iterací
+* Každá za 3 body
+* Každá z nich vás bude seznamovat s nějakou funkcionalitou Rustu
+* Automaticky testované, opravující jen zkontroluje kvalitu kódu
 
 ---
-# HODNOCENÍ: Úkoly
-### První 4 úkoly za 2 body
-* Úkoly obsahují automatizované testy. Procházející testy = 2b.
-* Hodnocení kódu od opravujících (Katka & Dan) = 2b po zapracování připomínek
-
----
-# HODNOCENÍ: Úkoly
-### Zbývajících 6 úkolů za 3 body, ke každému code review za 2 body
-* Úkoly opět obsahují automatizované testy. Procházející testy = 2b.
-* Na cvičení si najdete reviewera z řad spolužáků (ze stejného cvičení)
-* Reviewer projde Váš kód a zpracuje code review (CR) v pull requestu.
-
----
-# HODNOCENÍ: Úkoly
-### Zbývajících 6 úkolů za 3 body, ke každému code review za 2 body
-* Zapracujete změny (0,5b)
-* Reviewer zkontroluje změny a pokud to bude nutné, tak dá druhé kolo připomínek.
-* Zapracujete změny pokud budou nutné (0,5b)
-* Opravující zhodnotí kvalitu provedeného CR a reviewer může dostat 2 body
-
----
-# <!--fit-->HODNOCENÍ: Code Review
-### Každé code review je za 2 body
-* Opravující hodnotí kvalitu code review z pohledu:
-  + odhalených nedostatků
-  + úroveň komunikace
-  + kvalita vysvětlení
+# HODNOCENÍ: Velké domácí úkoly
+* 4 Velké domácí úkoly
+* Každý za 8 bodů
+* Volnější zadání
+* Opravující kontroluje celý úkol
 
 ---
 # HODNOCENÍ: Projekt
-* **52 bodů** za týmový projekt zakončený obhajobou
+* **50 bodů** za týmový projekt zakončený obhajobou
 * **3-4 členné týmy** - nikdy ne více. V případě menšího týmu nedojde ke snížení náročnosti.
 * Týmy lze tvořit mezi skupinami
 * Zadání zveřejníme v **5. týdnu** semestru
