@@ -413,11 +413,8 @@ fn main() {
 }
 ```
 
----
-TODO: dokoncit popis mainu
+* Všimněte si, že main nevrací hodnotu. Později zjistíte, že může vracet Result. Pro explicitní kód existuje  std::process::exit(code: i32).
 * __println!()__ je makro. Poznáme ho podle vykřičníku.
-*  
-
 
 ---
 # <!--fit--> Datové typy
@@ -455,6 +452,18 @@ TODO: dokoncit popis mainu
 výchozí je f64
 
 ---
+
+# Definice proměnné
+
+```rust
+let number = 42;
+let number: i16 = 42i16;
+
+let mut fp_number: f64 = 3.14f64;
+
+```
+
+---
 # Boolovské typy
 ```rust
 fn main() {
@@ -465,7 +474,8 @@ fn main() {
 ```
 
 ---
-# Znakové typy
+# Znakové typy (UTF-8)
+
 ```rust
 fn main() {
     let c: char = 'z';
@@ -570,6 +580,22 @@ fn main() {
     }
 
     println!("LIFTOFF!!!");
+}
+```
+
+---
+
+# For
+
+```rust
+fn main() {
+    for n in 1..=100 {
+        if n % 2 == 0 {
+            println!("even");
+        } else {
+            println!("odd");
+        }
+    }
 }
 ```
 
