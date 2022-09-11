@@ -16,7 +16,7 @@ paginate: true
 # <!--fit--> PŘEDNÁŠKY
 **2h** týdně
 
-Přednášející: **Grolig, Pitner**
+Přednášející: **Lukáš Grolig**
 
 Během přednášky projdeme teorii a základní příklady.
 
@@ -24,30 +24,38 @@ Během přednášky projdeme teorii a základní příklady.
 
 ![w:512 h:128](./assets/dropbox-logo.png)
 
-Jsou nahrávané a dostupné na:
-https://www.dropbox.com/sh/cvlth71b81x4raf/AABmXNUWMq-QSjNz4sbDOs2Ea?dl=0
+Jsou nahrávané a dostupné v IS a na:
+https://www.dropbox.com/sh/57ztrbuxow1ygae/AABovgOIXfIMceOAmnxq3HZra?dl=0
+
+Dostupnost záznamů bude zhruba 14 dní po přednášce.
 
 ---
 
 ![w:512 h:256](./assets/twitch-logo.png)
 
-Budou streamované v **úterý večer (20:00)**.
-https://www.twitch.tv/vexfalard
+V tomto roce jsme zrušili streamy přednášek. 
 
 ---
 # <!--fit--> CVIČENÍ
 **2h** týdně, 12 cvičení
 
-Cvičící: **Pitoňáková**
+Cvičící: **Adamove, Hirš, Holub, Hrdlička, Vrbka**
 
-Na cvičení si zopakujete probranou látku a budete vypracovávat příklady s pomocí cvičí.
+Na cvičení si zopakujete probranou látku a budete vypracovávat příklady s pomocí cvičích.
+
+---
+# <!--fit--> PODĚKOVÁNÍ
+
+Tomáš Sedláček za pomoc s organizací předmětu.
+
+Katka Pitoňáková za přípravu prvního běhu předmětu.
 
 ---
 ![w:512 h:256](./assets/discord-logo.png)
 
 Organizační informace, diskuze k Rustu, pomoc s projekty, hledání parťáka
 
-https://discord.gg/ZMvRqSqTfZ
+https://discord.gg/cketrr9MNn
 
 ---
 # HODNOCENÍ
@@ -63,13 +71,15 @@ Minimum pro úspěšné zakončení předmětu: **75**
 
 ---
 # HODNOCENÍ: Iterace
+
 * 6 iterací
 * Každá za 3 body
-* Každá z nich vás bude seznamovat s nějakou funkcionalitou Rustu
-* Automaticky testované, opravující jen zkontroluje kvalitu kódu
+* Každá z nich vás seznámí s konktrétní funkcionalitou Rustu
+* Automaticky testované, opravující jen kontroluje kvalitu kódu
 
 ---
 # HODNOCENÍ: Velké domácí úkoly
+
 * 4 Velké domácí úkoly
 * Každý za 8 bodů
 * Volnější zadání
@@ -77,9 +87,11 @@ Minimum pro úspěšné zakončení předmětu: **75**
 
 ---
 # HODNOCENÍ: Projekt
+
 * **50 bodů** za týmový projekt zakončený obhajobou
-* **3-4 členné týmy** - nikdy ne více. V případě menšího týmu nedojde ke snížení náročnosti.
+* **3-4 členné týmy** - a ne více. V případě menšího týmu bude snížena náročnost zadání.
 * Týmy lze tvořit mezi skupinami
+* Zadání jsou volná. Očekáváme kreativitu týmu při vlastním dodefinování zadání.
 * Zadání zveřejníme v **5. týdnu** semestru
 
 ---
@@ -90,23 +102,36 @@ Minimum pro úspěšné zakončení předmětu: **75**
 * Seznámení ostatních na přednášce s vlastním zajímavým projektem
 
 ---
+
+# Studijní materiály
+
+Web
+[The Rust Programming Language](https://doc.rust-lang.org/book/)
+[Rust By Example](https://doc.rust-lang.org/stable/rust-by-example/)
+
+Literatura
+Programming Rust: Fast, Safe Systems Development, 2nd Edition
+
+Pokročilá literatura
+Rust for Rustaceans: Idiomatic Programming for Experienced Developers
+
+---
 # PROBÍRANÁ LÁTKA
 * Intro - trocha historie, hlavní výhody a nevýhody
 * Syntaxe jazyka
+* Obsluha chybových stavů
 * CLI aplikace
 * Asynchronní programování
 * Paralelní programování
 * Práce se soubory
-* Obsluha chybových stavů
 
 ---
 # PROBÍRANÁ LÁTKA
 * Práce s databází
-* Webové frameworky
+* Server side webové aplikace a REST
 * GRPC protokol
-* Spolupráce s jinými jazyky (C, Python, Javascript)
-* Desktopové aplikace
-* Webassembly
+* Desktopové aplikace v Tauri
+* Unsafe Rust, makra a foreign function interface
 
 ---
 # PROBÍRANÁ LÁTKA MIMO RUST
@@ -144,7 +169,7 @@ Zakládajícími členy se stali:
 
 ---
 # Další známé firmy využívající Rust
-Tehle seznam se už hodně natáhl, ale můžeme jmenovat:
+Tento seznam se už hodně natáhl, ale můžeme jmenovat:
 **1Password, Apple, Canonical, Cloudflare, Discord, Dropbox, Figma, Facebook, System76, OVH**
 
 ---
@@ -153,20 +178,21 @@ Tehle seznam se už hodně natáhl, ale můžeme jmenovat:
 ---
 # Bezpečnost
 
-V jazycích typu C vznikají problémy s manuální správou pamětí jako dangling pointer, dvojité uvolnění aj. V moderním C++ je spousta věcí řešena technikami jako je RAII nebo smartpointy, ale v Rustu to nehlídá člověk, ale překladač.
+V jazycích typu C vznikají problémy s manuální správou pamětí jako dangling pointer, dvojité uvolnění aj. V moderním C++ je spousta věcí řešena technikami jako je RAII nebo smartpointy. Rozdílem je, že Rustu toto nemusí nehlídat člověk, ale řeší překladač.
 
-Cenou za to je délka překladu.
+Cenou za to je doba překladu.
 
 ---
 ![bg fit](./assets/01-images/compiling.png)
 
 ---
 # Rychlost
-Prakticky všechny jazyky jsou pomalejší než C a C++. Je to kvůli abstrakcím, garbage kolekci aj.
 
-To řeší:
-* **zero cost abstrakce**
-* **správa paměti během kompilace**
+Prakticky všechny dnešní jazyky jsou pomalejší než C a C++. Je to kvůli abstrakcím, garbage kolekci aj. Výsledný program běžící v Rustu je na stejné úrovni v rychlosti běhu jako C/C++.
+
+To máme díky:
+* **zero cost abstrakci**
+* **správě paměti během kompilace**
 
 ---
 ![bg fit](./assets/01-images/computerlanguagebenchmarkgame.svg)
@@ -192,26 +218,25 @@ To řeší:
 ---
 # Konkurence
 
-Při paralelním programování často dochází k všemožným problémům. Při překladu, díky síle překladače (rozumějte statickým kontrolám), poskytuje podstatně větší jistotu.
+Při paralelním programování často dochází k všemožným problémům. Při překladu, díky síle překladače (rozumějte statickým kontrolám), pravidlům a konvencím v jazyce, poskytuje podstatně větší jistotu.
 
 ---
 # Další výhody
 * jazyk nemá dědičnost, místo toho vyžaduje kompozici
 * moderní a pokrokový tooling
-  + balíčkovací manager
+  + správce závislostí
   + neexistující null
   + dokumentování kódu
   + testování
 
 ---
-# <!--fit--> POVÍDLA O SILNÉM TYPOVÁNÍ A STATICKY TYPOVANÉM JAZYCE
+# <!--fit--> POVÍDÁNÍ O SILNÉM TYPOVÁNÍ A STATICKY TYPOVANÉM JAZYCE
 
 ---
 # Nevýhody
 * Pomalý překlad
-* Stále ještě není tolik knihoven, abychom rychle zvládli všechno.
+* Stále ještě není tolik knihoven, abychom všechno rychle zvládli.
 * Často více psaní než v jiných jazycích
-
 
 ---
 # Jak se rozhodovat při výběru jazyka?
@@ -219,6 +244,8 @@ Potřebuju to jen rychle **naprasit -> Python**
 Bude to běžet v prohlížeči a nebo je to **UI -> Javascript/Typescript**
 Můžu použít **managovaný jazyk -> Golang** > C#, Kotlin > Java
 Jinak vyberu Rust
+
+Pro Rust může jinak rozhodnout i lepší udržovatelnost codebase, potřeba rychlosti, a nebo nižší chybovost kódu.
 
 ---
 # Příběh Discordu
@@ -255,21 +282,29 @@ stable:  vydávána jednou za 6 týdnů (následujících po betě)
 ---
 # Problémy verzování
 
-Dříve nebyly všechny features dostupné ve stabilní verzi. Tvůrci frameworků proto sahali po nightly a ta musela být používaná i v projektu. 
+Dříve nebyly všechny features dostupné ve stabilní verzi. Tvůrci frameworků proto sahali po nightly, a ta musela být používaná i v projektu. 
 
 Dnes už to neplatí a použití nightly verze se snažíme vyhnout.
+
+Je vhodné zmínit, že Rust se rychle vyvíjí. Je proto nutné hlídat, které vlastnosti jsou deprekovány, a naopak nově přidány.
 
 ---
 # Instalace Rustu
 
-**Na Unixu**
+Instalaci a aktualizaci Rustu doporučujeme vždy provádět přes rustup.
+
+---
+
+**Na Unixu obecně**
 ```shell
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
 
 **Na Windows**
-stáhnout rustup-init.exe
-https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-msvc/rustup-init.exe
+stáhnout [rustup-init.exe](https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-msvc/rustup-init.exe) a postupovat dle pokynů instalátoru.
+
+**Na MacOS*
+pokud máte homebrew, tak ```brew install rustup```.
 
 ---
 # Základní nástroje
@@ -278,7 +313,14 @@ https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-msvc/rustup-init.exe
 
 **rustc**  překladač
 
-**cargo**  balíčkovací systém spravující projekt a závislosti
+**cargo**  balíčkovací systém, spráce projektu a závislostí
+
+**clippy** linter
+
+---
+# IDE
+
+V našem předmětu budeme používat VS Code s pluginem rust-analyzer. Neinstalujte plugin jménem "Rust". Jedná se o starý a deprekovaný plugin, který nahradil právě "rust-analyzer".
 
 ---
 # Založení nového projektu
@@ -364,11 +406,18 @@ source = "git+https://github.com/rust-lang-nursery/rand.git#9f35b8e439eeedd60b94
 
 ---
 # Ukázka kódu z main.rs
+
 ```rust
 fn main() {
     println!("Hello, world!");
 }
 ```
+
+---
+TODO: dokoncit popis mainu
+* __println!()__ je makro. Poznáme ho podle vykřičníku.
+*  
+
 
 ---
 # <!--fit--> Datové typy
@@ -383,6 +432,7 @@ fn main() {
 | 32 bitů  | i32           | u32 |
 | 64 bitů  | i64           | u64 |
 | 128 bitů | i128          | u128 |
+| dle architektury | isize | usize |
 
 ---
 # Zápisy literálů
@@ -506,6 +556,7 @@ fn main() {
 ```
 
 ---
+
 # While
 
 ```rust
