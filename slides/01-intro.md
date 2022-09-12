@@ -413,8 +413,8 @@ fn main() {
 }
 ```
 
-* Všimněte si, že main nevrací hodnotu. Později zjistíte, že může vracet Result. Pro explicitní kód existuje  std::process::exit(code: i32).
-* __println!()__ je makro. Poznáme ho podle vykřičníku.
+* Všimněte si, že main nevrací hodnotu. Později zjistíte, že může vracet `Result`. Pro explicitní návratový kód také existuje `std::process::exit(code: i32)`.
+* `println!()` je makro. Poznáme ho podle vykřičníku.
 
 ---
 # <!--fit--> Datové typy
