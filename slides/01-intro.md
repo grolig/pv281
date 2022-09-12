@@ -322,6 +322,8 @@ pokud máte homebrew, tak ```brew install rustup```.
 
 V našem předmětu budeme používat VS Code s pluginem rust-analyzer. Neinstalujte plugin jménem "Rust". Jedná se o starý a deprekovaný plugin, který nahradil právě "rust-analyzer".
 
+Alternativou je CLion s vlastním Rust pluginem.
+
 ---
 # Založení nového projektu
 
