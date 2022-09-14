@@ -1,2 +1,0 @@
-## Bodovaná úloha: účtenky
-Vytvořte serverovou aplikaci pro uchování účtenek. Účtenky jsou uchovány na centrálním serveru v souboru. K serveru je možné se připojit a stáhnout konkrétní účtenku (číslo účtenky je názvem souboru a parametrem funkce u klienta). Na server se dají uložit účtenky. Dále vytvořte klientskou knihovnu, která bude obsahovat strukturu účtenky, její naplnění a funkce pro komunikaci se serverem.
