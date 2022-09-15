@@ -213,21 +213,6 @@ fn main() {
 
 ---
 
-# Shadowing
-
-```rust
-fn main() {
-    let x = 5;
-    println!("Hodnota x je: {}", x);
-    
-    let x = x + 5; // použitím let překryjeme původní proměnnou
-                   // nová položka na stacku
-    println!("Hodnota x je: {}", x);
-}
-```
-
----
-
 # <!--fit--> Datové typy
 
 ---
@@ -292,7 +277,7 @@ fn main() {
 
     let f: bool = false; // explicitní typ
     
-    let value: i32 = f as i32; // bool je v Rust vždy 0 nebo 1. Nic jiného.
+    let value: i32 = f as i32; // bool je v Rustu vždy 0 nebo 1, nic jiného
 }
 ```
 
@@ -310,7 +295,7 @@ fn main() {
 
 # Virtuální paměť
 
-Dnes se řeší praktický jen stránkováním. To je víceúrovňové. Dříve se používala i segmentace a nebo kombinace segmentace se stránkováním.
+Dnes se řeší prakticky jen stránkováním. To je víceúrovňové. Dříve se používala i segmentace a nebo kombinace segmentace se stránkováním.
 
 ---
 
