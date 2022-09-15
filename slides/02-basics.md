@@ -159,12 +159,12 @@ fn main() {
 
 ```rust
 fn main() {
-    let x = 5; // toto je binding, v jinych jazycich definice
-               // je imutabilní = neměnné = konstantní
+    let x = 5; // toto je *binding*, v jiných jazycích *definice*
+               // proměnná je imutabilní = neměnná = konstantní
     println!("Hodnota x je: {}", x);
     
     // x += 5 by hodilo chybu
-    // x = 10 by taktez hodilo chybu
+    // x = 10 by taktéž hodilo chybu
     
     let y: u32 = 6;
     println!("Hodnota y je: {}", y);
@@ -181,8 +181,8 @@ fn main() {
 
 ```rust
 fn main() {
-    let mut x = 5; // toto je binding, v jinych jazycich definice
-                   // díky klíčovému slovu mut jej můžeme změnit
+    let x = 5; // toto je *binding*, v jiných jazycích *definice*
+               // díky klíčovému slovu *mut* jej můžeme změnit
     println!("Hodnota x je: {}", x);
         
     x = 10;
@@ -191,7 +191,7 @@ fn main() {
     
     x += 1; // hned na začátek si raději řekneme, že Rust nemá 
             // inkrementaci (žádné x++ nebo ++x)
-            // proč? nepoužíváme cykly k iterování
+            // proč? protože nepoužíváme cykly k iterování
     println!("Hodnota x je: {}", x);
 }
 ```
@@ -206,7 +206,7 @@ fn main() {
     println!("Hodnota x je: {}", x);
     
     let x = x + 5; // použitím let překryjeme původní proměnnou
-                   // nová položka na stacku
+                   // vzniká nová položka na stacku
     println!("Hodnota x je: {}", x);
 }
 ```
@@ -523,7 +523,7 @@ fn main() {
     let r1 = &s; // žádný problém
     let r2 = &s; // taky žádný problém
     println!("{} and {}", r1, r2);
-    // r1 a r2 se dále nepoužívájí, takže zádný problém nebude
+    // r1 a r2 se dále nepoužívájí, takže žádný problém nebude
 
     let r3 = &mut s; // a tady to už problém není
     println!("{}", r3);
