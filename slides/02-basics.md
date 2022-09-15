@@ -313,17 +313,15 @@ Dnes se řeší prakticky jen stránkováním. To je víceúrovňové. Dříve s
 
 # Stack
 
-Rust se snaží primárně využívat stack kvůli rychlosti. Stack je vždy samostatný pro každé vlákno. 
-
-Jde o lineární paměť určité velikosti.
-
-Data jsou vždy pevné velikosti.
+Rust se snaží primárně využívat stack kvůli rychlosti.
+Stack je vždy samostatný pro každé vlákno.
+Jde o lineární paměť určité velikosti, data jsou vždy pevné velikosti.
 
 Pro zajímavost:
 1. Vlákno v Rustu má defaultně 2MB
 2. Windows standardně dává 1MB, Linux oproti tomu 8MB
 
-Velikost vlánka: sys::thread::DEFAULT_MIN_STACK_SIZE
+Velikost vlákna: `sys::thread::DEFAULT_MIN_STACK_SIZE`
 
 ---
 
