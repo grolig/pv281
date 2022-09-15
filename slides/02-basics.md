@@ -342,7 +342,7 @@ Velikost vlánka: sys::thread::DEFAULT_MIN_STACK_SIZE
 
 ---
 
-![w:512 h:512](./assets\02-images\program-stack.png)
+![w:512 h:512](./assets/02-images/program-stack.png)
 
 ---
 
