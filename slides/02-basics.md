@@ -240,6 +240,7 @@ fn main() {
 | 32 bitů  | i32           | u32 |
 | 64 bitů  | i64           | u64 |
 | 128 bitů | i128          | u128 |
+| dle architektury | isize | usize |
 
 ---
 # Zápisy literálů
