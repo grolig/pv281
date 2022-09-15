@@ -588,11 +588,15 @@ fn main() {
 
 ```rust 
 fn main() {
-    let hello_world_concat = ["hello", " world"].concat();
+    let concat_with_function: String = ["Hello", " world"].concat();
 
-    let hello_world_concat_format = format!("{} {}", "hello", " world");
-
-    // pokud chcete spojovat pluskem, tak vysledek je string a prvni argument musi byt string
+    // this is the most common and the most flexible way
+    let concat_with_format: String = format!("{} {}", "Hello", " world");
+    
+    // 2nd+ variables must be string slices or references to Strings
+    let hello = String::from("Hello");
+    let world = String::from("world");
+    let hello_world_concat_plus: String = hello + " " + &world;
 }
 ```
 
