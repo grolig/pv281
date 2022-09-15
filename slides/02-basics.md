@@ -39,7 +39,7 @@ Publikuje balíčky
 cargo new nazev_projektu
 ```
 
-V základu se založí projekt pro aplikaci (binary)
+V základu se založí projekt pro aplikaci (spustitelná binárka).
 
 ---
 
@@ -129,7 +129,7 @@ cargo fmt
 
 # clippy
 
-detekuje a případně opravuje další chyby v kódu
+Detekuje a případně opravuje další chyby v kódu.
 
 ```shell
 rustup component add clippy
@@ -141,7 +141,7 @@ cargo clippy
 
 ---
 
-# <!--fit--> To je ke cargo pro dnešek vše, jdeme na kód
+# <!--fit--> To je ke Cargo pro dnešek vše, jdeme na kód
 
 ---
 
@@ -260,7 +260,7 @@ fn main() {
 | 32 bitů  | f32 |
 | 64 bitů  | f64 |
 
-výchozí je f64
+Výchozí je `f64`.
 
 ---
 
@@ -387,7 +387,7 @@ fn main() {
 
 # Ownership
 
-Založený na principu `RAII` (Resource Aquisition Is Initialization). 
+Založený na principu `RAII` (Resource Acquisition Is Initialization). 
 
 ---
 
@@ -550,7 +550,7 @@ String a &str jsou zřetězením znaků UTF-8. Oba používáme a můžeme mezi 
 
 String je mutovatelný a uložený na haldě.
 
-&str je imutabilní, uložený na zásobníku haldě nebo součást kódu.
+&str je imutabilní, uložený na zásobníku, haldě nebo součást kódu.
 
 ---
 
