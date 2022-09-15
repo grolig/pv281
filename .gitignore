@@ -1,1 +1,7 @@
 node_modules/
+
+# IDE files
+.idea
+
+# MARP target directory
+**/dist
