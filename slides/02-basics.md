@@ -566,6 +566,7 @@ fn main() {
     let hello_string_from_str: String = "hello".to_string();
 
     let hello_str_from_string: &str =  &hello_string;
+    let hello_str_from_string: &str =  hello_string.as_str();
 }
 ```
 
