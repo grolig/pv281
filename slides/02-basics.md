@@ -67,7 +67,7 @@ cargo init
 cargo build
 ```
 
-Vytvoří složku target a v ní debug. Program je pomalejší, protože obsahuje více instrukcí. Získáme tím podporu debugování.
+Vytvoří složku `target` a v ní složku `debug`. Program je pomalejší, protože obsahuje více instrukcí. Získáme tím podporu debugování.
 
 ---
 
@@ -111,7 +111,7 @@ cargo publish
 cargo run options -- args
 ```
 
-Argumenty před -- jsou do Cargo, argumenty za jdou do binárky.
+Argumenty před `--` jsou pro Cargo, argumenty za `--` se předávají našemu programu.
 
 ---
 
@@ -387,7 +387,7 @@ fn main() {
 
 # Ownership
 
-Založený na principu RAII (Resource Aquisition Is Initialization). 
+Založený na principu `RAII` (Resource Aquisition Is Initialization). 
 
 ---
 
