@@ -329,30 +329,11 @@ Velikost vlákna: `sys::thread::DEFAULT_MIN_STACK_SIZE`
 
 ---
 
-# Stack Time Complexity
-
-Push: O(1)
-Pop: O(1)
-Top: O(1)
-Search: O(n)
-
----
-
 # Heap
 
-Používáme pro data proměnné velikosti. Heap je sdílený mezi vlákny. Částo programovací jazyky využívají několik heapů.
+Používáme pro data proměnné velikosti nebo data větší velikost, která necheme programovat. Heap je sdílený mezi vlákny. Částo programovací jazyky využívají několik heapů.
 
 Rust dává k dispozici jeden heap ve stable. Nemůžete změnit alokátor. V nightly to jde, ale pokud netvoříte OS, tak to nedělejte.
-
-Heap se běžně implementuje jako linked list nebo tree.
-
----
-
-# Tree Complexity
-
-Insert, delete and search: 
-Average case: O(log n), 
-Worst Case: O(log n) or O(n) based on implementation
 
 ---
 
@@ -413,7 +394,7 @@ fn main() {
 
 ---
 
-# Převzetí z vrácení vlastnictví
+# Vlastnictví - převzetí a vrácení
 
 ```rust 
 fn main() {
@@ -451,6 +432,8 @@ fn calculate_length(s: &String) -> usize {
 }
 ```
 
+Pozn. &s1 vyslovujeme jako ref s1
+
 ---
 
 # Použití reference
@@ -473,9 +456,9 @@ fn change(some_string: &mut String) {
 
 # Jak funguje kontrola
 
-1. Můžeme vytvořit neomezeně nemutovatelných referencí
+1. Můžeme vytvořit neomezeně immutabilních referencí
 2. Můžeme mít pouze jednu mutovatelnou referenci
-3. Nekombinujeme mutovatelné a nemutovatelné
+3. Nekombinujeme mutovatelné a immutabilní
 4. Odkaz musí být platný
 
 ---
@@ -521,19 +504,104 @@ fn main() {
 
 # Problémy práce se stringy
 
-Ve většině jazyků je práce s typem string jednoduchá. V Rustu je vzhledem k paměťovému modelu složitější a je častým zdrojem problémů pro začátečníky.
+Ve většině jazyků je práce s typem string jednoduchá. V Rustu je složitější a je častým zdrojem problémů pro začátečníky.
 
 Pod pokličkou jsou řetězce relativně komplexní ve všech jazycích.
 
 ---
 
+# Stringové literály
+
+Stringové literály jsou uzavřené v uvozovkách. Typicky jsou uložené v read-only části paměti s kódem. Dostáváme ho v typu &str (nazýváme "stir" nebo "string slice").
+
+```rust
+let joke = "Někdy je lepší zůstat v pondělí v posteli než celý týden ladit pondělní kód.";
+```
+
+Pokud potřebujeme uvozovky, tak musíme escapovat ```\"```
+
+---
+
+# Víceřádkové literály
+
+Tento řetězec se vytiskne na více řádek. Mezery ze začátku řádku jsou součástí.
+
+```rust
+println!("Zákazník: “Mám nainstalovaný Windows 95.“
+          Hotline : \"OK.\"
+          Zákazník: \"Počítač mi nefunguje.\"
+          Hotline : \"Ano, to jste už říkal...\"");
+```
+
+---
+
+# Víceřádkové literály
+
+Pokud se chceme zbavit bílých znaků na začku a nového řádku, tak použijeme ```\```
+
+```rust
+println!("Zákazník: “Mám nainstalovaný Windows 95.“ \
+          Hotline : \"OK.\"
+          Zákazník: \"Počítač mi nefunguje.\" \
+          Hotline : \"Ano, to jste už říkal...\"");
+```
+
+---
+
+# Raw string literal
+
+V některých situacích může být nepříjmené neustále escapeovat ```\```. Třeba u cest ve Windows.
+
+```rust
+let default_path = r"C:\Program Files\Moje Rust appka\";
+```
+
+Raw string tím pádem neumožní escapovat a použít uvozovky.
+Pozn. ikdyž je tu ukázaná cestka, tak lepří je použít ```std::path::PathBuf``` and ```&Path```.
+
+---
+
+# Raw string literal
+
+Existuje zápis raw stringu, který uvozovku umožní.
+
+```rust
+let default_path = r###"C:\"Program Files"\"Moje Rust appka"\"###;
+```
+
+---
+
+# Byte string literal
+
+Pokud potřebujeme mát string jako pole znaků (slice ```u8``` hodnot):
+
+```rust
+let method = b"GET";
+assert_eq!(method, &[b'G', b'E', b'T']);
+```
+
+Řetězcovou syntaxi můžeme kombinovat. Pomocí ```br"``` vytvoříme raw byte string.
+Byte string nemůže obsahovat Unicode znaky.
+
+---
+
+# String
+
+String v Rustu nefunguje jako v C, kde máme řetězec znaku zakončený prázdným znakem. V Rustu může být prázdný znak klidně uprostřed řetězce. Pozn. CString pro C variantu.
+
+String:
+- používá variabilní kódování UTF-8. 
+- je uložený na haldě
+- implementovaný jako Vec<u8>, můžeme ho považovat za buffer proměnné velikosti
+- je mutable
+
+---
+
 # String a &str
 
-String a &str jsou zřetězením znaků UTF-8. Oba používáme a můžeme mezi nimi přecházet.
+Stringový literál &str můžeme použít pro vytvoření stringu. Typicky se používá metoda ```String::from()```. 
 
-String je mutovatelný a uložený na haldě.
-
-&str je imutabilní, uložený na zásobníku, haldě nebo součást kódu.
+Pro vytoření za runtimu můžeme připravit buffer pomocí ```String::new()``` a nebo ```String::with_capacity()```. Maximum je usize::MAX, na 32-bit plaformě isize::MAX. Pozn. new má výchozí kapacitu 0. Při 0 nedojde k alokaci. 
 
 ---
 
@@ -561,9 +629,33 @@ fn main() {
 fn main() {
     let s = String::from("hello world");
 
-    let hello = &s[0..5];
-    let world = &s[6..11];
+    let hello: &str = &s[0..5];
+    let world: &str = &s[6..11];
+
+    let hello = &s[..5];
+    let world = &s[6..];
 }
+```
+
+---
+
+# Délka stringu
+
+Funkce ```len()``` vrací počet bajtů. Pro počet znaku na to musíme přes ```chars()```.
+
+```rust
+assert_eq!("ಠ_ಠ".len(), 7);
+assert_eq!("ಠ_ಠ".chars().count(), 3);
+```
+
+---
+
+# Porovnání stringu
+
+Dělá se pomocí ```==``` a ```!=```. Řetězce musí obsahovat stejné znaky ve stejném pořadí. Neporovnávají se adresy paměti.
+
+```rust
+assert!("ONE".to_lowercase() == "one");
 ```
 
 ---
@@ -572,7 +664,9 @@ fn main() {
 
 ```rust 
 fn main() {
-    let concat_with_function: String = ["Hello", " world"].concat();
+    let concat_with_function: String = ["Hello", " world"].concat(); 
+
+    let join_strings: String = ["Hello", "world"].join(" "); 
 
     // this is the most common and the most flexible way
     let concat_with_format: String = format!("{} {}", "Hello", " world");
@@ -586,7 +680,7 @@ fn main() {
 
 ---
 
-# Práce se stringem
+# Použití jako buffer
 
 ```rust 
 fn main() {
@@ -622,7 +716,21 @@ fn main() {
 
 ---
 
-# Byte string
+# Další užitečné metody
+
+```rust
+assert!("peanut".contains("nut"));
+assert_eq!("ಠ_ಠ".replace("ಠ", "■"), "■_■");
+assert_eq!("    clean\n".trim(), "clean");
+
+for word in "veni, vidi, vici".split(", ") {
+    assert!(word.starts_with("v"));
+}
+```
+
+---
+
+# Vytvoření z byte stringu
 
 ```rust 
 fn main() {
@@ -634,6 +742,18 @@ fn main() {
     }
 }
 ```
+
+---
+
+# Doporučení pro práci s řetězci
+
+- Parametry funkce by měli přijímat slice (&str)
+- Pro práci s cestou je doporučené použít ```std::path::PathBuf``` a ```&Path```
+- Pro binární data s kódování jiným než UTF-8 ```Vec<u8>``` a ```&[u8]```
+- Pro práci se stringy z OS (např. argumenty CMD) ```OsString``` a ```&OsStr```
+- Pro interoperatibilitu s C knihovnami ```CString``` a ```&CStr```
+
+``````
 
 ---
 
