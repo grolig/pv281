@@ -11,25 +11,22 @@ paginate: true
 ---
 
 # Obsah
-Cargo
 
-Binding & Shadowing
-
-Paměťový model & Borrow checker
-
-Práce s řetězci
+- Cargo
+- Binding & Shadowing
+- Paměťový model 
+- Borrow checker
+- Vektory
+- Práce s řetězci
 
 ---
 
 # Cargo
 
-Vytváří nové projekty
-
-Spravuje závislosti
-
-Spouští testy
-
-Publikuje balíčky
+- Vytváří nové projekty
+- Spravuje závislosti
+- Spouští testy
+- Publikuje balíčky
 
 ---
 
@@ -181,8 +178,7 @@ fn main() {
 
 ```rust
 fn main() {
-    let x = 5; // toto je *binding*, v jiných jazycích *definice*
-               // díky klíčovému slovu *mut* jej můžeme změnit
+    let mut x = 5; // díky klíčovému slovu *mut* můžeme hodnotu změnit
     println!("Hodnota x je: {}", x);
         
     x = 10;
@@ -191,7 +187,6 @@ fn main() {
     
     x += 1; // hned na začátek si raději řekneme, že Rust nemá 
             // inkrementaci (žádné x++ nebo ++x)
-            // proč? protože nepoužíváme cykly k iterování
     println!("Hodnota x je: {}", x);
 }
 ```
@@ -227,6 +222,8 @@ fn main() {
 | 128 bitů | i128          | u128 |
 | dle architektury | isize | usize |
 
+Výchozí je ```i32```.
+
 ---
 # Zápisy literálů
 
@@ -237,6 +234,20 @@ fn main() {
 | osmičkové  | 0o77 |
 | binární  | 0b1111_0000 |
 | bajtové | b'A' |
+
+---
+
+# Přetypování celočíselných typů
+
+```rust
+let x: u32 = 2;
+
+// prevod na vetsi
+let y: i64 = x as i64;
+
+// prevod na mensi
+let z = i32::try_from(y).unwrap_or(0);
+```
 
 ---
 # S plovoucí řádovou čárkou (IEEE-754)
@@ -267,6 +278,8 @@ fn main() {
 }
 ```
 
+Při přetypování f64 na f32 při přetečení je nastavena hodnota INFINITY nebo NEG_INFINITY.
+
 ---
 
 # Přetypování boolu
@@ -293,27 +306,8 @@ fn main() {
 
 ---
 
-# Virtuální paměť
-
-Dnes se řeší prakticky jen stránkováním. To je víceúrovňové. Dříve se používala i segmentace a nebo kombinace segmentace se stránkováním.
-
----
-
-![](./assets/02-images/paging-page-tables.svg)
-
----
-
-![](./assets/02-images/twolevel-page-table.svg)
-
----
-
-![](./assets/02-images/x86_64-page-table-translation-steps.svg)
-
----
-
 # Stack
 
-Rust se snaží primárně využívat stack kvůli rychlosti.
 Stack je vždy samostatný pro každé vlákno.
 Jde o lineární paměť určité velikosti, data jsou vždy pevné velikosti.
 
@@ -335,9 +329,12 @@ Používáme pro data proměnné velikosti nebo data větší velikost, která n
 
 Rust dává k dispozici jeden heap ve stable. Nemůžete změnit alokátor. V nightly to jde, ale pokud netvoříte OS, tak to nedělejte.
 
+Práce se stakem je obvykle jednodušší a efektivnější než práce s haldou:
+(Dynamic storage allocation: A survey and critical review.)[https://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.143.4688]
+
 ---
 
-# Založení proměnné na haldě
+# Box pro alokaci na haldě
 
 ```rust
 fn main() {
@@ -348,30 +345,61 @@ fn main() {
 
 ---
 
+# Statická paměť
 
-# Ownership
-
-Založený na principu `RAII` (Resource Acquisition Is Initialization). 
+Existuje po celou dobu běhu programu. Obsahuje kód programu, který je obvykle neměnný. Také obsahuje proměnné, které jsou označeny jako statické. Nemůžou být dealokovány do konce programu. Obsahuje také např. stringové literály.
 
 ---
 
-# Přesun na zásobníku
+# Ownership
+
+Práce s pamětí měla dva tábory. Jedni používali garbage collector, který se postaral o paměť, ale ubral z výkonu. Druzí se starali o paměť manuálně, aby docílili nejvyššího výkonu, ale za cenu možných problémů.
+
+Rust spojuje oba světy dohromady. Zároveň díky svým pravidlům (omezením jak pracujeme s pointery) zabraňuje deadlocku.
+
+---
+
+Vychází z principu `RAII` (Resource Acquisition Is Initialization). Ale enforcovaný překladačem.
+
+---
+
+# High level model
+
+- o proměnných přemýšlíme jako o pojmenovaních hodnot
+- proměnná existuje tak dlouho dokud drží vlastnictví hodnoty
+- můžeme vytvořit závislosti vypůjčením si hodnoty
+- existuje tok životem proměnné přes závislosti (flow)
+- toku závislostí se může větvit (neplatí pro mutovatelné výpujčky)
+
+---
+
+# Ownership model
+
+- všechny hodnoty mají jednoho vlastníka
+- pouze jedno místo (scope) je zodpovědné za uvolnění paměti
+- uvolnění paměti probíhá automaticky
+- pokud je hodnota přesunuta (do nové proměnné, do vektoru, na haldu...), přesouvá se vlastnictví a starý vlastník už k hodnotě nemůže přistupit
+
+---
+
+# Přesun vlastníctví
+(move ownership na zásobníku)
 
 ```rust
 fn main() {
     let x = 5;
-    let y = x;
+    let y = x; // x uz dale nejde pouzit
 }
 ```
 
 ---
 
-# Přesun na haldě
+# Přesun vlastníctví na haldě
 
 ```rust
 fn main() {
     let s1 = String::from("hello");
-    let s2 = s1;
+    let s2 = s1; // s1 uz dale nejde pouzit
 }
 ```
 
@@ -379,7 +407,7 @@ Tímto dojde ke zkopírování ukazatele na stejné místo v paměti
 
 ---
 
-# Přesun na haldě
+# Klonování
 
 Pokud potřebujeme data na haldě zkopírovat, tak musíme klonovat.
 
@@ -394,6 +422,21 @@ fn main() {
 
 ---
 
+# Převod vlastníctví ve scopu
+
+```rust
+let x = vec![10, 20, 30];
+if c {
+    f(x); // vlastnictví x převedeno do f()
+} else {
+    g(x); // vlastnictví x převedeno do g()
+}
+h(x); // chyba při kompilaci. x už patří někomu jinému
+
+```
+
+---
+
 # Vlastnictví - převzetí a vrácení
 
 ```rust 
@@ -402,11 +445,11 @@ fn main() {
 
     let (s2, len) = calculate_length(s1);
 
-    println!("The length of '{}' is {}.", s2, len);
+    println!("Byte length of '{}' is {}.", s2, len);
 }
 
 fn calculate_length(s: String) -> (String, usize) {
-    let length = s.len(); // len() returns the length of a String
+    let length = s.len(); // len() vrací bajtovou velikost
 
     (s, length)
 }
@@ -414,9 +457,37 @@ fn calculate_length(s: String) -> (String, usize) {
 
 ---
 
-# Použití reference
+# Převod vlastnictví a indexy
 
-Vlastník se nemění, předáváme objekt s tím, že se nebude modifikovat.
+```rust 
+let mut v = Vec::new();
+for i in 1 .. 42 {
+    v.push(i.to_string());
+}
+
+let third = v[2]; // chyba, vektor zůstává stále vlastníkem
+let fifth = v[4]; // a tady taky chyba
+```
+
+---
+
+# Řešení kopírováním
+
+```rust
+let mut v = Vec::new();
+for i in 1 .. 42 {
+    v.push(i.to_string());
+}
+
+let third = v[2].clone();
+let fifth = v[4].clone();
+```
+
+---
+
+# Borrowing: použití sdílené reference
+
+Vlastník se nemění, půjčujeme si objekt s tím, že se nebude modifikovat.
 
 ```rust 
 fn main() {
@@ -424,7 +495,7 @@ fn main() {
 
     let len = calculate_length(&s1);
 
-    println!("The length of '{}' is {}.", s1, len);
+    println!("Byte length of '{}' is {}.", s1, len);
 }
 
 fn calculate_length(s: &String) -> usize {
@@ -436,9 +507,9 @@ Pozn. &s1 vyslovujeme jako ref s1
 
 ---
 
-# Použití reference
+# Borrowing: použití exkluzivní reference
 
-Dokud ovšem nepoužijeme mutovatelnou referenci.
+Můžeme si objekt vypůjčit s úmyslem ho změnit. Na to použijeme mutabilní referenci.
 
 ```rust 
 fn main() {
@@ -454,12 +525,13 @@ fn change(some_string: &mut String) {
 
 ---
 
-# Jak funguje kontrola
+# Jak funguje borrow checker 
 
 1. Můžeme vytvořit neomezeně immutabilních referencí
-2. Můžeme mít pouze jednu mutovatelnou referenci
-3. Nekombinujeme mutovatelné a immutabilní
+2. Můžeme mít pouze jednu mutabilní referenci
+3. Nekombinujeme mutabilní a immutabilní
 4. Odkaz musí být platný
+5. Složitější věci s lifetime příště, typy které to porušují přespříště
 
 ---
 
@@ -496,6 +568,70 @@ fn main() {
 }
 ```
 
+---
+
+# Vektor
+
+1. Souvislý blok paměti stejně jako pole. 
+2. Narozdíl od pole je uložený na haldě. 
+3. Nejde o linkovaný seznam. Ten najdete jako std::collections::LinkedList.
+
+---
+
+# Vytvoření vektoru
+
+```rust
+fn main() {
+    // immutable pomocí makra
+    let v = vec![1, 2, 3];
+
+    // mutable vektory
+    let mut v = Vec::new();
+
+    v.push(5);
+    v.push(6);
+    v.push(7);
+    v.push(8);
+}
+```
+
+---
+
+# Získávání položek
+
+```rust
+fn main() {
+    let v = vec![1, 2, 3, 4, 5];
+
+    let third: &i32 = &v[2];
+    println!("The third element is {}", third);
+
+    match v.get(2) {
+        Some(third) => println!("The third element is {}", third),
+        None => println!("There is no third element."),
+    }
+}
+
+```
+
+---
+
+# Procházení vektoru
+
+```rust
+fn main() {
+    let v = vec![100, 32, 57];
+    for i in &v {
+        println!("{}", i);
+    }
+
+    let mut w = vec![100, 32, 57];
+    for i in &mut w {
+        *i += 50;
+    }
+}
+
+```
 ---
 
 # <!--fit--> Práce se stringy

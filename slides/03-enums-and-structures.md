@@ -12,6 +12,7 @@ paginate: true
 
 # Obsah
 
+# TODO: dát sem lifetime
 1. Enumy
 2. Pattern Matching
 3. Struktury
