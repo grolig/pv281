@@ -280,7 +280,8 @@ fn main() {
 }
 ```
 
-Při přetypování f64 na f32 při přetečení je nastavena hodnota INFINITY nebo NEG_INFINITY.
+Pokud při přetypování `f64` na `f32` dojde k přetečení,
+výslednou hodnotou je `f32::INFINITY` nebo `f32::NEG_INFINITY` (podle znaménka vstupu).
 
 ---
 
