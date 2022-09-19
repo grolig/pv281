@@ -585,10 +585,10 @@ fn main() {
 # Vektor
 
 1. Souvislý blok paměti stejně jako pole. 
-2. Narozdíl od pole
-    - je uložený na haldě,
-    - můžeme měnit jeho velikost (samozřejmě pokud je _mutable_).
-3. Nejde o spojovaný seznam, ten najdeme jako `std::collections::LinkedList`.
+2. Narozdíl od pole je uložený na haldě.
+3. Narozdíl od pole můžeme měnit jeho velikost
+(samozřejmě pokud je _mutable_).
+4. Nejde o spojovaný seznam, ten najdeme jako `std::collections::LinkedList`.
 
 ---
 
