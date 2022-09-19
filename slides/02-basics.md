@@ -397,20 +397,10 @@ Je ale vynucovaný překladačem.
 
 ---
 
-# Přesun vlastníctví na zásobníku
+# Přesun vlastníctví
 
 V dokumentaci a v chybových hláškách překladače se setkáte s pojmem `ownership move` či jen `move`.
 
-```rust
-fn main() {
-    let x = 5;
-    let y = x; // x už dále nejde použít
-}
-```
-
----
-
-# Přesun vlastníctví na haldě
 
 ```rust
 fn main() {
