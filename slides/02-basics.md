@@ -694,7 +694,7 @@ Pokud potřebujeme použít uvozovky uvnitř stringu, tak musíme escapovat (`\"
 Tento řetězec se vytiskne na více řádků. Mezery ze začátku řádku jsou součástí výsledného řetězce.
 
 ```rust
-println!("Zákazník: “Mám nainstalovaný Windows 95.“
+println!("Zákazník: \"Mám nainstalovaný Windows 95.\"
           Hotline : \"OK.\"
           Zákazník: \"Počítač mi nefunguje.\"
           Hotline : \"Ano, to jste už říkal...\"");
@@ -707,7 +707,7 @@ println!("Zákazník: “Mám nainstalovaný Windows 95.“
 Pokud se chceme zbavit bílých znaků na začátku nového řádku, tak použijeme `\`.
 
 ```rust
-println!("Zákazník: “Mám nainstalovaný Windows 95.“ \
+println!("Zákazník: \"Mám nainstalovaný Windows 95.\" \
           Hotline : \"OK.\" \
           Zákazník: \"Počítač mi nefunguje.\" \
           Hotline : \"Ano, to jste už říkal...\"");
