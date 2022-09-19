@@ -500,16 +500,15 @@ let fifth = v[4].clone();
 
 ---
 
-# Borrowing: použití sdílené reference
+### Borrowing: sdílená reference
 
 Vlastník se nemění, půjčujeme si objekt se zárukou, že se nebude modifikovat.
+Poznámka: `&s1` vyslovujeme jako `ref s1`.
 
 ```rust 
 fn main() {
     let s1 = String::from("hello");
-
     let len = calculate_length(&s1);
-
     println!("Byte length of '{}' is {}.", s1, len);
 }
 
@@ -517,8 +516,6 @@ fn calculate_length(s: &String) -> usize {
     s.len()
 }
 ```
-
-Poznámka: `&s1` vyslovujeme jako `ref s1`.
 
 ---
 
