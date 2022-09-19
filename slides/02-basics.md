@@ -585,8 +585,11 @@ fn main() {
 
 ```rust
 fn main() {
-    // immutable pomocí makra
+    // immutable pomocí makra výčtem hodnot
     let v = vec![1, 2, 3];
+    
+    // immutable pomocí makra s opakováním jedné hodnoty
+    let v = vec![0; 64];
 
     // mutable vektory
     let mut v = Vec::new();
