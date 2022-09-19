@@ -677,7 +677,7 @@ Pokud potřebujeme použít uvozovky uvnitř stringu, tak musíme escapovat (`\"
 
 # Víceřádkové literály
 
-Tento řetězec se vytiskne na více řádek. Mezery ze začátku řádku jsou součástí.
+Tento řetězec se vytiskne na více řádků. Mezery ze začátku řádku jsou součástí výsledného řetězce.
 
 ```rust
 println!("Zákazník: “Mám nainstalovaný Windows 95.“
@@ -690,7 +690,7 @@ println!("Zákazník: “Mám nainstalovaný Windows 95.“
 
 # Víceřádkové literály
 
-Pokud se chceme zbavit bílých znaků na začku a nového řádku, tak použijeme ```\```
+Pokud se chceme zbavit bílých znaků na začátku nového řádku, tak použijeme `\`.
 
 ```rust
 println!("Zákazník: “Mám nainstalovaný Windows 95.“ \
