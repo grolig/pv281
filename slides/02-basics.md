@@ -556,11 +556,13 @@ fn change(some_string: &mut String) {
 
 # Jak funguje borrow checker 
 
-1. Můžeme vytvořit neomezeně immutabilních referencí
-2. Můžeme mít pouze jednu mutabilní referenci
-3. Nekombinujeme mutabilní a immutabilní
-4. Odkaz musí být platný
-5. Složitější věci s lifetime příště, typy které to porušují přespříště
+1. Můžeme vytvořit neomezeně immutabilních referencí.
+2. Můžeme mít pouze jednu mutabilní referenci.
+3. Nekombinujeme mutabilní a immutabilní.
+4. Odkaz musí být platný. 
+
+O složitějších věcěch ohledně lifetime si řekneme příště &
+o typech, které tyto pravidla porušují, přespříště.
 
 ---
 
