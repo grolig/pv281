@@ -396,8 +396,9 @@ Je ale vynucovaný překladačem.
 
 ---
 
-# Přesun vlastníctví
-(move ownership na zásobníku)
+# Přesun vlastníctví na zásobníku
+
+V dokumentaci a v chybových hláškách překladače se setkáte s pojmem `ownership move` či jen `move`.
 
 ```rust
 fn main() {
