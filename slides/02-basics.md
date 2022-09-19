@@ -758,9 +758,11 @@ Poznámka: použijte `std::ffi::CString` pro C variantu, např. kvůli kompatibi
 
 # String a &str
 
-Stringový literál &str můžeme použít pro vytvoření stringu. Typicky se používá metoda ```String::from()```. 
+Stringový literál `&str` můžeme použít pro vytvoření `Stringu`. Typicky se používá metoda `String::from()` nebo `.to_string()`. 
 
-Pro vytoření za runtimu můžeme připravit buffer pomocí ```String::new()``` a nebo ```String::with_capacity()```. Maximum je usize::MAX, na 32-bit plaformě isize::MAX. Pozn. new má výchozí kapacitu 0. Při 0 nedojde k alokaci. 
+Pro vytoření za runtimu můžeme připravit buffer pomocí ```String::new()``` a nebo ```String::with_capacity()```. Maximum je `usize::MAX`, na 32bitové plaformě `isize::MAX`.
+
+Poznámka: při použití `new` má `String` výchozí kapacitu 0, tedy v momentě vytvoření nedojde k alokaci paměti. 
 
 ---
 
