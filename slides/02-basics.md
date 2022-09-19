@@ -665,13 +665,13 @@ Pod pokličkou jsou řetězce relativně komplexní ve všech jazycích.
 
 # Stringové literály
 
-Stringové literály jsou uzavřené v uvozovkách. Typicky jsou uložené v read-only části paměti s kódem. Dostáváme ho v typu &str (nazýváme "stir" nebo "string slice").
+Stringové literály jsou uzavřené ve dvojitých uvozovkách. Typicky jsou uložené v read-only části paměti s kódem. Dostáváme ho v typu `&str` (nazýváme `"stir"` nebo `"string slice"`).
 
 ```rust
 let joke = "Někdy je lepší zůstat v pondělí v posteli než celý týden ladit pondělní kód.";
 ```
 
-Pokud potřebujeme uvozovky, tak musíme escapovat ```\"```
+Pokud potřebujeme použít uvozovky uvnitř stringu, tak musíme escapovat (`\"`).
 
 ---
 
