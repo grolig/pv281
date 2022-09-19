@@ -372,7 +372,8 @@ Zároveň díky svým pravidlům (omezením jak pracujeme s pointery) zabraňuje
 
 ---
 
-Vychází z principu `RAII` (Resource Acquisition Is Initialization). Ale enforcovaný překladačem.
+Vychází z principu `RAII` (Resource Acquisition Is Initialization).
+Je ale vynucovaný překladačem.
 
 ---
 
