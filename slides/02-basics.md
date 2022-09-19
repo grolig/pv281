@@ -729,8 +729,6 @@ Raw string umožní neescapovat, ale nesmíme uvnitř použít uvozovky.
 let default_path = r"C:\Program Files\Moje Rust appka\";
 ```
 
-Pozn.: pro cesty je lepší používat `std::path::PathBuf` and `&Path`.
-
 ---
 
 # Raw string literal
