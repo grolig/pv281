@@ -180,7 +180,7 @@ fn main() {
 
 ```rust
 fn main() {
-    let mut x = 5; // díky klíčovému slovu *mut* můžeme hodnotu změnit
+    let mut x = 5; // díky klíčovému slovu *mut* můžeme hodnotu měnit
     println!("Hodnota x je: {}", x);
         
     x = 10;
