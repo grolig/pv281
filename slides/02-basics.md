@@ -511,8 +511,14 @@ let fifth = v[4].clone();
 
 ### Borrowing: sdílená reference
 
+<!--suppress HtmlUnknownAttribute Reason: valid MarpCore syntax --> 
+<style scoped>
+pre {
+  font-size: 75%;
+}
+</style>
+
 Vlastník se nemění, půjčujeme si objekt se zárukou, že se nebude modifikovat.
-Poznámka: `&s1` vyslovujeme jako `ref s1`.
 
 ```rust 
 fn main() {
@@ -525,6 +531,8 @@ fn calculate_length(s: &String) -> usize {
     s.len()
 }
 ```
+
+Poznámka: `&s1` vyslovujeme jako `ref s1`.
 
 ---
 
