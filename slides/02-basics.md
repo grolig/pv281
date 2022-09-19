@@ -380,10 +380,10 @@ Je ale vynucovaný překladačem.
 # High level model
 
 - o proměnných přemýšlíme jako o pojmenovaních hodnot
-- proměnná existuje tak dlouho dokud drží vlastnictví hodnoty
+- proměnná existuje tak dlouho, dokud drží vlastnictví hodnoty
 - můžeme vytvořit závislosti vypůjčením si hodnoty
-- existuje tok životem proměnné přes závislosti (flow)
-- toku závislostí se může větvit (neplatí pro mutovatelné výpujčky)
+- existuje tok životem proměnné přes závislosti (_flow_)
+- toku závislostí se může větvit (což ale neplatí pro mutovatelné výpujčky)
 
 ---
 
@@ -392,7 +392,7 @@ Je ale vynucovaný překladačem.
 - všechny hodnoty mají jednoho vlastníka
 - pouze jedno místo (scope) je zodpovědné za uvolnění paměti
 - uvolnění paměti probíhá automaticky
-- pokud je hodnota přesunuta (do nové proměnné, do vektoru, na haldu...), přesouvá se vlastnictví a starý vlastník už k hodnotě nemůže přistupit
+- pokud je hodnota přesunuta (do nové proměnné, do vektoru, na haldu, ...), přesouvá se vlastnictví a starý vlastník už k hodnotě nemůže přistupit
 
 ---
 
