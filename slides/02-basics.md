@@ -363,9 +363,12 @@ Obsahuje také např. stringové literály.
 
 # Ownership
 
-Práce s pamětí měla dva tábory. Jedni používali garbage collector, který se postaral o paměť, ale ubral z výkonu. Druzí se starali o paměť manuálně, aby docílili nejvyššího výkonu, ale za cenu možných problémů.
+Práce s pamětí měla dva tábory.
+Jedni používali garbage collector, který se postaral o paměť, ale ubral z výkonu.
+Druzí se starali o paměť manuálně, aby docílili nejvyššího výkonu, ale za cenu možných problémů.
 
-Rust spojuje oba světy dohromady. Zároveň díky svým pravidlům (omezením jak pracujeme s pointery) zabraňuje deadlocku.
+Rust spojuje oba světy dohromady.
+Zároveň díky svým pravidlům (omezením jak pracujeme s pointery) zabraňuje deadlocku.
 
 ---
 
