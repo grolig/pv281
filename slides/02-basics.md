@@ -328,12 +328,12 @@ Velikost vlákna: `sys::thread::DEFAULT_MIN_STACK_SIZE`
 
 # Heap
 
-Používáme pro data proměnné velikosti nebo data větší velikost, která necheme programovat. Heap je sdílený mezi vlákny. Částo programovací jazyky využívají několik heapů.
+Používáme pro data proměnné velikosti nebo data větší velikosti, která necheme programovat. Heap je sdílený mezi vlákny. Částo programovací jazyky využívají několik heapů.
 
-Rust dává k dispozici jeden heap ve stable. Nemůžete změnit alokátor. V nightly to jde, ale pokud netvoříte OS, tak to nedělejte.
+Rust dává k dispozici jeden heap ve **stable**. Nemůžete změnit alokátor. V **nightly** to jde, ale pokud netvoříte OS, tak to nedělejte.
 
-Práce se stakem je obvykle jednodušší a efektivnější než práce s haldou:
-(Dynamic storage allocation: A survey and critical review.)[https://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.143.4688]
+Práce se stackem je obvykle jednodušší a efektivnější než práce s haldou:
+[Dynamic storage allocation: A survey and critical review](https://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.143.4688)
 
 ---
 
