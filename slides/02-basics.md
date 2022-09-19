@@ -457,6 +457,8 @@ if c {
 h(x); // chyba při kompilaci, x už patří někomu jinému
 ```
 
+Samozřejmě za předpokladu, že funkce mají signaturu `fn f(values: Vec<i32>)`. 
+
 ---
 
 # Vlastnictví – převzetí a vrácení
