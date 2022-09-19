@@ -519,7 +519,7 @@ fn calculate_length(s: &String) -> usize {
 
 ---
 
-# Borrowing: použití exkluzivní reference
+## Borrowing: exkluzivní reference
 
 Můžeme si objekt vypůjčit s úmyslem ho změnit. Na to použijeme mutabilní referenci.
 
