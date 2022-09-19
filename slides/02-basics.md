@@ -703,14 +703,19 @@ println!("Zákazník: “Mám nainstalovaný Windows 95.“ \
 
 # Raw string literal
 
-V některých situacích může být nepříjmené neustále escapeovat ```\```. Třeba u cest ve Windows.
+Někdy může být nepříjmené neustále escapeovat `\`, třeba u cest ve Windows:
+
+```rust
+let default_path = "C:\\Program Files\\Moje Rust appka\\";
+```
+
+Raw string umožní neescapovat, ale nesmíme uvnitř použít uvozovky.
 
 ```rust
 let default_path = r"C:\Program Files\Moje Rust appka\";
 ```
 
-Raw string tím pádem neumožní escapovat a použít uvozovky.
-Pozn. ikdyž je tu ukázaná cestka, tak lepří je použít ```std::path::PathBuf``` and ```&Path```.
+Pozn: pro cesty je lepší používat `std::path::PathBuf` and `&Path`.
 
 ---
 
