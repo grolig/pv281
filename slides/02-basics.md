@@ -743,15 +743,16 @@ Byte string může obsahovat pouze ASCII znaky.
 
 ---
 
-# String
+### String
 
-String v Rustu nefunguje jako v C, kde máme řetězec znaku zakončený prázdným znakem. V Rustu může být prázdný znak klidně uprostřed řetězce. Pozn. CString pro C variantu.
-
-String:
-- používá variabilní kódování UTF-8. 
-- je uložený na haldě
-- implementovaný jako Vec<u8>, můžeme ho považovat za buffer proměnné velikosti
+String v Rustu nefunguje jako v C, kde máme řetězec znaku zakončený prázdným znakem. V Rustu může být prázdný znak klidně uprostřed řetězce. String v Rustu
+- používá variabilní kódování UTF-8,
+- je uložený na haldě,
+- je implementovaný jako `Vec<u8>`
+(můžeme ho považovat za buffer proměnné velikosti)
 - je mutable
+
+Poznámka: použijte `std::ffi::CString` pro C variantu, např. kvůli kompatibilitě.
 
 ---
 
