@@ -262,7 +262,7 @@ Výchozí je `f64`.
 
 ---
 
-# Přetypování desetinných čísel
+### Přetypování desetinných čísel
 
 ```rust
 fn main() {
@@ -281,7 +281,7 @@ fn main() {
 ```
 
 Pokud při přetypování `f64` na `f32` dojde k přetečení,
-výslednou hodnotou je `f32::INFINITY` nebo `f32::NEG_INFINITY` (podle znaménka vstupu).
+výslednou hodnotou je `f32::INFINITY` nebo `f32::NEG_INFINITY`.
 
 ---
 
