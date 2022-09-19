@@ -908,13 +908,11 @@ fn main() {
 
 # Doporučení pro práci s řetězci
 
-- Parametry funkce by měli přijímat slice (&str)
-- Pro práci s cestou je doporučené použít ```std::path::PathBuf``` a ```&Path```
-- Pro binární data s kódování jiným než UTF-8 ```Vec<u8>``` a ```&[u8]```
-- Pro práci se stringy z OS (např. argumenty CMD) ```OsString``` a ```&OsStr```
-- Pro interoperatibilitu s C knihovnami ```CString``` a ```&CStr```
-
-``````
+- Parametry funkce by měli přijímat _string slice_ (`&str`)
+- Pro práci s cestou je doporučené použít `std::path::PathBuf` a `&Path`
+- Pro binární data s kódování jiným než UTF-8 `Vec<u8>` a `&[u8]`
+- Pro práci se stringy z OS (např. argumenty CMD) `OsString` a `&OsStr`
+- Pro interoperatibilitu s C knihovnami `CString` a `&CStr`
 
 ---
 
