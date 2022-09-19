@@ -417,7 +417,7 @@ fn main() {
 }
 ```
 
-Tímto dojde ke zkopírování ukazatele na stejné místo v paměti
+Tímto dojde ke zkopírování ukazatele na stejné místo v paměti.
 
 ---
 
