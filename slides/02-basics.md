@@ -350,7 +350,14 @@ fn main() {
 
 # Statická paměť
 
-Existuje po celou dobu běhu programu. Obsahuje kód programu, který je obvykle neměnný. Také obsahuje proměnné, které jsou označeny jako statické. Nemůžou být dealokovány do konce programu. Obsahuje také např. stringové literály.
+Existuje po celou dobu běhu programu.
+Obsahuje kód programu, který je obvykle neměnný.
+Také obsahuje proměnné, které jsou označeny jako statické, např:
+```rust
+let important_constant: &'static str = "Hello World";
+```
+Takové proměnné nemůžou být dealokovány do konce programu.
+Obsahuje také např. stringové literály.
 
 ---
 
