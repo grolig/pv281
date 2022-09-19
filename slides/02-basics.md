@@ -731,7 +731,7 @@ let default_path = r###"C:\"Program Files"\"Moje Rust appka"\"###;
 
 # Byte string literal
 
-Pokud potřebujeme mát string jako pole znaků (slice ```u8``` hodnot):
+Pokud potřebujeme mít string jako pole znaků (slice ```u8``` hodnot):
 
 ```rust
 let method = b"GET";
@@ -739,7 +739,7 @@ assert_eq!(method, &[b'G', b'E', b'T']);
 ```
 
 Řetězcovou syntaxi můžeme kombinovat. Pomocí ```br"``` vytvoříme raw byte string.
-Byte string nemůže obsahovat Unicode znaky.
+Byte string může obsahovat pouze ASCII znaky.
 
 ---
 
