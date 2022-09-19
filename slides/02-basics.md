@@ -114,6 +114,8 @@ Argumenty před `--` jsou pro Cargo, argumenty za `--` se předávají našemu p
 
 # rustfmt
 
+Formátuje kód podle komunitního stylu a konvencí.
+
 ```shell
 rustup component add rustfmt
 ```
