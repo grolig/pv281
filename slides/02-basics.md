@@ -186,7 +186,6 @@ fn main() {
     x = 10;
     println!("Hodnota x je: {}", x);
     
-    
     x += 1; // hned na začátek si raději řekneme, že Rust nemá 
             // inkrementaci (žádné x++ nebo ++x)
     println!("Hodnota x je: {}", x);
@@ -338,8 +337,7 @@ Používáme pro data proměnné velikosti nebo data větší velikosti, která 
 
 Rust dává k dispozici jeden heap ve **stable**. Nemůžete změnit alokátor. V **nightly** to jde, ale pokud netvoříte OS, tak to nedělejte.
 
-Práce se stackem je obvykle jednodušší a efektivnější než práce s haldou:
-[Dynamic storage allocation: A survey and critical review](https://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.143.4688)
+Práce se stackem je obvykle jednodušší a efektivnější než práce s haldou: [Dynamic storage allocation: A survey and critical review](https://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.143.4688)
 
 ---
 
@@ -369,12 +367,9 @@ Obsahuje také např. stringové literály.
 
 # Ownership
 
-Práce s pamětí měla dva tábory.
-Jedni používali garbage collector, který se postaral o paměť, ale ubral z výkonu.
-Druzí se starali o paměť manuálně, aby docílili nejvyššího výkonu, ale za cenu možných problémů.
+Práce s pamětí měla dva tábory.  Jedni používali **garbage collector**, který se postaral o paměť, ale ubral z výkonu.  Druzí se starali o paměť **manuálně**, aby docílili nejvyššího výkonu, ale za cenu možných problémů.
 
-Rust spojuje oba světy dohromady.
-Zároveň díky svým pravidlům (omezením jak pracujeme s pointery) zabraňuje deadlocku.
+Rust spojuje oba světy dohromady. Zároveň díky svým pravidlům (omezením jak pracujeme s pointery) zabraňuje deadlocku.
 
 ---
 
@@ -396,7 +391,7 @@ Je ale vynucovaný překladačem.
 # Ownership model
 
 - všechny hodnoty mají jednoho vlastníka
-- pouze jedno místo (scope) je zodpovědné za uvolnění paměti
+- pouze jedno místo (_scope_) je zodpovědné za uvolnění paměti
 - uvolnění paměti probíhá automaticky
 - pokud je hodnota přesunuta (do nové proměnné, do vektoru, na haldu, ...), přesouvá se vlastnictví a starý vlastník už k hodnotě nemůže přistupit
 
@@ -734,7 +729,7 @@ Raw string umožní neescapovat, ale nesmíme uvnitř použít uvozovky.
 let default_path = r"C:\Program Files\Moje Rust appka\";
 ```
 
-Pozn: pro cesty je lepší používat `std::path::PathBuf` and `&Path`.
+Pozn.: pro cesty je lepší používat `std::path::PathBuf` and `&Path`.
 
 ---
 
@@ -757,8 +752,9 @@ let method = b"GET";
 assert_eq!(method, &[b'G', b'E', b'T']);
 ```
 
-Řetězcovou syntaxi můžeme kombinovat. Pomocí ```br"``` vytvoříme raw byte string.
 Byte string může obsahovat pouze ASCII znaky.
+
+Řetězcovou syntaxi můžeme kombinovat – pomocí `br"` vytvoříme **raw byte string**.
 
 ---
 
