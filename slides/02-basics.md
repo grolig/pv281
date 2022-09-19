@@ -280,8 +280,7 @@ fn main() {
 }
 ```
 
-Pokud při přetypování `f64` na `f32` dojde k přetečení,
-výslednou hodnotou je `f32::INFINITY` nebo `f32::NEG_INFINITY`.
+Pokud při přetypování `f64` na `f32` dojde k přetečení, výsledkem je `f32::INFINITY` nebo `f32::NEG_INFINITY`.
 
 ---
 
@@ -328,7 +327,7 @@ Velikost vlákna: `sys::thread::DEFAULT_MIN_STACK_SIZE`
 
 # Heap
 
-Používáme pro data proměnné velikosti nebo data větší velikosti, která necheme programovat. Heap je sdílený mezi vlákny. Částo programovací jazyky využívají několik heapů.
+Používáme pro data proměnné velikosti nebo data větší velikosti, která necheme programovat. Heap je sdílený mezi vlákny. Často programovací jazyky využívají několik heapů.
 
 Rust dává k dispozici jeden heap ve **stable**. Nemůžete změnit alokátor. V **nightly** to jde, ale pokud netvoříte OS, tak to nedělejte.
 
@@ -383,7 +382,7 @@ Je ale vynucovaný překladačem.
 - proměnná existuje tak dlouho, dokud drží vlastnictví hodnoty
 - můžeme vytvořit závislosti vypůjčením si hodnoty
 - existuje tok životem proměnné přes závislosti (_flow_)
-- toku závislostí se může větvit (což ale neplatí pro mutovatelné výpujčky)
+- tok závislostí se může větvit (což ale neplatí pro mutovatelné výpujčky)
 
 ---
 
@@ -441,18 +440,19 @@ fn main() {
 
 ```rust
 let x = vec![10, 20, 30];
+
 if c {
     f(x); // vlastnictví x převedeno do f()
 } else {
     g(x); // vlastnictví x převedeno do g()
 }
-h(x); // chyba při kompilaci, x už patří někomu jinému
 
+h(x); // chyba při kompilaci, x už patří někomu jinému
 ```
 
 ---
 
-# Vlastnictví - převzetí a vrácení
+# Vlastnictví – převzetí a vrácení
 
 ```rust 
 fn main() {
@@ -694,7 +694,7 @@ Pokud se chceme zbavit bílých znaků na začátku nového řádku, tak použij
 
 ```rust
 println!("Zákazník: “Mám nainstalovaný Windows 95.“ \
-          Hotline : \"OK.\"
+          Hotline : \"OK.\" \
           Zákazník: \"Počítač mi nefunguje.\" \
           Hotline : \"Ano, to jste už říkal...\"");
 ```
@@ -760,7 +760,7 @@ Poznámka: použijte `std::ffi::CString` pro C variantu, např. kvůli kompatibi
 
 Stringový literál `&str` můžeme použít pro vytvoření `Stringu`. Typicky se používá metoda `String::from()` nebo `.to_string()`. 
 
-Pro vytoření za runtimu můžeme připravit buffer pomocí ```String::new()``` a nebo ```String::with_capacity()```. Maximum je `usize::MAX`, na 32bitové plaformě `isize::MAX`.
+Pro vytvoření za běhu můžeme připravit buffer pomocí ```String::new()``` a nebo ```String::with_capacity()```. Maximum je `usize::MAX`, na 32bitové plaformě `isize::MAX`.
 
 Poznámka: při použití `new` má `String` výchozí kapacitu 0, tedy v momentě vytvoření nedojde k alokaci paměti. 
 
