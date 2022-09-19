@@ -480,7 +480,7 @@ fn calculate_length(s: String) -> (String, usize) {
 
 ```rust 
 let mut v = Vec::new();
-for i in 1 .. 42 {
+for i in 1..42 {
     v.push(i.to_string());
 }
 
@@ -494,7 +494,7 @@ let fifth = v[4]; // a tady taky chyba
 
 ```rust
 let mut v = Vec::new();
-for i in 1 .. 42 {
+for i in 1..42 {
     v.push(i.to_string());
 }
 
