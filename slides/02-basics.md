@@ -264,6 +264,13 @@ Výchozí je `f64`.
 
 ### Přetypování desetinných čísel
 
+<!--suppress HtmlUnknownAttribute Reason: valid MarpCore syntax --> 
+<style scoped>
+pre {
+  font-size: 75%;
+}
+</style>
+
 ```rust
 fn main() {
     let x = 2;
