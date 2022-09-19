@@ -223,7 +223,7 @@ fn main() {
 | 128 bitů | i128          | u128 |
 | dle architektury | isize | usize |
 
-Výchozí je ```i32```.
+Výchozí je `i32`.
 
 ---
 # Zápisy literálů
@@ -745,7 +745,7 @@ let default_path = r###"C:\"Program Files"\"Moje Rust appka"\"###;
 
 # Byte string literal
 
-Pokud potřebujeme mít string jako pole znaků (slice ```u8``` hodnot):
+Pokud potřebujeme mít string jako pole znaků (slice `u8` hodnot):
 
 ```rust
 let method = b"GET";
@@ -775,7 +775,7 @@ Poznámka: použijte `std::ffi::CString` pro C variantu, např. kvůli kompatibi
 
 Stringový literál `&str` můžeme použít pro vytvoření `Stringu`. Typicky se používá metoda `String::from()` nebo `.to_string()`. 
 
-Pro vytvoření za běhu můžeme připravit buffer pomocí ```String::new()``` a nebo ```String::with_capacity()```. Maximum je `usize::MAX`, na 32bitové plaformě `isize::MAX`.
+Pro vytvoření za běhu můžeme připravit buffer pomocí `String::new()` a nebo `String::with_capacity()`. Maximum je `usize::MAX`, na 32bitové plaformě `isize::MAX`.
 
 Poznámka: při použití `new` má `String` výchozí kapacitu 0, tedy v momentě vytvoření nedojde k alokaci paměti. 
 
@@ -817,7 +817,7 @@ fn main() {
 
 # Délka stringu
 
-Funkce ```len()``` vrací počet bajtů. Pro počet znaků musíme použít ```chars()```.
+Funkce `len()` vrací počet bajtů. Pro počet znaků musíme použít `chars()`.
 
 ```rust
 assert_eq!("ಠ_ಠ".len(), 7);
@@ -828,7 +828,7 @@ assert_eq!("ಠ_ಠ".chars().count(), 3);
 
 # Porovnání stringu
 
-Dělá se pomocí ```==``` a ```!=```. Řetězce musí obsahovat stejné znaky ve stejném pořadí. Neporovnávají se adresy paměti.
+Dělá se pomocí `==` a `!=`. Řetězce musí obsahovat stejné znaky ve stejném pořadí. Neporovnávají se adresy paměti.
 
 ```rust
 assert!("ONE".to_lowercase() == "one");
