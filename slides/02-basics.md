@@ -244,10 +244,10 @@ Výchozí je ```i32```.
 ```rust
 let x: u32 = 2;
 
-// prevod na vetsi
+// převod na větší
 let y: i64 = x as i64;
 
-// prevod na mensi
+// převod na menší
 let z = i32::try_from(y).unwrap_or(0);
 ```
 
@@ -391,7 +391,7 @@ Vychází z principu `RAII` (Resource Acquisition Is Initialization). Ale enforc
 ```rust
 fn main() {
     let x = 5;
-    let y = x; // x uz dale nejde pouzit
+    let y = x; // x už dále nejde použít
 }
 ```
 
@@ -402,7 +402,7 @@ fn main() {
 ```rust
 fn main() {
     let s1 = String::from("hello");
-    let s2 = s1; // s1 uz dale nejde pouzit
+    let s2 = s1; // s1 už dále nejde použít
 }
 ```
 
@@ -434,7 +434,7 @@ if c {
 } else {
     g(x); // vlastnictví x převedeno do g()
 }
-h(x); // chyba při kompilaci. x už patří někomu jinému
+h(x); // chyba při kompilaci, x už patří někomu jinému
 
 ```
 
@@ -842,7 +842,7 @@ fn main() {
     chars.sort();
     chars.dedup();
 
-     // Create an empty and growable `String`
+    // Create an empty and growable `String`
     let mut string = String::new();
     for c in chars {
         // Insert a char at the end of string
@@ -875,7 +875,7 @@ for word in "veni, vidi, vici".split(", ") {
 fn main() {
     let raw_bytestring = br"\u{211D} is not escaped here";
 
-     // Converting a byte array to `str` can fail
+    // Converting a byte array to `str` can fail
     if let Ok(my_str) = str::from_utf8(raw_bytestring) {
         println!("And the same as text: '{}'", my_str);
     }
