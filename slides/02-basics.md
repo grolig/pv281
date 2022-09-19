@@ -895,7 +895,7 @@ fn main() {
 ```rust
 assert!("peanut".contains("nut"));
 assert_eq!("ಠ_ಠ".replace("ಠ", "■"), "■_■");
-assert_eq!("    clean\n".trim(), "clean");
+assert_eq!("    clean this\n".trim(), "clean this");
 
 for word in "veni, vidi, vici".split(", ") {
     assert!(word.starts_with("v"));
