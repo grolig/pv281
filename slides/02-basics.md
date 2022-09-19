@@ -495,7 +495,7 @@ let fifth = v[4]; // a tady taky chyba
 
 ---
 
-# Řešení kopírováním
+# Řešení klonováním
 
 ```rust
 let mut v = Vec::new();
