@@ -802,7 +802,7 @@ fn main() {
 
 # Délka stringu
 
-Funkce ```len()``` vrací počet bajtů. Pro počet znaku na to musíme přes ```chars()```.
+Funkce ```len()``` vrací počet bajtů. Pro počet znaků musíme použít ```chars()```.
 
 ```rust
 assert_eq!("ಠ_ಠ".len(), 7);
