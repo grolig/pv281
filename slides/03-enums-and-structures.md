@@ -1,7 +1,7 @@
 ---
 marp: true
 title: PV281 Programming in Rust
-description: Programming in Rust The Basics
+description: Programming in Rust Enums and Structures
 theme: rust
 paginate: true
 ---

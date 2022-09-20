@@ -1,7 +1,7 @@
 ---
 marp: true
 title: PV281 Programming in Rust
-description: Programming in Rust Data Structures
+description: Programming in Rust Parallelism
 theme: rust
 paginate: true
 ---

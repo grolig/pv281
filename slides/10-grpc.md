@@ -1,7 +1,7 @@
 ---
 marp: true
 title: PV281 Programming in Rust
-description: Programming in Rust Actix
+description: Programming in Rust Grpc
 theme: rust
 paginate: true
 ---
