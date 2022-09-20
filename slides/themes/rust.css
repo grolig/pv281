@@ -268,7 +268,6 @@ section mark {
 }
 section code {
   background: var(--dracula-current-line);
-  color: var(--dracula-current-green);
 }
 section h1 strong,
 section h2 strong,
