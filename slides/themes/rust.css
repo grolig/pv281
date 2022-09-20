@@ -312,6 +312,7 @@ section::after {
   padding: 10px 25px;
   position: absolute;
   color: var(--dracula-comment);
+  content: attr(data-marpit-pagination) '/' attr(data-marpit-pagination-total);
 }
 
 header {
