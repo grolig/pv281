@@ -360,5 +360,7 @@ section.plantuml {
 }
 
 section.plantuml > img {
-    width: -webkit-fill-available;
+  /* Reason: valid outside Firefox */ /* noinspection CssInvalidPropertyValue */
+  width: -webkit-fill-available;
+  width: -moz-available;
 }
