@@ -251,7 +251,7 @@ table td {
 
 section {
   font-size: 35px;
-  font-family: "IBM Plex Sans";
+  font-family: "IBM Plex Sans", sans-serif;
   line-height: 1.35;
   letter-spacing: 1.25px;
   padding: 70px;
