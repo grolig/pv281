@@ -186,7 +186,7 @@ code {
   margin: -0.1em 0.15em;
   padding: 0.1em 0.2em;
   vertical-align: baseline;
-  color: var(--dracula-green);
+  color: var(--dracula-foreground);
 }
 
 pre {
@@ -283,6 +283,7 @@ section h6 strong {
 }
 section pre > code {
   background: var(--dracula-current-line);
+  color: var(--dracula-foreground);
 }
 section header,
 section footer,
