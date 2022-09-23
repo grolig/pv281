@@ -845,10 +845,10 @@ use std::fs::File;
 use std::io::prelude::*;
 
 fn main() -> std::io::Result<()> {
-    let mut f = File::create("foo.txt")?;
-    f.write_all(b"Hello, world!")?;
-
-    f.sync_all()?;
+    let mut file = File::create("foo.txt")?;
+    
+    file.write_all(b"Hello, world!")?;
+    file.sync_all()?;
     
     Ok(())
 }
@@ -883,10 +883,10 @@ use std::io::{BufWriter, Write};
 
 fn main() {
     let data = "Some data!";
-    let f = File::create("/tmp/foo").expect("Unable to create file");
-    let mut f = BufWriter::new(f);
+    let file = File::create("/tmp/foo").expect("Unable to create file");
+    let mut file = BufWriter::new(f);
     
-    f.write_all(data.as_bytes()).expect("Unable to write data");
+    file.write_all(data.as_bytes()).expect("Unable to write data");
 }
 ```
 
