@@ -784,7 +784,6 @@ match io::stdin().read_line(&mut input) {
 # Standardní vstup
 
 ```rust
-#![feature(stdin_forwarders)]
 use std::io;
 
 let lines = io::stdin().lines();
