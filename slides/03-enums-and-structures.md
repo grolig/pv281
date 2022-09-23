@@ -455,8 +455,8 @@ Použijeme pro situace, kde máme více parametrů s různými kombinacemi trait
 
 ```rust
 fn some_function<T, U>(t: &T, u: &U) -> i32
-    where T: Display + Clone,
-          U: Clone + Debug
+where T: Display + Clone,
+      U: Clone + Debug
 {
     // ...
 }
