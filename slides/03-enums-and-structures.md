@@ -451,7 +451,7 @@ pub fn notify(item: &(impl Summary + Display)) {
 
 # Zápis pomocí where
 
-Použijeme pro situace, kde máme více parametrů s různými kombinacemi traitů
+Použijeme pro situace, kde máme více parametrů s různými kombinacemi traitů.
 
 ```rust
 fn some_function<T, U>(t: &T, u: &U) -> i32
@@ -470,8 +470,8 @@ fn some_function<T, U>(t: &T, u: &U) -> i32
 
 # Typy chyb
 
-1. chyby ze kterých se můžeme zotavit
-2. a chyby po kterých to můžeme zabalit
+1. Chyby, ze kterých se můžeme zotavit.
+2. Chyby, po kterých to můžeme zabalit.
 
 ---
 
