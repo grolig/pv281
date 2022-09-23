@@ -25,6 +25,7 @@
   --dracula-pink: #ff79c6;
   --dracula-purple:#bd93f9;
   --dracula-red: #ff5555;
+  --dracula-dark-red: #e73434;
   --dracula-yellow: #f1fa8c;
 }
 
@@ -279,7 +280,7 @@ section h3 strong,
 section h4 strong,
 section h5 strong,
 section h6 strong {
-  color: var(--dracula-current-line);
+  color: var(--dracula-dark-red);
 }
 section pre > code {
   background: var(--dracula-current-line);
