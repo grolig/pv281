@@ -110,7 +110,7 @@ fn main() {
 
 ---
 
-# Zpracování enum pattern matchingem
+### Zpracování hodnoty pattern matchingem
 
 ```rust 
 fn deliver(delivery: Delivery) {
@@ -217,7 +217,7 @@ fn main() {
 
 ---
 
-# Nad touple
+# Match nad tuple
 
 ```rust
 fn main() {
@@ -374,7 +374,7 @@ impl Summary for NewsArticle {
 
 ---
 
-# Implementace traitu pro druhou sturkturu
+### Implementace traitu pro druhou strukturu
 
 ```rust
 pub trait Summary {
@@ -701,7 +701,7 @@ fn main() {
 
 ---
 
-# Definice argumentů v yaml
+# Definice argumentů v YAML
 
 ```yaml
 name: myapp
@@ -738,7 +738,7 @@ fn main() {
 
 ---
 
-# Stdin
+# Standardní vstup
 
 ```rust
 use std::io;
@@ -755,7 +755,7 @@ match io::stdin().read_line(&mut input) {
 
 ---
 
-# Stdin
+# Standardní vstup
 
 ```rust
 #![feature(stdin_forwarders)]
