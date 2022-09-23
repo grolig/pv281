@@ -698,7 +698,7 @@ use clap::{arg, App, Arg, ArgAction};
 fn main() {
     let matches = App::new("myapp")
         .version("1.0")
-        .author("LG")
+        .author("John Smith")
         .about("Does awesome things")
         .arg(arg!(-c --config [FILE] "Sets an optional custom config file"))
         .arg(arg!(<INPUT>            "Sets the required input file to use"))
@@ -712,9 +712,9 @@ fn main() {
         println!("Value for config: {}", c);
     }
     match matches.get_count("verbosity") {
-        0 => println!("Verbose mode is off"),
-        1 => println!("Verbose mode is kind of on"),
-        2 => println!("Verbose mode is on"),
+        0 => println!("No verbose info"),
+        1 => println!("Some verbose info"),
+        2 => println!("Tons of verbose info"),
         _ => println!("Don't be crazy"),
     }
 }
@@ -727,7 +727,7 @@ fn main() {
 ```yaml
 name: myapp
 version: "1.0"
-author: LG
+author: John Smith
 about: Does awesome things
 args:
     - config:
