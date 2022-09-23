@@ -492,7 +492,7 @@ panic = 'abort'
 
 ---
 
-# Výčet Result
+# Enum `Result`
 
 Funkce, kde může nastat chyba, vrací `Result`. Z něho můžeme vyčíst výsledek, nebo chybu.
 
