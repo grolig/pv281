@@ -645,11 +645,11 @@ clap = "3.2.22"
 # Jednodušší zpracování přes clap
 
 ```rust
-use clap::Clap;
+use clap::Parser;
 
 /// This doc string acts as a help message when the user runs '--help'
 /// as do all doc strings on fields
-#[derive(Clap)]
+#[derive(Parser)]
 #[clap(version = "1.0", author = "L.G.")]
 struct Opts {
     /// Sets a custom config file. Could have been an Option<T> with no default too
