@@ -424,34 +424,34 @@ fn main() {
 ---
 # Celočíselné typy
 
-| Velikost | Znaménkový    | Neznaménkový  |
-| -------- | ------------- | ------------- |
-| 8 bitů   | i8            | u8 |
-| 16 bitů  | i16           | u16 |
-| 32 bitů  | i32           | u32 |
-| 64 bitů  | i64           | u64 |
-| 128 bitů | i128          | u128 |
-| dle architektury | isize | usize |
+| Velikost         | Znaménkový | Neznaménkový |
+|------------------|------------|--------------|
+| 8 bitů           | i8         | u8           |
+| 16 bitů          | i16        | u16          |
+| 32 bitů          | i32        | u32          |
+| 64 bitů          | i64        | u64          |
+| 128 bitů         | i128       | u128         |
+| dle architektury | isize      | usize        |
 
 ---
 # Zápisy literálů
 
-| Velikost | Příklad |
-| -------- | ------------- |
-| desítkové   | 98_222 |
-| šestnáctkové | 0xff |
-| osmičkové  | 0o77 |
-| binární  | 0b1111_0000 |
-| bajtové | b'A' |
+| Velikost     | Příklad     |
+|--------------|-------------|
+| desítkové    | 98_222      |
+| šestnáctkové | 0xff        |
+| osmičkové    | 0o77        |
+| binární      | 0b1111_0000 |
+| bajtové      | b'A'        |
 
 ---
 # S plovoucí řádovou čárkou (IEEE-754)
 | Velikost | Typ |
-| -------- | --- |
+|----------|-----|
 | 32 bitů  | f32 |
 | 64 bitů  | f64 |
 
-výchozí je f64
+Výchozí je `f64`.
 
 ---
 
