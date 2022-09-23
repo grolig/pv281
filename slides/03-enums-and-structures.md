@@ -477,13 +477,13 @@ where T: Display + Clone,
 
 # Panika
 
-rust
+```rust
 fn main() {
     panic!("crash and burn");
 }
 ```
 
-Pozn. v Rustu při panice program sám projde stacka uklidí po sobě veškerá data. Je to za cenu větší binárky. Pokud chcete snížit velikost binárky a nechat úklid na operačním systému, tak můžete udělat následující konfiguraci v Cargo.toml:
+Poznámka: v Rustu při panice program sám projde stack a uklidí po sobě veškerá data. Je to za cenu větší binárky. Pokud chcete snížit velikost binárky a nechat úklid na operačním systému, tak můžete udělat následující konfiguraci v `Cargo.toml`:
 
 ```toml
 [profile.release]
