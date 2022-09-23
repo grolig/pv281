@@ -693,27 +693,25 @@ fn main() {
 # Zpracování přes builder pattern
 
 ```rust
-use clap::App;
+use clap::{arg, App, Arg, ArgAction};
 
 fn main() {
     let matches = App::new("myapp")
         .version("1.0")
         .author("LG")
         .about("Does awesome things")
-        .arg("-c, --config=[FILE] 'Sets a custom config file'")
-        .arg("<INPUT>              'Sets the input file to use'")
-        .arg("-v...                'Sets the level of verbosity'")
+        .arg(arg!(-c --config [FILE] "Sets an optional custom config file"))
+        .arg(arg!(<INPUT>            "Sets the required input file to use"))
+        .arg(Arg::new("verbosity").short('v').long("verbose").action(ArgAction::Count))
         .get_matches();
 
     if let Some(i) = matches.value_of("INPUT") {
         println!("Value for input: {}", i);
     }
-
     if let Some(c) = matches.value_of("config") {
         println!("Value for config: {}", c);
     }
-
-    match matches.occurrences_of("v") {
+    match matches.get_count("verbosity") {
         0 => println!("Verbose mode is off"),
         1 => println!("Verbose mode is kind of on"),
         2 => println!("Verbose mode is on"),
