@@ -648,15 +648,17 @@ clap = "3.2.22"
 use clap::Parser;
 
 /// This doc string acts as a help message when the user runs '--help'
-/// as do all doc strings on fields
+/// The same applies for all doc strings on struct fields
 #[derive(Parser)]
-#[clap(version = "1.0", author = "L.G.")]
+#[clap(version = "1.0", author = "John Smith")]
 struct Opts {
     /// Sets a custom config file. Could have been an Option<T> with no default too
     #[clap(short = 'c', long = "config", default_value = "default.conf")]
     config: String,
-    /// Some input. Because this isn't an Option<T> it's required to be used
+    
+    /// Some input. Because this isn't an Option<T> it is required to be used
     input: String,
+    
     /// A level of verbosity, and can be used multiple times
     #[clap(short = 'v', long = "verbose", parse(from_occurrences))]
     verbose: i32,
