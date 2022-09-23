@@ -532,13 +532,13 @@ use std::fs::File;
 use std::io::ErrorKind;
 
 fn main() {
-    let f = File::open("hello.txt");
+    let file = File::open("hello.txt");
 
-    let f = match f {
-        Ok(file) => file,
+    let file = match file {
+        Ok(ok_file) => ok_file,
         Err(error) => match error.kind() {
             ErrorKind::NotFound => match File::create("hello.txt") {
-                Ok(fc) => fc,
+                Ok(created_file) => created_file,
                 Err(e) => panic!("Problem creating the file: {:?}", e),
             },
             other_error => {
