@@ -334,7 +334,7 @@ fn area(rectangle: &Rectangle) -> u32 {
 
 # Traity
 
-Zjednodušeně můžeme trait považovat za interface v jiných programovacích jazycích.
+Zjednodušeně můžeme **trait** považovat za **interface** v jiných programovacích jazycích.
 
 Definujeme pomocí nich společnou funkcionalitu.
 
