@@ -43,14 +43,14 @@ fn main() {
 # C varianta
 
 ```rust 
-// zacinaji nulou
+// hodnota defaultně začíná nulou
 enum Number {
     Zero,
     One,
     Two,
 }
 
-// enum s nastavenou hodnotou
+// hodnota je ale nastavitelná
 enum Color {
     Red = 0xff0000,
     Green = 0x00ff00,
@@ -58,7 +58,7 @@ enum Color {
 }
 
 fn main() {
-    // enum muze byt pretypovan na cele cislo
+    // enum můžeme přetypovat na celé číslo
     println!("zero is {}", Number::Zero as i32);
     println!("one is {}", Number::One as i32);
 
@@ -70,7 +70,7 @@ fn main() {
 
 ---
 
-# Monadicka varianta
+# Monadická varianta
 
 ```rust 
 enum Delivery {
@@ -117,13 +117,13 @@ fn main() {
 fn deliver(delivery: Delivery) {
     match delivery {
         Delivery::Pickup => {
-            println!("Vyzvednete to u nas v obchode!");
+            println!("Vyzvednete to u nás v obchodě!");
         },
         Delivery::Parcel(address) => {
-            println!("Zbozi bude dorucena prepravou na adresu: {}!", address);
+            println!("Zboží bude doručeno na adresu: {}!", address);
         },
         _ => {
-        	println!("Zatim neimplementovany zpusob doruceni!");
+            println!("Zatím neimplementovaný způsob doručení!");
         }
     }
 }
@@ -186,7 +186,7 @@ fn main() {
 
 ---
 
-# Match více explicitně zadaných variant
+# Match několika explicitně zadaných variant
 
 ```rust
 fn main() {
@@ -209,8 +209,9 @@ fn main() {
 fn main() {
     let x = 'c';
 
+    // ..= znamená včetně posledního prvku
     match x {
-        'a'..='j' => println!("early ASCII letter"), // ..= znamená včetně
+        'a'..='j' => println!("early ASCII letter"),
         'k'..='z' => println!("late ASCII letter"),
         _ => println!("something else"),
     }
@@ -563,11 +564,11 @@ fn main() {
 use std::fs::File;
 
 fn main() {
-    // Pri chybe ukonci program s generickou chybovou zpravou
-    let f = File::open("hello.txt").unwrap();
+    // Při chybě ukončí program s obecnou chybovou zprávou
+    let file = File::open("hello.txt").unwrap();
 
-    // Pri chybe ukonci program s nasi vlastni chybovou hlaskou
-    let f = File::open("hello.txt").expect("hello.txt se nepovedlo otevřít");
+    // Při chybě ukončí program s naší vlastní chybovou hláškou
+    let file = File::open("hello.txt").expect("hello.txt se nepovedlo otevřít");
 }
 
 ```
