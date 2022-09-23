@@ -305,7 +305,7 @@ fn main() {
 
 ---
 
-# Makro Debug
+### Makro Debug
 
 ```rust 
 #[derive(Debug)]
@@ -320,10 +320,7 @@ fn main() {
         height: 50,
     };
 
-    println!(
-        "The area of the rectangle is {} square pixels.",
-        area(&rect1)
-    );
+    println!("The area of the rectangle is {} square pixels.", area(&rect1));
     
     println!("rect1 is {:?}", rect1);
 }
