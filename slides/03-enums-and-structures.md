@@ -84,7 +84,7 @@ fn main() {
 
 ---
 
-# Zpracování hodnoty pomocí if
+# Zpracování hodnoty pomocí `if`
 
 ```rust
 fn main() {
@@ -497,7 +497,7 @@ panic = 'abort'
 
 # Výčet Result
 
-Funkce, kde může nastat chyba, vrací result. Z něm můžeme vyčíst výsledek nebo chybu
+Funkce, kde může nastat chyba, vrací `Result`. Z něho můžeme vyčíst výsledek, nebo chybu.
 
 ```rust
 enum Result<T, E> {
