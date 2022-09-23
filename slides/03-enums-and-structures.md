@@ -722,48 +722,6 @@ fn main() {
 
 ---
 
-# Definice argumentů v YAML
-
-```yaml
-name: myapp
-version: "1.0"
-author: John Smith
-about: Does awesome things
-args:
-    - config:
-        short: c
-        long: config
-        value_name: FILE
-        about: Sets a custom config file
-        takes_value: true
-    - INPUT:
-        about: Sets the input file to use
-        required: true
-        index: 1
-    - verbose:
-        short: v
-        multiple_occurrences: true
-        about: Sets the level of verbosity
-```
-
----
-
-# Definice argumentů v YAML
-
-
-```rust
-use clap::{App, load_yaml};
-
-fn main() {
-    let yaml = load_yaml!("cli.yaml");
-    let matches = App::from(yaml).get_matches();
-
-    // ...zpracování `matches` jako v předchozím příkladu
-}
-```
-
----
-
 # Standardní vstup
 
 ```rust
