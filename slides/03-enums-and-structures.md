@@ -443,6 +443,7 @@ pub fn notify<T: Summary>(item: &T) {
 
 ```rust
 pub fn notify(item: &(impl Summary + Display)) {
+    // ...
 }
 ```
 
@@ -457,6 +458,7 @@ fn some_function<T, U>(t: &T, u: &U) -> i32
     where T: Display + Clone,
           U: Clone + Debug
 {
+    // ...
 }
 ```
 
@@ -726,7 +728,7 @@ fn main() {
     let yaml = load_yaml!("cli.yaml");
     let matches = App::from(yaml).get_matches();
 
-    // zpracování matches jako v předchozím příkladu
+    // ...zpracování `matches` jako v předchozím příkladu
 }
 ```
 
