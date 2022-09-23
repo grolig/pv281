@@ -505,9 +505,11 @@ enum Result<T, E> {
 
 --- 
 
-# Příklad ošetření chybového stavu
+### Příklad ošetření chybového stavu
 
-Pokud chceme otevřít soubor, tak může dojít k chybě. Ošetřit ji můžeme následně:
+Pokud chceme otevřít soubor, tak může dojít k chybě.
+Ošetřit ji můžeme následně:
+
 ```rust
 use std::fs::File;
 
@@ -516,7 +518,7 @@ fn main() {
 
     let f = match f {
         Ok(file) => file,
-        Err(error) => panic!("Problem opening the file: {:?}", error),
+        Err(error) => panic!("Problem opening the 'hello.txt' file: {:?}", error),
     };
 }
 ```
