@@ -622,6 +622,26 @@ fn main() {
 
 ---
 
+# `clap` crate
+
+Nejpopulárnější knihovna na zpracování argumentů z CLI.
+Závislost se liší podle toho, jestli budeme používat
+`derive` pattern:
+
+```toml
+[dependencies]
+clap = { version = "3.2.22", features = ["derive"] }
+```
+
+nebo `builder` pattern:
+
+```toml
+[dependencies]
+clap = "3.2.22"
+```
+
+---
+
 # Jednodušší zpracování přes clap
 
 ```rust
