@@ -53,7 +53,8 @@
 }
 
 /* Dracula Cyan */
-.hljs-meta .hljs-doctag,
+.hljs-meta,
+.hljs-doctag,
 .hljs-built_in,
 .hljs-selector-tag,
 .hljs-section,
