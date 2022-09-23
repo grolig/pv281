@@ -811,7 +811,9 @@ use std::io::prelude::*;
 
 fn main() -> std::io::Result<()> {
     let mut file = File::create("foo.txt")?;
+    
     file.write_all(b"Hello, world!")?;
+    
     Ok(())
 }
 ```
@@ -827,8 +829,10 @@ use std::io::prelude::*;
 fn main() -> std::io::Result<()> {
     let mut file = File::open("foo.txt")?;
     let mut contents = String::new();
+    
     file.read_to_string(&mut contents)?;
     assert_eq!(contents, "Hello, world!");
+    
     Ok(())
 }
 ```
@@ -846,8 +850,10 @@ fn main() -> std::io::Result<()> {
     let file = File::open("foo.txt")?;
     let mut buf_reader = BufReader::new(file);
     let mut contents = String::new();
+    
     buf_reader.read_to_string(&mut contents)?;
     assert_eq!(contents, "Hello, world!");
+    
     Ok(())
 }
 ```
@@ -885,6 +891,7 @@ fn main() -> std::io::Result<()> {
     f.write_all(b"Hello, world!")?;
 
     f.sync_all()?;
+    
     Ok(())
 }
 ```
@@ -903,6 +910,7 @@ fn main() -> std::io::Result<()> {
 
     buffer.write_all(b"some bytes")?;
     buffer.flush()?;
+    
     Ok(())
 }
 ```
@@ -919,6 +927,7 @@ fn main() {
     let data = "Some data!";
     let f = File::create("/tmp/foo").expect("Unable to create file");
     let mut f = BufWriter::new(f);
+    
     f.write_all(data.as_bytes()).expect("Unable to write data");
 }
 ```
