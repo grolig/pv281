@@ -65,7 +65,6 @@ fn main() {
     println!("roses are #{:06x}", Color::Red as i32);
     println!("violets are #{:06x}", Color::Blue as i32);
 }
-
 ```
 
 ---
@@ -77,7 +76,6 @@ enum Delivery {
     Pickup,
     Parcel(String),
 }
-
 
 fn main() {
     let delivery = Delivery::Parcel(String::from("Ceska 0, 60200 Brno"));
@@ -146,7 +144,6 @@ fn main() {
 
     println!("at the end: x = {:?}, y = {:?}", x, y);
 }
-
 ```
 
 ---
@@ -198,7 +195,6 @@ fn main() {
         _ => println!("anything"),
     }
 }
-
 ```
 
 ---
@@ -275,7 +271,6 @@ fn main() {
 
     user1.email = String::from("anotheremail@example.com");
 }
-
 ```
 
 ---
@@ -312,7 +307,6 @@ fn main() {
         ...user1
     };
 }
-
 ```
 
 ---
@@ -570,7 +564,6 @@ fn main() {
     // Při chybě ukončí program s naší vlastní chybovou hláškou
     let file = File::open("hello.txt").expect("hello.txt se nepovedlo otevřít");
 }
-
 ```
 
 ---
