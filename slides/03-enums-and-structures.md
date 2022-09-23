@@ -630,14 +630,14 @@ Závislost se liší podle toho, jestli budeme používat
 
 ```toml
 [dependencies]
-clap = { version = "3.2.22", features = ["derive"] }
+clap = { version = "4.0.0-rc.2", features = ["derive"] }
 ```
 
 nebo `builder` pattern:
 
 ```toml
 [dependencies]
-clap = "3.2.22"
+clap = "4.0.0-rc.2"
 ```
 
 ---
@@ -645,10 +645,10 @@ clap = "3.2.22"
 # Jednodušší zpracování přes clap
 
 ```rust
-use clap::Parser;
+use clap::{ArgAction, Parser};
 
-/// This doc string acts as a help message when the user runs '--help'
-/// The same applies for all doc strings on struct fields
+/// This doc string acts as a help message when the user runs '--help'.
+/// The same applies for all doc strings on struct fields.
 #[derive(Parser)]
 #[clap(version = "1.0", author = "John Smith")]
 struct Opts {
@@ -660,8 +660,8 @@ struct Opts {
     input: String,
     
     /// A level of verbosity, and can be used multiple times
-    #[clap(short = 'v', long = "verbose", parse(from_occurrences))]
-    verbose: i32,
+    #[clap(short = 'v', long = "verbose", action = ArgAction::Count)]
+    verbose: u8,
 }
 ```
 
@@ -678,7 +678,7 @@ fn main() {
     println!("Using input file: {}", opts.input);
 
     // Vary the output based on how many times the user used the "verbose" flag
-    // (i.e. 'myprog -v -v -v' or 'myprog -vvv' vs 'myprog -v'
+    // (i.e. 'myprog -v -v -v' or 'myprog -vvv' vs 'myprog -v')
     match opts.verbose {
         0 => println!("No verbose info"),
         1 => println!("Some verbose info"),
@@ -693,10 +693,10 @@ fn main() {
 # Zpracování přes builder pattern
 
 ```rust
-use clap::{arg, App, Arg, ArgAction};
+use clap::{arg, Arg, ArgAction, Command};
 
 fn main() {
-    let matches = App::new("myapp")
+    let matches = Command::new("myapp")
         .version("1.0")
         .author("John Smith")
         .about("Does awesome things")
@@ -705,10 +705,10 @@ fn main() {
         .arg(Arg::new("verbosity").short('v').long("verbose").action(ArgAction::Count))
         .get_matches();
 
-    if let Some(i) = matches.value_of("INPUT") {
+    if let Some(i) = matches.get_one::<String>("INPUT") {
         println!("Value for input: {}", i);
     }
-    if let Some(c) = matches.value_of("config") {
+    if let Some(c) = matches.get_one::<String>("config") {
         println!("Value for config: {}", c);
     }
     match matches.get_count("verbosity") {
