@@ -890,6 +890,8 @@ fn main() {
 }
 ```
 
+Poznámka: dočasný adresář by bylo lepší zjistit nezávisle na platformě pomocí `env::temp_dir()`.
+
 ---
 # <!--fit--> Dotazy?
 
