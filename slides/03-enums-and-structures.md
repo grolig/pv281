@@ -425,8 +425,12 @@ pub fn notify(item: &impl Summary) {
 
 # Trait Bound
 
-Impl je syntaktické pozlátko pro delší zápis, kterému se říká trait bound. Následující výpis kódu je shodný s přechozím. Jen je delší a hůře čitelný. Proto doporučujeme používat impl.
-
+Syntax `impl Trait` u parametru je syntaktický cukr pro delší zápis, kterému se říká **trait bound**. Následující bloky kódu jsou ekvivalentní, jen je zápis pomocí trait bound delší a hůře čitelný. Proto doporučujeme používat `impl Trait`.
+```rust
+pub fn notify(item: &impl Summary) {
+    println!("Breaking news! {}", item.summarize());
+}
+```
 ```rust
 pub fn notify<T: Summary>(item: &T) {
     println!("Breaking news! {}", item.summarize());
