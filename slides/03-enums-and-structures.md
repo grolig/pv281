@@ -284,7 +284,7 @@ fn build_user(email: String, username: String) -> User {
 
 ---
 
-# Vytvoření z již existující struktury
+### Vytvoření z již existující struktury
 
 ```rust 
 fn main() {
