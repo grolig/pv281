@@ -769,13 +769,16 @@ fn main() {
 ```rust
 use std::io;
 
-let mut input = String::new();
-match io::stdin().read_line(&mut input) {
-    Ok(n) => {
-        println!("{} bytes read", n);
-        println!("{}", input);
-    }
-    Err(error) => println!("error: {}", error),
+fn main() {
+   let mut input = String::new();
+   
+   match io::stdin().read_line(&mut input) {
+       Ok(n) => {
+           println!("{} bytes read", n);
+           println!("{}", input);
+       }
+       Err(error) => println!("error: {}", error),
+   }
 }
 ```
 
@@ -786,9 +789,11 @@ match io::stdin().read_line(&mut input) {
 ```rust
 use std::io;
 
-let lines = io::stdin().lines();
-for line in lines {
-    println!("got a line: {}", line.unwrap());
+fn main() {
+   let lines = io::stdin().lines();
+   for line in lines {
+       println!("got a line: {}", line.unwrap());
+   }
 }
 ```
 
