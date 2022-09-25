@@ -57,6 +57,53 @@ cargo init
 ```
 
 ---
+<!-- _class: split -->
+
+<div class=left-column>
+
+#### Binárka
+```
+.
+├── .git/
+├── .gitignore
+├── Cargo.toml
+└── src
+    └── main.rs
+```
+```rust
+fn main() {
+    println!("Hello, world!");
+}
+```
+</div>
+<div class=right-column>
+
+#### Knihovna
+```
+.
+├── .git/
+├── .gitignore
+├── Cargo.toml
+└── src
+    └── lib.rs
+```
+```rust
+pub fn add(left: usize, right: usize) -> usize { left + right }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn it_works() {
+        let result = add(2, 2);
+        assert_eq!(result, 4);
+    }
+}
+```
+</div>
+
+---
 
 # Sestavení projektu
 
