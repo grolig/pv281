@@ -372,25 +372,27 @@ section.split {
   padding-top: 0;
   display: grid;
   grid-template-columns: 45% 45%;
-  grid-template-rows: 1.3em auto;
+  grid-template-rows: 1.5em 1.3em auto;
   grid-template-areas:
         "slideheading slideheading"
+        "columnheading columnheading"
         "leftpanel rightpanel";
 }
-section.split .left-column {
-  margin-right: 5%;
-}
-section.split .right-column {
-  margin-left: 5%;
+section.split h3 {
+  grid-area: slideheading;
+  font-size: 1.3em;
+  margin: 1em 0 0 0;
 }
 section.split h4 {
-  grid-area: slideheading;
+  grid-area: columnheading;
   font-size: 1.3em;
   margin: 0 0 0 0;
 }
 section.split .left-column {
   grid-area: leftpanel;
+  margin: auto;
 }
 section.split .right-column {
   grid-area: rightpanel;
+  margin: auto;
 }
