@@ -12,12 +12,12 @@ paginate: true
 
 # Obsah
 
-# TODO: dát sem lifetime
 1. Enumy
 2. Pattern Matching
 3. Struktury
-4. Ošetření chyb
-5. CLI aplikace
+4. Traity
+5. Ošetření chyb
+6. CLI aplikace
 
 ---
 
@@ -84,7 +84,15 @@ fn main() {
 
 ---
 
-# Zpracování hodnoty pomocí `if`
+# Paměťová reprezentace
+
+* stejně jako union je velikost určena podle největší položky
+* kromě toho přidává jestě skrytou položku pro diskriminant
+* velikost diskriminantu je závislá na počtu variant
+
+---
+
+# Zpracování hodnoty pomocí `if let`
 
 ```rust
 fn main() {
@@ -231,7 +239,57 @@ fn main() {
 
 ---
 
-# Definice struktury
+# Definice struktury dle C
+
+```rust
+#[repr(C)]
+struct Foo {
+  tiny: bool,
+  normal: u32,
+  small: u8,
+  long: u64,
+  short: u16,
+}
+```
+
+---
+
+# Zarovnání v paměti dle C
+
+* nejprve překladač objeví ```tiny```, který má logickou velikost 1 bit - dostane 1 bajt
+* následně vidí ```normal```, který má 4 bajty
+* Pokud by ```tiny``` měl 1 byte, byly by problémy se zarovnáním proti ```normal```. Proto je za ```tiny``` vložené zarovnání velikosti 3 bajty.
+* Následuje ```small``` - má velikost 1 byte. Aktuální zarovnání je 1 + 3 + 4 = 8. Je zarovnáno, takže ```small``` může být vloženo na konec.
+* S ```long``` máme zase stejný problém se zarovnáním. Abychom zarovnali, muísme za ```small``` vložit 7 bajtů.
+* ```short``` vložíme přímo. 
+* zarovnáme strukturu podle největší položky, takže za ```short``` přídáme 6 bajtů
+
+---
+
+# Změny v Rustu
+
+* C reprezentace vyžaduje, aby položky byly za sebou dle definice
+* výchozí (```repr(Rust)```) toto omezení odstraňuje
+* v Rustu není ani deterministické řazení položek
+* tato struktura po přeskládání položek bude mít pouze 16 bajtů, nepotřebujeme zarovnání
+
+---
+
+# Alternativní modely
+
+```#[repr(packed)]``` 
+* nepoužívá zarovnání
+* se používá při scénářích s málo pamětí, nebo pro pomalé síťové spojení
+* může velmi zpomalit vykonávání, může dojít k pádu pokud CPU podporuje pouze zarovnané argumenty.
+
+```#[repr(align(n))]``` 
+* umožňuje větší zarovnání než by bylo nutné
+* pro scénáře, kdy potřebujeme zařidít, aby položky byly v různých cache lines. Vyhneme se problému __false sharing__. 
+* K false sharingu dochází, když různá CPU sdíli cache line. Oba se ji mohou pokusit změnit současně.
+
+---
+
+# Další ukázka struktury
 
 ```rust 
 struct User {
@@ -332,6 +390,197 @@ fn area(rectangle: &Rectangle) -> u32 {
 
 ---
 
+# Struktury s referencí
+
+* pokud struktura má mít referenci, tak musíme definova lifetime
+
+```rust
+struct Extrema<'elt> {
+    greatest: &'elt i32,
+    least: &'elt i32
+}
+```
+
+---
+
+# Příklad použití funkce extrema
+
+```rust
+fn find_extrema<'s>(slice: &'s [i32]) -> Extrema<'s> {
+    let mut greatest = &slice[0];
+    let mut least = &slice[0];
+
+    for i in 1..slice.len() {
+        if slice[i] < *least    { least    = &slice[i]; }
+        if slice[i] > *greatest { greatest = &slice[i]; }
+    }
+    Extrema { greatest, least }
+}
+```
+
+---
+
+# Lifetime
+
+Je konstrukce překladače, která dává dobu platnosti reference. Dříve bylo nutností ji explicitně definovat, dneska už není moc často třeba. Kód by  měl většinou jít napsat i bez specifikace lifetimu.
+
+---
+
+# Lifetime
+```rust 
+fn main() {
+    let i = 3; // Lifetime pro `i` začíná. ────────────────┐
+    //                                                     │
+    { //                                                   │
+        let borrow1 = &i; // `borrow1` lifetime začíná. ──┐│
+        //                                                ││
+        println!("borrow1: {}", borrow1); //              ││
+    } // `borrow1 koncí. ─────────────────────────────────┘│
+    //                                                     │
+    //                                                     │
+    { //                                                   │
+        let borrow2 = &i; // `borrow2` lifetime začíná. ──┐│
+        //                                                ││
+        println!("borrow2: {}", borrow2); //              ││
+    } // `borrow2` končí. ────────────────────────────────┘│
+    //                                                     │
+}   // Lifetime končí. ────────────────────────────────────┘
+
+```
+
+---
+
+# Explicitní anotace lifetimu
+```rust
+// `print_refs` bere dvě reference na  `i32`, které mají
+// lifetime `'a` a `'b`. Oba musí žít minimálně stejné 
+// dlouho jako funkce `print_refs`.
+fn print_refs<'a, 'b>(x: &'a i32, y: &'b mut i32) {
+    println!("x is {} and y is {}", x, y);
+}
+```
+
+---
+
+# Lifetime s generikou
+
+Pokud v předchozím příkladu nepoužijeme lifetime, tak příklad nejde přeložit. Překladač netuší, jestli bude návratová hodnota mít lifetime x nebo y. 
+
+---
+
+# Coercion
+```rust
+// Here, Rust infers a lifetime that is as short as possible.
+// The two references are then coerced to that lifetime.
+fn multiply<'a>(first: &'a i32, second: &'a i32) -> i32 {
+    first * second
+}
+
+// `<'a: 'b, 'b>` reads as lifetime `'a` is at least as long as `'b`.
+// Here, we take in an `&'a i32` and return a `&'b i32` as a result of coercion.
+fn choose_first<'a: 'b, 'b>(first: &'a i32, _: &'b i32) -> &'b i32 {
+    first
+}
+
+fn main() {
+    let first = 2; // Longer lifetime
+    
+    {
+        let second = 3; // Shorter lifetime
+        
+        println!("The product is {}", multiply(&first, &second));
+        println!("{} is the first", choose_first(&first, &second));
+    };
+}
+```
+
+---
+
+# Lifetime s generikou
+```rust
+use std::fmt::Display;
+
+fn longest_with_an_announcement<'a, T>(
+    x: &'a str,
+    y: &'a str,
+    ann: T,
+) -> &'a str
+where
+    T: Display,
+{
+    println!("Announcement! {}", ann);
+    if x.len() > y.len() {
+        x
+    } else {
+        y
+    }
+}
+```
+
+---
+
+# Další příklad generiky
+```rust
+// Here a reference to `T` is taken where `T` implements
+// `Debug` and all *references* in `T` outlive `'a`. In
+// addition, `'a` must outlive the function.
+fn print_ref<'a, T>(t: &'a T) where
+    T: Debug + 'a {
+    println!("`print_ref`: t is {:?}", t);
+}
+```
+
+---
+
+# Lifetime u struktur
+```rust
+// Typ `Borrowed` obsahuje referenci na
+// `i32`. Reference`i32` musí přežít `Borrowed`.
+// Pokud máme ve struktuře referenci, tak musíme lifetime definovat vždy.
+#[derive(Debug)]
+struct Borrowed<'a>(&'a i32);
+
+// Enum, který je `i32` or nebo referencí na něj.
+#[derive(Debug)]
+enum Either<'a> {
+    Num(i32),
+    Ref(&'a i32),
+}
+
+fn main() {
+    let x = 18;
+    let y = 15;
+
+    let single = Borrowed(&x);
+    let reference = Either::Ref(&x);
+    let number    = Either::Num(y);
+
+    println!("x is borrowed in {:?}", single);
+    println!("x is borrowed in {:?}", reference);
+    println!("y is *not* borrowed in {:?}", number);
+}
+```
+
+---
+
+# Elision
+
+Pro běžné příklady určuje lifetime sám překladač. Dělá to podle následujících pravidel:
+1. pravidlo pro životnost vstupních parametrů
+   Každý vstupní parametr dostává vlastní lifetime. 
+2. pravidlo pro životnost výstupních parametrů
+   Pokud má funkce jeden vstupní parametr, tak všechny výstupy mají stejný lifetime.
+3. pravidlo pro metody s parametrem self
+   Pokud má metoda vstupní parametr referenci na self, všechny výstupní parametry mají stejný lifetime.
+
+---
+
+# 'static
+
+Snažte se mu vyhnout. Dává životnost po celý běh programu. Hodí se například pro chybové hlášky.
+
+---
+
 # Traity
 
 Zjednodušeně můžeme **trait** považovat za **interface** v jiných programovacích jazycích.
@@ -343,12 +592,12 @@ Definujeme pomocí nich společnou funkcionalitu.
 # Implementace traitu
 
 ```rust
-pub trait Summary {
+trait Summary {
     fn summarize(&self) -> String;
 }
 
-pub struct NewsArticle {
-    pub headline: String,
+struct NewsArticle {
+    headline: String,
     pub location: String,
     pub author: String,
     pub content: String,
@@ -367,15 +616,15 @@ impl Summary for NewsArticle {
 ### Implementace traitu pro druhou strukturu
 
 ```rust
-pub trait Summary {
+trait Summary {
     fn summarize(&self) -> String;
 }
 
-pub struct Tweet {
-    pub username: String,
-    pub content: String,
-    pub reply: bool,
-    pub retweet: bool,
+struct Tweet {
+    username: String,
+    content: String,
+    reply: bool,
+    retweet: bool,
 }
 
 impl Summary for Tweet {
@@ -390,7 +639,7 @@ impl Summary for Tweet {
 # Výchozí implementace
 
 ```rust
-pub trait Summary {
+trait Summary {
     fn summarize(&self) -> String {
         String::from("(Read more...)")
     }
@@ -402,7 +651,7 @@ pub trait Summary {
 # Využití jiných metod ve výchozí implementaci
 
 ```rust
-pub trait Summary {
+trait Summary {
     fn summarize_author(&self) -> String;
 
     fn summarize(&self) -> String {
@@ -416,23 +665,26 @@ pub trait Summary {
 # Trait jako parametr
 
 ```rust
-pub fn notify(item: &impl Summary) {
+fn notify(item: &impl Summary) {
     println!("Breaking news! {}", item.summarize());
 }
 ```
+
 
 ---
 
 # Trait Bound
 
 Syntax `impl Trait` u parametru je syntaktický cukr pro delší zápis, kterému se říká **trait bound**. Následující bloky kódu jsou ekvivalentní, jen je zápis pomocí trait bound delší a hůře čitelný. Proto doporučujeme používat `impl Trait`.
+
 ```rust
-pub fn notify(item: &impl Summary) {
+fn notify(item: &impl Summary) {
     println!("Breaking news! {}", item.summarize());
 }
 ```
+
 ```rust
-pub fn notify<T: Summary>(item: &T) {
+fn notify<T: Summary>(item: &T) {
     println!("Breaking news! {}", item.summarize());
 }
 ```
@@ -459,6 +711,101 @@ where T: Display + Clone,
       U: Clone + Debug
 {
     // ...
+}
+```
+
+---
+
+# Dynamický trait
+
+```rust
+use std::io::Write;
+
+fn say_hello(out: &mut dyn Write) -> std::io::Result<()> {
+    out.write_all(b"hello world\n")?;
+    out.flush()
+}
+```
+
+---
+
+# Trait Object
+
+* ```dyn Write``` předstravuje jednu variantu polymorfismu, které říkáme trait object.
+* slouží k provedení volání přes virtuální tabulku (vtable)
+* C++ používá vptr jako součást struktury, Rust oproti tomu má fat pointer. Nic dalšího se do struktury nepřidává.
+* trait object nemůže být použit jako typ proměnné, reference na něj ale ano
+* trait object není známý v době překladu, proto obsahuje další informace o typu referenta
+* Rust umožní koverzi Box<File> na Box<dyn Write>
+
+---
+
+# Reference na trait object
+
+V jazyce Java je proměnná typu OutputStream (Java analogie pro std::io::Write) referencí na libovolný objekt, který implementuje OutputStream. Skutečnost, že se jedná o referenci, je samozřejmá. 
+
+---
+
+# Reference na trait object
+
+```rust
+let mut buf: Vec<u8> = vec![];
+let writer: &mut dyn Write = &mut buf;
+```
+
+---
+
+# Lifetime traitu
+```rust
+// A struct with annotation of lifetimes.
+#[derive(Debug)]
+struct Borrowed<'a> {
+    x: &'a i32,
+}
+
+// Annotate lifetimes to impl.
+impl<'a> Default for Borrowed<'a> {
+    fn default() -> Self {
+        Self {
+            x: &10,
+        }
+    }
+}
+
+fn main() {
+    let b: Borrowed = Default::default();
+    println!("b is {:?}", b);
+}
+```
+
+---
+
+# Subtrait
+
+* můžeme vytvořit subtrait, který vyžaduje i implementaci nadřezeného
+* říkáme, že ```Creature``` je extension ```Visible```
+
+```rust
+trait Creature: Visible {
+    fn position(&self) -> (i32, i32);
+    fn facing(&self) -> Direction;
+    ...
+}
+```
+
+---
+
+# Subtrait
+
+* na pořadí implementace nezáleží
+
+```rust
+impl Visible for Broom {
+    ...
+}
+
+impl Creature for Broom {
+    ...
 }
 ```
 
@@ -551,6 +898,24 @@ fn main() {
 
 ---
 
+# vlastní zpracování chyby pomoc &dyn Error
+
+```rust
+use std::error::Error;
+use std::io::{Write, stderr};
+
+fn print_error(mut err: &dyn Error) {
+    let _ = writeln!(stderr(), "error: {}", err);
+    while let Some(source) = err.source() {
+        let _ = writeln!(stderr(), "caused by: {}", source);
+        err = source;
+    }
+}
+
+```
+
+---
+
 # Zpanikaření v případě chyby
 
 ```rust
@@ -583,6 +948,42 @@ fn read_username_from_file() -> Result<String, io::Error> {
     File::open("hello.txt")?.read_to_string(&mut s)?;
 
     Ok(s)
+}
+```
+
+---
+
+# Práce s chybami různých typů
+
+```rust
+type GenericError = Box<dyn std::error::Error + Send + Sync + 'static>;
+type GenericResult<T> = Result<T, GenericError>;
+```
+
+---
+
+---
+
+# `anyhow`
+
+Nejpopulárnější knihovna pro práci s chybami je anyhow.
+
+```toml
+[dependencies]
+anyhow = "1"
+```
+
+---
+
+# Práce s chybami přes anyhow
+
+```rust
+use anyhow::Result;
+
+fn get_cluster_info() -> Result<ClusterMap> {
+    let config = std::fs::read_to_string("cluster.json")?;
+    let map: ClusterMap = serde_json::from_str(&config)?;
+    Ok(map)
 }
 ```
 
@@ -765,7 +1166,7 @@ fn main() {
 
 ```rust
 use std::fs::File;
-use std::io::prelude::*;
+use std::io::prelude::*; // vlozi vezne pouzivane traity
 
 fn main() -> std::io::Result<()> {
     let mut file = File::create("foo.txt")?;

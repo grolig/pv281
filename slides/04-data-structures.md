@@ -12,6 +12,8 @@ paginate: true
 
 # Obsah
 
+1. Generika
+2. Utility traity
 1. Vektory
 2. Iterátory
 3. Hashová tabulka

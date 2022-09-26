@@ -12,7 +12,7 @@ paginate: true
 
 # Obsah
 
-1. Lifetimes
+1. TBD
 2. Plánování procesů
 3. Paralelismus v Rustu
 4. Úvod do async
@@ -22,7 +22,7 @@ paginate: true
 
 # Lifetime
 
-Je konstrukce překladače, která říká, zda je borrow validní. Dříve byl nutností, dneska už není třeba moc často používat. Kód by měl jít napsat většinou i bez specifikace lifetimu.
+Je konstrukce překladače, která říká, zda je reference validní. Dříve byl nutností, dneska už není třeba moc často používat. Kód by měl jít napsat většinou i bez specifikace lifetimu.
 
 ---
 
