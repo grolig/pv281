@@ -259,8 +259,13 @@ struct Foo {
 * nejprve překladač objeví ```tiny```, který má logickou velikost 1 bit - dostane 1 bajt
 * následně vidí ```normal```, který má 4 bajty
 * Pokud by ```tiny``` měl 1 byte, byly by problémy se zarovnáním proti ```normal```. Proto je za ```tiny``` vložené zarovnání velikosti 3 bajty.
+
+---
+
+# Zarovnání v paměti dle C
+
 * Následuje ```small``` - má velikost 1 byte. Aktuální zarovnání je 1 + 3 + 4 = 8. Je zarovnáno, takže ```small``` může být vloženo na konec.
-* S ```long``` máme zase stejný problém se zarovnáním. Abychom zarovnali, muísme za ```small``` vložit 7 bajtů.
+* S ```long``` máme zase stejný problém se zarovnáním. Abychom zarovnali, musíme za ```small``` vložit 7 bajtů.
 * ```short``` vložíme přímo. 
 * zarovnáme strukturu podle největší položky, takže za ```short``` přídáme 6 bajtů
 
@@ -281,6 +286,10 @@ struct Foo {
 * nepoužívá zarovnání
 * se používá při scénářích s málo pamětí, nebo pro pomalé síťové spojení
 * může velmi zpomalit vykonávání, může dojít k pádu pokud CPU podporuje pouze zarovnané argumenty.
+
+---
+
+# Alternativní modely
 
 ```#[repr(align(n))]``` 
 * umožňuje větší zarovnání než by bylo nutné
