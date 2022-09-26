@@ -84,15 +84,16 @@ fn main() {
 
 ---
 
-# Paměťová reprezentace
+# Paměťová reprezentace enumu
 
-* stejně jako union je velikost určena podle největší položky
-* kromě toho přidává jestě skrytou položku pro diskriminant
-* velikost diskriminantu je závislá na počtu variant
+* Velikost je určena podle největší položky
+  (stejně jako např. `union` v C).
+* Kromě toho je zde ještě skrytá položka - diskriminant.
+* Velikost diskriminantu je závislá na počtu variant enumu.
 
 ---
 
-# Zpracování hodnoty pomocí `if let`
+### Zpracování hodnoty pomocí `if let`
 
 ```rust
 fn main() {
@@ -113,7 +114,7 @@ fn main() {
 # Výhody pattern matchingu
 
 1. Kontrola všech variant větvení
-   To pomáhá i při refaktoringu - nikdy nezpomenete změnit další místa v kódu
+   To pomáhá i při refaktoringu – nikdy nezpomenete změnit další místa v kódu
 2. Lepší čitelnost
 
 ---
@@ -254,46 +255,50 @@ struct Foo {
 
 ---
 
-# Zarovnání v paměti dle C
+### Zarovnání v paměti dle C
 
-* nejprve překladač objeví ```tiny```, který má logickou velikost 1 bit - dostane 1 bajt
-* následně vidí ```normal```, který má 4 bajty
-* Pokud by ```tiny``` měl 1 byte, byly by problémy se zarovnáním proti ```normal```. Proto je za ```tiny``` vložené zarovnání velikosti 3 bajty.
+* Překladač objeví `tiny`, který má logickou velikost 1 bit – dostane 1 bajt.
+* Následně vidí `normal`, který má 4 bajty.
+* Pokud by `tiny` měl pouze 1 bajt, byly by problémy se zarovnáním proti `normal`. Proto je za `tiny` vložené **zarovnání** o velikosti 3 bajty.
 
 ---
 
-# Zarovnání v paměti dle C
+### Zarovnání v paměti dle C
 
-* Následuje ```small``` - má velikost 1 byte. Aktuální zarovnání je 1 + 3 + 4 = 8. Je zarovnáno, takže ```small``` může být vloženo na konec.
-* S ```long``` máme zase stejný problém se zarovnáním. Abychom zarovnali, musíme za ```small``` vložit 7 bajtů.
-* ```short``` vložíme přímo. 
-* zarovnáme strukturu podle největší položky, takže za ```short``` přídáme 6 bajtů
+* Následuje `small` – má velikost 1 byte.
+  Aktuální zarovnání je 1 + 3 + 4 = 8.
+  Je zarovnáno, takže `small` může být vloženo na konec.
+* S `long` máme zase stejný problém se zarovnáním.
+  Abychom zarovnali, musíme za `small` vložit 7 bajtů.
+* Položku `short` vložíme přímo. 
+* Zarovnáme strukturu podle největší položky – za `short` přídáme 6 bajtů.
 
 ---
 
 # Změny v Rustu
 
-* C reprezentace vyžaduje, aby položky byly za sebou dle definice
-* výchozí (```repr(Rust)```) toto omezení odstraňuje
-* v Rustu není ani deterministické řazení položek
-* tato struktura po přeskládání položek bude mít pouze 16 bajtů, nepotřebujeme zarovnání
+* C reprezentace vyžaduje, aby položky byly za sebou dle definice.
+* Výchozí (`#[repr(Rust)]`) toto omezení odstraňuje.
+* V Rustu není ani deterministické řazení položek.
+* Předchozí struktura po přeskládání položek bude mít pouze 16 bajtů, nepotřebujeme zarovnání.
 
 ---
 
 # Alternativní modely
 
-```#[repr(packed)]``` 
-* nepoužívá zarovnání
-* se používá při scénářích s málo pamětí, nebo pro pomalé síťové spojení
-* může velmi zpomalit vykonávání, může dojít k pádu pokud CPU podporuje pouze zarovnané argumenty.
+`#[repr(packed)]`
+* Nepoužívá zarovnání.
+* Používá se při scénářích s málo pamětí nebo pro pomalé síťové spojení.
+* Může velmi zpomalit vykonávání a může dojít k pádu, pokud CPU podporuje pouze zarovnané argumenty.
 
 ---
 
 # Alternativní modely
 
-```#[repr(align(n))]``` 
-* umožňuje větší zarovnání než by bylo nutné
-* pro scénáře, kdy potřebujeme zařidít, aby položky byly v různých cache lines. Vyhneme se problému __false sharing__. 
+`#[repr(align(n))]` 
+* Umožňuje větší zarovnání, než by bylo nutné.
+* Pro scénáře, kdy potřebujeme zařidít, aby položky byly v různých _cache lines_.
+  Vyhneme se problému nazvanému __false sharing__.
 * K false sharingu dochází, když různá CPU sdíli cache line. Oba se ji mohou pokusit změnit současně.
 
 ---
@@ -401,7 +406,7 @@ fn area(rectangle: &Rectangle) -> u32 {
 
 # Struktury s referencí
 
-* pokud struktura má mít referenci, tak musíme definova lifetime
+Pokud má struktura obsahovat referenci, tak musíme definovat **lifetime**.
 
 ```rust
 struct Extrema<'elt> {
@@ -431,7 +436,7 @@ fn find_extrema<'s>(slice: &'s [i32]) -> Extrema<'s> {
 
 # Lifetime
 
-Je konstrukce překladače, která dává dobu platnosti reference. Dříve bylo nutností ji explicitně definovat, dneska už není moc často třeba. Kód by  měl většinou jít napsat i bez specifikace lifetimu.
+Je konstrukce překladače, která udává dobu platnosti reference. Dříve bylo nutností ji explicitně definovat, dneska už není moc často třeba. Kód by  měl většinou jít napsat i bez specifikace lifetimu.
 
 ---
 
@@ -461,9 +466,9 @@ fn main() {
 
 # Explicitní anotace lifetimu
 ```rust
-// `print_refs` bere dvě reference na  `i32`, které mají
-// lifetime `'a` a `'b`. Oba musí žít minimálně stejné 
-// dlouho jako funkce `print_refs`.
+// `print_refs` bere dvě reference na `i32`,
+// které mají lifetime `'a` a `'b`.
+// Obě reference musí žít minimálně stejně dlouho jako funkce `print_refs`.
 fn print_refs<'a, 'b>(x: &'a i32, y: &'b mut i32) {
     println!("x is {} and y is {}", x, y);
 }
@@ -471,9 +476,8 @@ fn print_refs<'a, 'b>(x: &'a i32, y: &'b mut i32) {
 
 ---
 
-# Lifetime s generikou
-
-Pokud v předchozím příkladu nepoužijeme lifetime, tak příklad nejde přeložit. Překladač netuší, jestli bude návratová hodnota mít lifetime x nebo y. 
+Pokud v předchozím příkladu nepoužijeme lifetime, tak příklad nejde přeložit.
+Překladač netuší, jestli bude návratová hodnota mít lifetime x nebo y. 
 
 ---
 
@@ -528,28 +532,15 @@ where
 
 ---
 
-# Další příklad generiky
-```rust
-// Here a reference to `T` is taken where `T` implements
-// `Debug` and all *references* in `T` outlive `'a`. In
-// addition, `'a` must outlive the function.
-fn print_ref<'a, T>(t: &'a T) where
-    T: Debug + 'a {
-    println!("`print_ref`: t is {:?}", t);
-}
-```
-
----
-
 # Lifetime u struktur
 ```rust
-// Typ `Borrowed` obsahuje referenci na
-// `i32`. Reference`i32` musí přežít `Borrowed`.
+// Typ `Borrowed` obsahuje referenci na `i32`.
+// Reference `i32` musí přežít `Borrowed`.
 // Pokud máme ve struktuře referenci, tak musíme lifetime definovat vždy.
 #[derive(Debug)]
 struct Borrowed<'a>(&'a i32);
 
-// Enum, který je `i32` or nebo referencí na něj.
+// Enum, který je buď `i32`, nebo referencí na něj.
 #[derive(Debug)]
 enum Either<'a> {
     Num(i32),
@@ -560,7 +551,7 @@ fn main() {
     let x = 18;
     let y = 15;
 
-    let single = Borrowed(&x);
+    let single    = Borrowed(&x);
     let reference = Either::Ref(&x);
     let number    = Either::Num(y);
 
@@ -574,12 +565,12 @@ fn main() {
 
 # Elision
 
-Pro běžné příklady určuje lifetime sám překladač. Dělá to podle následujících pravidel:
-1. pravidlo pro životnost vstupních parametrů
+Pro běžné příklady určuje lifetime sám překladač, a to podle následujících pravidel:
+- `Pravidlo pro životnost vstupních parametrů`
    Každý vstupní parametr dostává vlastní lifetime. 
-2. pravidlo pro životnost výstupních parametrů
+- `Pravidlo pro životnost výstupních parametrů`
    Pokud má funkce jeden vstupní parametr, tak všechny výstupy mají stejný lifetime.
-3. pravidlo pro metody s parametrem self
+- `Pravidlo pro metody s parametrem self`
    Pokud má metoda vstupní parametr referenci na self, všechny výstupní parametry mají stejný lifetime.
 
 ---
@@ -778,18 +769,19 @@ fn say_hello(out: &mut dyn Write) -> std::io::Result<()> {
 
 # Trait Object
 
-* ```dyn Write``` předstravuje jednu variantu polymorfismu, které říkáme trait object.
-* slouží k provedení volání přes virtuální tabulku (vtable)
-* C++ používá vptr jako součást struktury, Rust oproti tomu má fat pointer. Nic dalšího se do struktury nepřidává.
-* trait object nemůže být použit jako typ proměnné, reference na něj ale ano
-* trait object není známý v době překladu, proto obsahuje další informace o typu referenta
-* Rust umožní koverzi Box<File> na Box<dyn Write>
+* `dyn Write` představuje jednu variantu polymorfismu, které říkáme **trait object**.
+* Slouží k provedení volání přes virtuální tabulku (_vtable_).
+* C++ používá _vptr_ jako součást struktury, Rust oproti tomu má tzv. _fat pointer_. Nic dalšího se do struktury nepřidává.
+* Trait object nemůže být použit jako typ proměnné, reference na něj ale ano.
+* Trait object není známý v době překladu, proto obsahuje další informace o typu referenta.
+* Rust umožní konverzi `Box<File>` na `Box<dyn Write>`.
 
 ---
 
 # Reference na trait object
 
-V jazyce Java je proměnná typu OutputStream (Java analogie pro std::io::Write) referencí na libovolný objekt, který implementuje OutputStream. Skutečnost, že se jedná o referenci, je samozřejmá. 
+V jazyce Java je proměnná typu `OutputStream` (analogické k `std::io::Write` v Rustu) referencí na libovolný objekt, který implementuje `OutputStream`.
+Skutečnost, že se jedná o referenci, je samozřejmá. 
 
 ---
 
@@ -829,30 +821,29 @@ fn main() {
 
 # Subtrait
 
-* můžeme vytvořit subtrait, který vyžaduje i implementaci nadřezeného
-* říkáme, že ```Creature``` je extension ```Visible```
-
-```rust
-trait Creature: Visible {
-    fn position(&self) -> (i32, i32);
-    fn facing(&self) -> Direction;
-    ...
-}
-```
+* Můžeme vytvořit subtrait, který vyžaduje i implementaci nadřazeného traitu.
+* Řekneme, že `Creature` je **extension** `Visible`:
+  ```rust
+  trait Creature: Visible {
+      fn position(&self) -> (i32, i32);
+      fn facing(&self) -> Direction;
+      ...
+  }
+  ```
 
 ---
 
 # Subtrait
 
-* na pořadí implementace nezáleží
+Na pořadí implementace nezáleží:
 
 ```rust
 impl Visible for Broom {
-    ...
+    // ...
 }
 
 impl Creature for Broom {
-    ...
+    // ...
 }
 ```
 
@@ -945,7 +936,7 @@ fn main() {
 
 ---
 
-# vlastní zpracování chyby pomoc &dyn Error
+### Vlastní zpracování chyby pomocí `&dyn Error`
 
 ```rust
 use std::error::Error;
@@ -953,12 +944,12 @@ use std::io::{Write, stderr};
 
 fn print_error(mut err: &dyn Error) {
     let _ = writeln!(stderr(), "error: {}", err);
+    
     while let Some(source) = err.source() {
         let _ = writeln!(stderr(), "caused by: {}", source);
         err = source;
     }
 }
-
 ```
 
 ---
@@ -1011,9 +1002,10 @@ type GenericResult<T> = Result<T, GenericError>;
 
 ---
 
-# `anyhow`
+# `anyhow` crate
 
-Nejpopulárnější knihovna pro práci s chybami je anyhow. Je doporučená pro aplikace. Pro knihovny doporučujeme se podívat na thiserror
+Nejpopulárnější knihovna pro zjednodušení práce s chybami. Je doporučená pro aplikace, pro knihovny doporučujeme se podívat na `thiserror`.
+
 
 ```toml
 [dependencies]
@@ -1022,7 +1014,7 @@ anyhow = "1"
 
 ---
 
-# Práce s chybami přes anyhow
+# Práce s chybami pomocí anyhow
 
 ```rust
 use anyhow::Result;
