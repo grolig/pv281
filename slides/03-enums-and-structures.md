@@ -105,6 +105,15 @@ fn main() {
 }
 ```
 
+V příkladu využíváme důležitý enum `std::option::Option`:
+
+```rust
+enum Option<T> {
+    Some(T),
+    None,
+}
+```
+
 ---
 
 # <!--fit--> Pattern Matching
