@@ -12,8 +12,10 @@ paginate: true
 
 # Obsah
 
+?. Práce se soubory
 1. Generika
 2. Utility traity
+3. Operator overloading
 1. Vektory
 2. Iterátory
 3. Hashová tabulka
