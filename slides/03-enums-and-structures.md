@@ -604,23 +604,20 @@ impl Queue {
         self.younger.push(c);
     }
 
-    /// Pop a character off the front of a queue. Return `Some(c)` if there
-    /// was a character to pop, or `None` if the queue was empty.
+    /// Pop a character off the front of a queue. Return `Some(c)` if there was a character to pop, or `None` if the queue was empty.
     pub fn pop(&mut self) -> Option<char> {
         if self.older.is_empty() {
             if self.younger.is_empty() {
                 return None;
             }
 
-            // Bring the elements in younger over to older, and put them in
-            // the promised order.
+            // Bring the elements in younger over to older, and put them in the promised order.
             use std::mem::swap;
             swap(&mut self.older, &mut self.younger);
             self.older.reverse();
         }
 
-        // Now older is guaranteed to have something. Vec's pop method
-        // already returns an Option, so we're set.
+        // Now older is guaranteed to have something. Vec's pop method already returns an Option, so we're set.
         self.older.pop()
     }
 }
@@ -780,7 +777,7 @@ fn say_hello(out: &mut dyn Write) -> std::io::Result<()> {
 
 * `dyn Write` představuje jednu variantu polymorfismu, které říkáme **trait object**.
 * Slouží k provedení volání přes virtuální tabulku (_vtable_).
-* C++ používá _vptr_ jako součást struktury, Rust oproti tomu má tzv. _fat pointer_. Nic dalšího se do struktury nepřidává.
+* C++ používá _vptr_ jako součást struktury, Rust oproti tomu má tzv. _fat pointer_. Nic se do struktury nepřidává.
 * Trait object nemůže být použit jako typ proměnné, reference na něj ale ano.
 * Trait object není známý v době překladu, proto obsahuje další informace o typu referenta.
 * Rust umožní konverzi `Box<File>` na `Box<dyn Write>`.
@@ -836,7 +833,7 @@ fn main() {
   trait Creature: Visible {
       fn position(&self) -> (i32, i32);
       fn facing(&self) -> Direction;
-      ...
+      // ...
   }
   ```
 
@@ -908,10 +905,10 @@ Ošetřit ji můžeme následně:
 use std::fs::File;
 
 fn main() {
-    let f = File::open("hello.txt");
+    let file = File::open("hello.txt");
 
-    let f = match f {
-        Ok(file) => file,
+    let file = match file {
+        Ok(value) => value,
         Err(error) => panic!("Problem opening the 'hello.txt' file: {:?}", error),
     };
 }
@@ -1006,8 +1003,6 @@ fn read_username_from_file() -> Result<String, io::Error> {
 type GenericError = Box<dyn std::error::Error + Send + Sync + 'static>;
 type GenericResult<T> = Result<T, GenericError>;
 ```
-
----
 
 ---
 
