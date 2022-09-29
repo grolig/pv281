@@ -155,8 +155,9 @@ where
 ---
 
 
-1. Funkcionální přístup k iterování
-2. Výsledkem je nové pole/jiný ADT
+### Map
+
+Funkcionální přístup k iterování: na každý prvek iterátoru se zavolá closure, výsledkem je nový iterátor s modifikovanými prvky.
 
 ```rust
 fn main() {
@@ -172,7 +173,7 @@ fn main() {
 ```
 ---
 
-# Filter
+### Filter
 
 1. Pro získání podmnožiny prvků
 
@@ -190,7 +191,7 @@ fn main() {
 
 ---
 
-# Enumerate
+### Enumerate
 
 1. Vrací dvojici index a element
 2. index je typu usize, pro jiný typ použijte zip()
@@ -210,7 +211,7 @@ fn main() {
 
 ---
 
-# Skip
+### Skip
 
 1. Přeskočí n prvků
 
@@ -227,7 +228,7 @@ fn main() {
 
 ---
 
-# Take
+### Take
 
 1. Vezme n prvků
 
@@ -245,7 +246,7 @@ fn main() {
 
 ---
 
-# Sumace přes fold()
+### Fold
 
 1. Fold má akumulátor se kterým pracujeme
 
@@ -264,7 +265,7 @@ fn main() {
 
 ---
 
-# zip()
+### Zip
 
 ```rust
 #![feature(iter_zip)]
