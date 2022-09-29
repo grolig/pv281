@@ -491,7 +491,7 @@ fn main() {
 
 ---
 
-# Datové struktury
+# <!--fit--> Datové struktury
 
 ---
 
