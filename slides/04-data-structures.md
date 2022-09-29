@@ -327,7 +327,7 @@ Využití:
 2. Potřebujeme frontu.
 3. Potřebujeme obousměrnou frontu.
 
-Je implementován jako ring buffer. Tj. nemusí mít kontinuální prostor v paměti. Pokud chceme dělat slice, tak musíme mít kontinuální prostor. Na jeho získání jde využít funkce make_contiguous
+Je implementován jako _ring buffer_, tj. nemusí zabírat kontinuální prostor v paměti. Pokud chceme dělat slice, tak potřebujeme kontinuální prostor – získáme ho metodou `make_contiguous()`.
 
 ---
 
@@ -366,7 +366,7 @@ Využití:
 1. Potřebujeme slovník.
 2. Potřebujeme cache.
 
-Implementovaná podle Google SwissTable. Jako hashovací funkci používá SipHash 1-3. Ta je vhodná pro středně velké slovníky a je odolná na HashDoS útoky.
+Implementovaná podle _Google SwissTable_, jako hashovací funkci používá _SipHash 1-3_. Ta je vhodná pro středně velké slovníky a je odolná na HashDoS útoky.
 Pro malé a velké hashovací tabulky je vhodnější použít jinou hashovací funkci.
 
 ---
@@ -438,7 +438,8 @@ Využití:
 1. Chceme zaznamenávat prošlé prvky.
 2. Chceme mít hodnotu uloženou pouze jednou.
 
-Nejrychlejší implementace je HashSet. To platí ale jen do chvíle než potřebujeme mít položky sežezené. Potom už použijeme BTreeMap.
+Nejrychlejší implementace je `HashSet`.
+To platí ale jen do chvíle, než potřebujeme mít položky sežezené. Potom už použijeme `BTreeMap`.
 
 ---
 
