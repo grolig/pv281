@@ -287,24 +287,24 @@ fn main() {
 
 ---
 
-# Spojení dvou polí přes zip()
+# Spojení dvou iterátorů
 
 ```rust
 fn main() {
-    // jak bylo předtím zmíněno enumerate
-    let enumerate: Vec<_> = "foo".chars().enumerate().collect();
+    // Varianta 1: enumerate()
+    let enumerated: Vec<_> = "foo".chars().enumerate().collect();
 
-    // tak dosažení tohotéž přes zip
-    let zipper: Vec<_> = (0..).zip("foo".chars()).collect();
+    // Varianta 2: zip()
+    let zipped: Vec<_> = (0..).zip("foo".chars()).collect();
 
-    assert_eq!((0, 'f'), enumerate[0]);
-    assert_eq!((0, 'f'), zipper[0]);
+    assert_eq!((0, 'f'), enumerated[0]);
+    assert_eq!((0, 'f'), zipped[0]);
 
-    assert_eq!((1, 'o'), enumerate[1]);
-    assert_eq!((1, 'o'), zipper[1]);
+    assert_eq!((1, 'o'), enumerated[1]);
+    assert_eq!((1, 'o'), zipped[1]);
 
-    assert_eq!((2, 'o'), enumerate[2]);
-    assert_eq!((2, 'o'), zipper[2]);
+    assert_eq!((2, 'o'), enumerated[2]);
+    assert_eq!((2, 'o'), zipped[2]);
 }
 ```
 
