@@ -348,6 +348,7 @@ fn main() {
     buf.push_back(4);
     buf.push_back(5);
     buf.push_front(2);
+    
     if let Some(elem) = buf.get_mut(2) {
         *elem = 7;
     }
@@ -394,7 +395,6 @@ fn main() {
     let team_name = String::from("Blue");
     let score = scores.get(&team_name);
 }
-
 ```
 
 ---
@@ -466,8 +466,6 @@ fn main() {
     // Remove a book.
     books.remove("The Odyssey");
 }
-
-
 ```
 
 ---
@@ -509,8 +507,6 @@ fn main() {
     let stat = player_stats.entry("attack").or_insert(100);
     *stat += random_stat_buff();
 }
-
-
 ```
 
 ---
@@ -539,8 +535,6 @@ fn main() {
 
     // on next slide...
 }
-
-
 ```
 
 ---
@@ -572,8 +566,6 @@ fn main() {
         println!("{}: \"{}\"", movie, review);
     }
 }
-
-
 ```
 
 ---
@@ -607,7 +599,6 @@ fn main() {
 
     // continues on next slide 
 }
-
 ```
 
 ---
@@ -642,8 +633,6 @@ fn main() {
     // The heap should now be empty.
     assert!(heap.is_empty())
 }
-
-
 ```
 
 ---
@@ -675,6 +664,7 @@ rayon = "1.5"
 Funkci iter() nahradíme za par_iter()
 ```rust
 use rayon::prelude::*;
+
 fn sum_of_squares(input: &[i32]) -> i32 {
     input.par_iter() // <-- just change that!
          .map(|&i| i * i)
