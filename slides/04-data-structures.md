@@ -360,7 +360,7 @@ fn main() {
 
 ---
 
-# Hashtable
+# Hašovací tabulka
 
 Využití:
 1. Potřebujeme slovník.
@@ -371,13 +371,13 @@ Pro malé a velké hashovací tabulky je vhodnější použít jinou hashovací 
 
 ---
 
-# Hashtable
+# Hašovací tabulka
 
 ![w:512 h:512](./assets/04-images/hash-table.png)
 
 ---
 
-# Hashtable
+# Hašovací tabulka
 
 ```rust
 fn main() {
@@ -399,7 +399,7 @@ fn main() {
 
 ---
 
-# Hashtable - ukázka 2
+# Hašovací tabulka – ukázka 2
 
 ```rust
 fn main() {
@@ -443,7 +443,7 @@ To platí ale jen do chvíle, než potřebujeme mít položky sežezené. Potom 
 
 ---
 
-# Hašová množina
+# Množina
 
 ```rust
 fn main() {
@@ -481,7 +481,7 @@ Využití:
 
 ---
 
-# BTreeMap
+# B-strom
 
 ```rust
 fn main() {
@@ -512,7 +512,7 @@ fn main() {
 
 ---
 
-# BTreeMap
+# B-strom – ukázka 2
 
 ```rust
 fn main() {
@@ -540,7 +540,7 @@ fn main() {
 
 ---
 
-# BTreeMap
+# B-strom – ukázka 2
 
 ```rust
 fn main() {
