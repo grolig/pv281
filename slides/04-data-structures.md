@@ -801,6 +801,17 @@ využijte crate [itertools](https://docs.rs/itertools/latest/itertools/index.htm
 
 ---
 
+# Příklady metod v itertools
+
+`interleave()` - střídavě poskytuje prvky ze dvou iterátorů
+`intersperse()` - mezi každý prvek iterátoru vloží hodnotu
+`group_by()` - seskupuje po sobě jdoucí prvky se společným klíčem 
+`merge()` - spojí dva iterátory sléváním
+`sorted()` - seřadí iterátor bez potřeby vytvoření vektoru (interně iterátor zkonzumuje, seřadí a vytvoří nový)
+`unfold()` - generuje iterátor na základě výchozího stavu a builder funkce
+
+---
+
 # Pro jednoduchou paralelizaci na úrovni iterátoru
 
 využijte crate [Rayon](https://docs.rs/rayon/latest/rayon/index.html)
