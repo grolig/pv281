@@ -24,68 +24,30 @@ paginate: true
 
 ---
 
-# Vektor
+# Připomenutí vektorů
 
-1. Souvislý blok paměti stejně jako pole. 
-2. Narozdíl od pole je uložený na haldě. 
-3. Nejde o linkovaný seznam. Ten najdete jako std::collections::LinkedList.
-
----
-
-# Vytvoření vektoru
+Souvislý blok paměti, uložený na haldě, lze měnit jeho velikost.
 
 ```rust
 fn main() {
-    // immutable pomocí makra
-    let v = vec![1, 2, 3];
+    let values = vec![1, 2, 3];
+    let values = vec![0; 64];
 
-    // mutable vektory
-    let mut v = Vec::new();
-
-    v.push(5);
-    v.push(6);
-    v.push(7);
-    v.push(8);
-}
-```
-
----
-
-# Získávání položek
-
-```rust
-fn main() {
-    let v = vec![1, 2, 3, 4, 5];
-
-    let third: &i32 = &v[2];
-    println!("The third element is {}", third);
-
-    match v.get(2) {
+    let mut values = Vec::new();
+    values.push(1);
+    values.push(2);
+    
+    match values.get(2) {
         Some(third) => println!("The third element is {}", third),
         None => println!("There is no third element."),
     }
-}
-
-```
-
----
-
-# Procházení vektoru
-
-```rust
-fn main() {
-    let v = vec![100, 32, 57];
-    for i in &v {
-        println!("{}", i);
-    }
-
-    let mut w = vec![100, 32, 57];
-    for i in &mut w {
-        *i += 50;
+    
+    for value in &values {
+        println!("{}", value);
     }
 }
-
 ```
+
 ---
 
 # Iterátor
