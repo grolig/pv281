@@ -89,7 +89,7 @@ fn main() {
 
 # Closure
 
-1. aneb lamda funkce 
+Anonymní funkce. Z jiných jazyků znáte jako _lambda funkce_.
 
 ```rust
 fn main() {
@@ -101,8 +101,8 @@ fn main() {
     println!("closure_annotated: {}", closure_annotated(i));
     println!("closure_inferred: {}", closure_inferred(i));
 
-    let one = || 1;
-    println!("closure returning one: {}", one());
+    let closure_parameterless = || 1;
+    println!("closure returning one: {}", closure_parameterless());
 }
 ```
 
