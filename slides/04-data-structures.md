@@ -322,10 +322,10 @@ fn main() {
 
 # Dvousměrný vektor 
 
-Využijeme v případě kdy:
-1. potřebujeme vkládat na začátek
-2. chceme frontu
-3. chceme obousměrnou frontu
+Využití:
+1. Chceme vkládat na začátek.
+2. Potřebujeme frontu.
+3. Potřebujeme obousměrnou frontu.
 
 Je implementován jako ring buffer. Tj. nemusí mít kontinuální prostor v paměti. Pokud chceme dělat slice, tak musíme mít kontinuální prostor. Na jeho získání jde využít funkce make_contiguous
 
@@ -362,8 +362,8 @@ fn main() {
 # Hashtable
 
 Využití:
-1. slovník
-2. cache
+1. Potřebujeme slovník.
+2. Potřebujeme cache.
 
 Implementovaná podle Google SwissTable. Jako hashovací funkci používá SipHash 1-3. Ta je vhodná pro středně velké slovníky a je odolná na HashDoS útoky.
 Pro malé a velké hashovací tabulky je vhodnější použít jinou hashovací funkci.
@@ -434,8 +434,9 @@ fn main() {
 
 # Množina
 
-Množinu často využíváme v algoritmech, které si zaznamenávají prošlé prvky.
-Ale jinak kdykoliv, kdy potřebujeme mít hodnotu uloženou pouze jednou.
+Využití:
+1. Chceme zaznamenávat prošlé prvky.
+2. Chceme mít hodnotu uloženou pouze jednou.
 
 Nejrychlejší implementace je HashSet. To platí ale jen do chvíle než potřebujeme mít položky sežezené. Potom už použijeme BTreeMap.
 
@@ -473,11 +474,11 @@ fn main() {
 
 # B-strom
 
-Použijeme pokud:
-1. Chceme mapu seřazenou podle klíčů
-2. Pokud cheme získávat položky v rozsahu
-3. Pokud potřebuje rychle získát nejmenší nebo největší položku
-4. Pokud potřebujeme najít klíče, které jsou větší nebo menší než jiný
+Využití:
+1. Chceme mapu seřazenou podle klíčů.
+2. Chceme získávat položky v nějakém rozsahu.
+3. Chceme rychle získávat nejmenší nebo největší položku.
+4. Chceme najít klíče, které jsou větší nebo menší než jiný klíč.
 
 ---
 
@@ -579,7 +580,9 @@ fn main() {
 
 # Halda
 
-Využívá se jako prioritní fronta a nebo pokud potřebujeme zpracovat největší/nejdůležitejší položku.
+Využití:
+1. Potřebujeme prioritní frontu.
+2. Chceme pracovat s největší/nejdůležitější položkou.
 
 ---
 
