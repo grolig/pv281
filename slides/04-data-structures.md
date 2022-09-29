@@ -255,15 +255,13 @@ Bere iniciální hodnotu akumulátoru a closure o dvou parametrech. Iterátor je
 ```rust
 fn main() {
     let a = [1, 4, 2, 3];
-
-    let sum = a.iter()
-        .cloned()
-        .filter(|x| x % 2 == 0)
-        .fold(0, |sum, i| sum + i);
-
-    println!("{}", sum);
+    let sum = a.iter().fold(0, |acc, x| acc + x);
+    assert_eq!(10, sum);
 }
 ```
+
+Poznámka: `reduce()` používá první prvek iterátoru jako iniciální hodnotu akumulátoru.
+Poznámka č. 2: existuje metoda `sum()`.
 
 ---
 
