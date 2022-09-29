@@ -310,7 +310,9 @@ fn main() {
 
 ---
 
-# Pro side efekty je vhodnější použít for cyklus.
+# Pro side efekty je vhodnější použít for cyklus...
+
+...pokud se nejedná o poslední volání v dlouhém řetězci metod iterátorů, pak se nabízí metoda `for_each()`.
 
 ---
 
