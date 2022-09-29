@@ -541,7 +541,7 @@ Využití:
 1. Potřebujeme slovník.
 2. Potřebujeme cache.
 
-Implementovaná podle _Google SwissTable_, jako hashovací funkci používá _SipHash 1-3_. Ta je vhodná pro středně velké slovníky a je odolná na HashDoS útoky.
+Implementovaná podle _Google SwissTable_, jako hashovací funkci používá _SipHash 1-3_. Ta je vhodná pro středně velké slovníky a je odolná proti HashDoS útokům.
 Pro malé a velké hashovací tabulky je vhodnější použít jinou hashovací funkci.
 
 ---
