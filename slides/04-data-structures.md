@@ -24,6 +24,144 @@ paginate: true
 
 ---
 
+# <!--fit--> Práce se soubory
+
+---
+
+# Vytvoření souboru a zápis
+
+```rust
+use std::fs::File;
+// importuje běžně používané traity pro práci se soubory
+use std::io::prelude::*;
+
+fn main() -> std::io::Result<()> {
+    let mut file = File::create("foo.txt")?;
+    
+    file.write_all(b"Hello, world!")?;
+    
+    Ok(())
+}
+```
+
+---
+
+# Načtení obsahu ze souboru
+
+```rust
+use std::fs::File;
+use std::io::prelude::*;
+
+fn main() -> std::io::Result<()> {
+    let mut file = File::open("foo.txt")?;
+    let mut contents = String::new();
+    
+    file.read_to_string(&mut contents)?;
+    assert_eq!(contents, "Hello, world!");
+    
+    Ok(())
+}
+```
+
+---
+
+# Práce přes buffer
+
+```rust
+use std::fs::File;
+use std::io::BufReader;
+use std::io::prelude::*;
+
+fn main() -> std::io::Result<()> {
+    let file = File::open("foo.txt")?;
+    let mut buf_reader = BufReader::new(file);
+    let mut contents = String::new();
+    
+    buf_reader.read_to_string(&mut contents)?;
+    assert_eq!(contents, "Hello, world!");
+    
+    Ok(())
+}
+```
+
+---
+
+# Načtení řádku
+
+```rust
+use std::fs::File;
+use std::io::{self, prelude::*, BufReader};
+
+fn main() -> io::Result<()> {
+    let file = File::open("foo.txt")?;
+    let reader = BufReader::new(file);
+
+    for line in reader.lines() {
+        println!("{}", line?);
+    }
+
+    Ok(())
+}
+```
+
+---
+
+# Synchronizace na disk
+
+```rust
+use std::fs::File;
+use std::io::prelude::*;
+
+fn main() -> std::io::Result<()> {
+    let mut file = File::create("foo.txt")?;
+    
+    file.write_all(b"Hello, world!")?;
+    file.sync_all()?;
+    
+    Ok(())
+}
+```
+
+---
+
+# Flush bufferu
+
+```rust
+use std::io::prelude::*;
+use std::io::BufWriter;
+use std::fs::File;
+
+fn main() -> std::io::Result<()> {
+    let mut buffer = BufWriter::new(File::create("foo.txt")?);
+
+    buffer.write_all(b"some bytes")?;
+    buffer.flush()?;
+    
+    Ok(())
+}
+```
+
+---
+
+# Zápis přes buffer
+
+```rust
+use std::fs::File;
+use std::io::{BufWriter, Write};
+
+fn main() {
+    let data = "Some data!";
+    let file = File::create("/tmp/foo").expect("Unable to create file");
+    let mut file = BufWriter::new(f);
+    
+    file.write_all(data.as_bytes()).expect("Unable to write data");
+}
+```
+
+Poznámka: dočasný adresář by bylo lepší zjistit nezávisle na platformě pomocí `env::temp_dir()`.
+
+---
+
 # Připomenutí vektorů
 
 Souvislý blok paměti, uložený na haldě, lze měnit jeho velikost.
