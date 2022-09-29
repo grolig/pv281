@@ -198,6 +198,10 @@ fn main() {
 
 ---
 
+# <!--fit--> Vektory a iterátory
+
+---
+
 # Připomenutí vektorů
 
 Souvislý blok paměti, uložený na haldě, lze měnit jeho velikost.
