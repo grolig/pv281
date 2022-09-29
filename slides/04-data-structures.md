@@ -324,8 +324,8 @@ where
 
 # Metody pracující s iterátory
 
-2. Metody produkující jiný iterátor
-1. Metody konzumující iterátor
+1. Metody produkující jiný iterátor
+2. Metody konzumující iterátor
 
 ---
 
