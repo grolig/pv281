@@ -108,7 +108,19 @@ fn main() {
 
 ---
 
-# Jako vstupní parametr
+# Closure jako vstupní parametr
+
+Argumenty funkcí musí být vždy explicitně otypovány.
+Typ closure jakožto parametru musí být jeden z následujících traitů:
+
+`Fn`: closure používá své parametry jako reference (`&T`)
+`FnMut`: closure používá své parametry jako mutable reference
+(`&mut T`)
+`FnOnce`: closure se stává vlastníkem svých parametrů (`T`)
+
+---
+
+# Closure jako vstupní parametr
 
 ```rust
 // A function which takes a closure as an argument and calls it.
