@@ -12,15 +12,12 @@ paginate: true
 
 # Obsah
 
-?. Práce se soubory
-1. Generika
-2. Utility traity
-3. Operator overloading
-1. Vektory
-2. Iterátory
-3. Hashová tabulka
-4. Množina
-5. Halda
+1. Práce se soubory a stdin
+2. TODO: Generika
+3. TODO: Utility traity
+4. TODO: Přetěžování operátorů
+5. Vektory a iterátory
+6. Datové struktury
 
 ---
 
