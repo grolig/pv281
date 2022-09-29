@@ -494,7 +494,7 @@ fn main() {
 
 ---
 
-# Zpět k datovým strukturám
+# Datové struktury
 
 ---
 
