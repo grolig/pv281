@@ -147,7 +147,13 @@ where
 
 ---
 
-# Map
+# Metody pracující s iterátory
+
+2. Metody produkující jiný iterátor
+1. Metody konzumující iterátor
+
+---
+
 
 1. Funkcionální přístup k iterování
 2. Výsledkem je nové pole/jiný ADT
