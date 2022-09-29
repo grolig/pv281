@@ -620,7 +620,7 @@ fn main() {
 
 ---
 
-# Pro rozšíření možností iterátoru 
+# Pro rozšíření možností iterátorů
 
 využijte crate [itertools](https://docs.rs/itertools/latest/itertools/index.html)
 
@@ -634,7 +634,7 @@ využijte crate [Rayon](https://docs.rs/rayon/latest/rayon/index.html)
 
 # Instalace Rayon
 
-Do Cargo.toml přidáme závislost: 
+Do `Cargo.toml` přidáme závislost: 
 ```toml
 [dependencies]
 rayon = "1.5"
@@ -642,9 +642,9 @@ rayon = "1.5"
 
 ---
 
-# Použití
+# Použití Rayon
 
-Funkci iter() nahradíme za par_iter()
+Metodu `iter()` nahradíme za metodu `par_iter()`.
 ```rust
 use rayon::prelude::*;
 
