@@ -162,6 +162,42 @@ Poznámka: dočasný adresář by bylo lepší zjistit nezávisle na platformě 
 
 ---
 
+# Standardní vstup
+
+```rust
+use std::io;
+
+fn main() {
+   let mut input = String::new();
+   
+   match io::stdin().read_line(&mut input) {
+       Ok(byte_count) => {
+           println!("{} bytes read", byte_count);
+           println!("{}", input);
+       }
+       Err(error) => println!("error: {}", error),
+   }
+}
+```
+
+---
+
+# Standardní vstup
+
+```rust
+use std::io;
+
+fn main() {
+   let lines = io::stdin().lines();
+   
+   for line in lines {
+       println!("got a line: {}", line.unwrap());
+   }
+}
+```
+
+---
+
 # Připomenutí vektorů
 
 Souvislý blok paměti, uložený na haldě, lze měnit jeho velikost.
