@@ -163,7 +163,8 @@ Funkcionální přístup k iterování: na každý prvek iterátoru se zavolá c
 fn main() {
     let a = [1, 2, 3];
 
-    let mut iter = a.iter().map(|x| 2 * x); // lambda funkce
+    // typem parametru metody `.map()` je `F: FnMut(Self::Item) -> B`
+    let mut iter = a.iter().map(|x| 2 * x);
 
     assert_eq!(iter.next(), Some(2));
     assert_eq!(iter.next(), Some(4));
