@@ -176,7 +176,7 @@ fn main() {
 
 ### Filter
 
-1. Pro získání podmnožiny prvků
+Výsledkem je nový iterátor, jehož prvky tvoří podmnožinu prvků původních.
 
 ```rust
 fn main() {
@@ -194,8 +194,7 @@ fn main() {
 
 ### Enumerate
 
-1. Vrací dvojici index a element
-2. index je typu usize, pro jiný typ použijte zip()
+Transformuje iterátor na iterátor dvojic: index a prvek.
 
 ```rust
 fn main() {
@@ -210,11 +209,13 @@ fn main() {
 }
 ```
 
+Poznámka: index je typu `usize`, pro vlastní typ použijte `zip()`.
+
 ---
 
 ### Skip
 
-1. Přeskočí n prvků
+Přeskočí prvních _n_ prvků.
 
 ```rust
 fn main() {
@@ -231,7 +232,7 @@ fn main() {
 
 ### Take
 
-1. Vezme n prvků
+Vezme prvních _n_ prvků.
 
 ```rust
 fn main() {
@@ -249,7 +250,7 @@ fn main() {
 
 ### Fold
 
-1. Fold má akumulátor se kterým pracujeme
+Bere iniciální hodnotu akumulátoru a closure o dvou parametrech. Iterátor je zkonzumován.
 
 ```rust
 fn main() {
