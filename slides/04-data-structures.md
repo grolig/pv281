@@ -277,7 +277,7 @@ fn main() {
         println!("x:{}, y:{}", x, y);
     }
 
-    // Nested zips are also possible:
+    // Zip můžeme i vnořovat:
     let zs = [7, 8, 9];
     for ((x, y), z) in zip(zip(&xs, &ys), &zs) {
         println!("x:{}, y:{}, z:{}", x, y, z);
