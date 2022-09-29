@@ -406,14 +406,10 @@ fn main() {
     let mut book_reviews = HashMap::new();
 
     // Review some books.
-    book_reviews.insert(
-        "Adventures of Huckleberry Finn".to_string(),
-        "My favorite book.".to_string(),
-    );
+    book_reviews.insert("Adventures of Huckleberry Finn".to_string(), "My favorite book. 10/10.".to_string());
     
     if !book_reviews.contains_key("Les Misérables") {
-        println!("We've got {} reviews, but Les Misérables ain't one.",
-                book_reviews.len());
+        println!("We've got {} reviews, but Les Misérables ain't one.", book_reviews.len());
     }
 
     // Oops, this review has a lot of spelling mistakes, let's delete it.
@@ -498,7 +494,7 @@ fn main() {
 
     // Update a key, guarding against the key possibly not being set.
     let stat = player_stats.entry("attack").or_insert(100);
-    *stat += random_stat_buff();
+    *stat += 13;
 }
 ```
 
@@ -543,8 +539,8 @@ fn main() {
     let to_find = ["Up!", "Office Space"];
     for movie in &to_find {
         match movie_reviews.get(movie) {
-        Some(review) => println!("{}: {}", movie, review),
-        None => println!("{} is unreviewed.", movie)
+            Some(review) => println!("{}: {}", movie, review),
+            None => println!("{} is unreviewed.", movie)
         }
     }
 
