@@ -520,7 +520,7 @@ fn main() {
         println!("We've got {} reviews, but Les Misérables ain't one.", movie_reviews.len());
     }
 
-    // on next slide...
+    // Continued on the next slide...
 }
 ```
 
@@ -530,7 +530,7 @@ fn main() {
 
 ```rust
 fn main() {
-    // code from pred slide ...
+    // Continued from previous slide...
 
     // Oops, this review has a lot of spelling mistakes, let's delete it.
     movie_reviews.remove("The Blues Brothers");
@@ -581,7 +581,7 @@ fn main() {
     heap.push(5);
     heap.push(2);
 
-    // continues on next slide 
+    // Continued on the next slide...
 }
 ```
 
@@ -591,7 +591,7 @@ fn main() {
 
 ```rust
 fn main() {
-    // continued from prev slide
+    // Continued from previous slide...
 
     // Now peek shows the most important item in the heap.
     assert_eq!(heap.peek(), Some(&5));
