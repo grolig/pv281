@@ -383,12 +383,12 @@ Pro malé a velké hashovací tabulky je vhodnější použít jinou hashovací 
 fn main() {
     use std::collections::HashMap;
 
-    let mut scores = HashMap::new();
+    let mut scores: HashMap<String, i32> = HashMap::new();
 
     scores.insert(String::from("Blue"), 10);
     scores.insert(String::from("Yellow"), 50);
     
-    // vložení jen pokud klíč neexistuje
+    // Inserts if the key does not exist.
     scores.entry(String::from("Yellow")).or_insert(50);
     scores.entry(String::from("Blue")).or_insert(50);
 
@@ -416,7 +416,7 @@ fn main() {
                 book_reviews.len());
     }
 
-    // oops, this review has a lot of spelling mistakes, let's delete it.
+    // Oops, this review has a lot of spelling mistakes, let's delete it.
     book_reviews.remove("The Adventures of Sherlock Holmes");
 
     // Look up the values associated with some keys.
@@ -448,8 +448,8 @@ To platí ale jen do chvíle, než potřebujeme mít položky sežezené. Potom 
 ```rust
 fn main() {
     use std::collections::HashSet;
-    // Type inference lets us omit an explicit type signature (which
-    // would be `HashSet<String>` in this example).
+
+    // Type inference lets us omit an explicit type signature (which would be `HashSet<String>` in this example).
     let mut books = HashSet::new();
 
     // Add some books.
@@ -458,7 +458,7 @@ fn main() {
     books.insert("The Odyssey".to_string());
     books.insert("The Great Gatsby".to_string());
 
-    // Check for a specific one.
+    // Check for a specific book.
     if !books.contains("The Winds of Winter") {
         println!("We have {} books, but The Winds of Winter ain't one.",
                 books.len());
@@ -487,24 +487,16 @@ Využití:
 fn main() {
     use std::collections::BTreeMap;
 
-    // type inference lets us omit an explicit type signature (which
-    // would be `BTreeMap<&str, u8>` in this example).
+    // Type inference lets us omit an explicit type signature (which would be `BTreeMap<&str, u8>` in this example).
     let mut player_stats = BTreeMap::new();
 
-    fn random_stat_buff() -> u8 {
-        // could actually return some random value here - let's just return
-        // some fixed value for now
-        42
-    }
-
-    // insert a key only if it doesn't already exist
+    // Insert a key only if it doesn't already exist.
     player_stats.entry("health").or_insert(100);
 
-    // insert a key using a function that provides a new value only if it
-    // doesn't already exist
-    player_stats.entry("defence").or_insert_with(random_stat_buff);
+    // Insert a key using a function that provides a new value only if it doesn't already exist.
+    player_stats.entry("defence").or_insert_with(|| 42);
 
-    // update a key, guarding against the key possibly not being set
+    // Update a key, guarding against the key possibly not being set.
     let stat = player_stats.entry("attack").or_insert(100);
     *stat += random_stat_buff();
 }
@@ -518,20 +510,18 @@ fn main() {
 fn main() {
     use std::collections::BTreeMap;
 
-    // type inference lets us omit an explicit type signature (which
-    // would be `BTreeMap<&str, &str>` in this example).
+    // Type inference lets us omit an explicit type signature (which would be `BTreeMap<&str, &str>` in this example).
     let mut movie_reviews = BTreeMap::new();
 
-    // review some movies.
+    // Review some movies.
     movie_reviews.insert("Office Space",       "Deals with real issues in the workplace.");
     movie_reviews.insert("Pulp Fiction",       "Masterpiece.");
     movie_reviews.insert("The Godfather",      "Very enjoyable.");
     movie_reviews.insert("The Blues Brothers", "Eye lyked it a lot.");
 
-    // check for a specific one.
+    // Check for a specific one.
     if !movie_reviews.contains_key("Les Misérables") {
-        println!("We've got {} reviews, but Les Misérables ain't one.",
-                movie_reviews.len());
+        println!("We've got {} reviews, but Les Misérables ain't one.", movie_reviews.len());
     }
 
     // on next slide...
@@ -546,11 +536,10 @@ fn main() {
 fn main() {
     // code from pred slide ...
 
-
-    // oops, this review has a lot of spelling mistakes, let's delete it.
+    // Oops, this review has a lot of spelling mistakes, let's delete it.
     movie_reviews.remove("The Blues Brothers");
 
-    // look up the values associated with some keys.
+    // Look up the values associated with some keys.
     let to_find = ["Up!", "Office Space"];
     for movie in &to_find {
         match movie_reviews.get(movie) {
@@ -562,7 +551,7 @@ fn main() {
     // Look up the value for a key (will panic if the key is not found).
     println!("Movie review: {}", movie_reviews["Office Space"]);
 
-    // iterate over everything.
+    // Iterate over everything.
     for (movie, review) in &movie_reviews {
         println!("{}: \"{}\"", movie, review);
     }
@@ -585,12 +574,10 @@ Využití:
 fn main() {
     use std::collections::BinaryHeap;
 
-    // Type inference lets us omit an explicit type signature (which
-    // would be `BinaryHeap<i32>` in this example).
+    // Type inference lets us omit an explicit type signature (which would be `BinaryHeap<i32>` in this example).
     let mut heap = BinaryHeap::new();
 
-    // We can use peek to look at the next item in the heap. In this case,
-    // there's no items in there yet so we get None.
+    // We can use peek to look at the next item in the heap. In this case, there's no items in there yet so we get None.
     assert_eq!(heap.peek(), None);
 
     // Let's add some scores...
@@ -616,8 +603,7 @@ fn main() {
     // We can check the length of a heap.
     assert_eq!(heap.len(), 3);
 
-    // We can iterate over the items in the heap, although they are returned in
-    // a random order.
+    // We can iterate over the items in the heap, although they are returned in a random order.
     for x in &heap {
         println!("{}", x);
     }
