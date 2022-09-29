@@ -69,17 +69,17 @@ pub trait Iterator {
 
 # Iterátor nad vektorem
 
-1. Vektor implementuje trait Iterator
-2. Můžeme využít funkce iter()
+Vektor implementuje trait `Iterator`. 
+Můžeme využít funkce `.iter()`.
 
 ```rust
 fn main() {
-    let v1 = vec![1, 2, 3];
+    let values = vec![1, 2, 3];
 
-    let v1_iter = v1.iter();
+    let iterator = v1.iter();
 
-    // iter lze využít i ve for cyklu
-    for val in v1_iter {
+    // `.iter()` lze využít i ve for cyklu
+    for value in iterator {
         println!("Got: {}", val);
     }
 }
