@@ -622,13 +622,13 @@ fn main() {
 
 # Pro rozšíření možností iterátoru 
 
-využijte crate [itertools](https://docs.rs/itertools/0.10.1/itertools/#)
+využijte crate [itertools](https://docs.rs/itertools/latest/itertools/index.html)
 
 ---
 
 # Pro jednoduchou paralelizaci na úrovni iterátoru
 
-využijte crate [Rayon](https://github.com/rayon-rs/rayon)
+využijte crate [Rayon](https://docs.rs/rayon/latest/rayon/index.html)
 
 ---
 
