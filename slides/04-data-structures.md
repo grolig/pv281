@@ -52,14 +52,16 @@ fn main() {
 
 # Iterátor
 
-1. Jde o trait, který dává následující položku.
-2. Vrácení položka je typu Option. Podle toho poznáme, zda jsme na konci.
+Jde o trait, který dává následující položku.
+Vrácená položka je typu `Option`. Podle toho poznáme, jestli jsme na konci.
 
 ```rust
 pub trait Iterator {
     type Item;
 
     fn next(&mut self) -> Option<Self::Item>;
+    
+    // ...
 }
 ```
 
