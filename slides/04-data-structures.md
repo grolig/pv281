@@ -123,23 +123,26 @@ Typ closure jakožto parametru musí být jeden z následujících traitů:
 # Closure jako vstupní parametr
 
 ```rust
-// A function which takes a closure as an argument and calls it.
-// <F> denotes that F is a "Generic type parameter"
-fn apply<F>(f: F) where
-    // The closure takes no input and returns nothing.
-    F: FnOnce() {
-    // ^ TODO: Try changing this to `Fn` or `FnMut`.
-
+// Funkce, která bere closure jako parametr a zavolá ji.
+// Poznámka: F je typické písmeno generického typu pro otypování closure.
+fn apply<F>(f: F)
+where
+    // Samotná closure nemá žádné vstupní parametry a nic nevrací
+    F: FnOnce(),
+{
     f();
 }
 
-// A function which takes a closure and returns an `i32`.
-fn apply_to_3<F>(f: F) -> i32 where
-    // The closure takes an `i32` and returns an `i32`.
-    F: Fn(i32) -> i32 {
-    
+// Funkce, který bere closure jako parametr a vrací `i32`.
+fn apply_to_3<F>(f: F) -> i32
+where
+    // Samotná closure bere i vrací `i32`.
+    F: Fn(i32) -> i32
+{
     f(3)
 }
+
+// TODO: zkuste si zaměnit `FnOnce()`, `Fn()` a `FnMut()` v kódu výše.
 ```
 
 ---
