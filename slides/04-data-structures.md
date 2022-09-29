@@ -268,7 +268,6 @@ Poznámka č. 2: existuje metoda `sum()`.
 ### Zip
 
 ```rust
-#![feature(iter_zip)]
 use std::iter::zip;
 
 fn main() {
