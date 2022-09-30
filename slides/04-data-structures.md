@@ -347,6 +347,7 @@ fn main() {
     assert_eq!(iter.next(), None);
 }
 ```
+
 ---
 
 ### Filter
@@ -362,6 +363,26 @@ fn main() {
         .inspect(|x| println!("about to filter: {}", x))
         .filter(|x| x % 2 == 0)
         .inspect(|x| println!("made it through filter: {}", x))
+}
+```
+
+---
+
+### Filter Map
+
+V iterátoru zůstanou jen ty prvky, pro které closure vrací `Some(mapped_value)`.
+
+```rust
+fn main() {
+    let a = [-1, 1, -10, 10, 0];
+
+    let mut iter = a
+        .into_iter()
+        .filter_map(|n| if n > 0 { Some(n.to_string()) } else { None });
+
+    assert_eq!(iter.next(), Some("1".to_string()));
+    assert_eq!(iter.next(), Some("10".to_string()));
+    assert_eq!(iter.next(), None);
 }
 ```
 
