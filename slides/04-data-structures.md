@@ -12,12 +12,11 @@ paginate: true
 
 # Obsah
 
-1. Práce se soubory a stdin
-2. TODO: Generika
-3. TODO: Utility traity
-4. TODO: Přetěžování operátorů
-5. Vektory a iterátory
-6. Datové struktury
+1. Práce se soubory
+2. Generika
+3. Utility traity
+4. Vektory a iterátory
+5. Datové struktury
 
 ---
 
@@ -185,13 +184,291 @@ fn main() {
 use std::io;
 
 fn main() {
-   let lines = io::stdin().lines();
+   let lines = io::stdin().lock().lines(); // mutex
    
    for line in lines {
        println!("got a line: {}", line.unwrap());
    }
 }
 ```
+
+---
+
+# Generika
+
+Umožňuje obecnou definici pro různé typy položek u struktur, výčtů nebo metod.
+
+---
+
+# Generika u struktur 
+
+```rust
+struct Point<T> {
+    x: T,
+    y: T,
+}
+
+fn main() {
+    let integer = Point { x: 5, y: 10 };
+    let float = Point { x: 1.0, y: 4.0 };
+}
+
+```
+
+---
+
+# Generika u struktur (více typů)
+
+```rust
+struct Point<T, U> {
+    x: T,
+    y: U,
+}
+
+fn main() {
+    let both_integer = Point { x: 5, y: 10 };
+    let both_float = Point { x: 1.0, y: 4.0 };
+    let integer_and_float = Point { x: 5, y: 4.0 };
+}
+
+```
+
+---
+
+# Generika u výčtu
+
+```rust
+enum Option<T> {
+    Some(T),
+    None,
+}
+
+enum Result<T, E> {
+    Ok(T),
+    Err(E),
+}
+
+```
+
+---
+
+# Generika u metod
+
+```rust
+struct Point<T, U> {
+    x: T,
+    y: U,
+}
+
+impl<T, U> Point<T, U> {
+    fn mixup<V, W>(self, other: Point<V, W>) -> Point<T, W> {
+        Point {
+            x: self.x,
+            y: other.y,
+        }
+    }
+}
+
+fn main() {
+    let p1 = Point { x: 5, y: 10.4 };
+    let p2 = Point { x: "Hello", y: 'c' };
+
+    let p3 = p1.mixup(p2);
+
+    println!("p3.x = {}, p3.y = {}", p3.x, p3.y);
+}
+
+```
+
+---
+
+# Generika u metod
+
+```rust
+fn largest<T: PartialOrd + Copy>(list: &[T]) -> T {
+    let mut largest = list[0];
+
+    for &item in list {
+        if item > largest {
+            largest = item;
+        }
+    }
+
+    largest
+}
+
+```
+
+---
+
+# Generika u metod
+
+```rust
+fn some_function<T, U>(t: &T, u: &U) -> i32
+    where T: Display + Clone,
+          U: Clone + Debug
+{
+    // ...
+}
+
+```
+
+---
+
+# Utility traity
+
+- tak důležité traity, že jsou ve standardní knihovně 
+- nutné je znát, abychom vytvořili idiomatický kód, tj. takový který je dostateně "Rustic"
+
+---
+
+# Drop
+
+Rust dělá dobrou práci při uvolnění zdrojů. Občas chceme uvolnění přizpusobit, a k tomu slouží trait Drop.
+
+```rust
+trait Drop {
+    fn drop(&mut self);
+}
+```
+
+---
+
+# Implementace Drop
+
+```rust
+impl Drop for UserProfile {
+    fn drop(&mut self) {
+        print!("Dropping {}", self.name);
+        if !self.nicknames.is_empty() {
+            print!(" (AKA {})", self.nicknames.join(", "));
+        }
+        println!("");
+    }
+}
+```
+
+---
+
+# Typ Sized
+
+- v rámci Rustu existují typy sized a unsized. Unsized nemohou být uložené do proměnných a musí se s nimi pracovat přes referenci.
+- příkladem unsized je ```dyn Trait``` (např. ```dyn Write```)
+- implicitně mají generiské typy bound Sized. Abycho mohli u struktur využít i unsized typy, musíme řici, že nemusí jít o typ Sized pomocí ```?Sized```. Tím mužeme použít i fatpointer.
+
+---
+
+# Použití ?Sized
+
+```rust
+struct RcBox<T: ?Sized> {
+    ref_count: usize,
+    value: T,
+}
+
+let boxed_lunch: RcBox<String> = RcBox {
+    ref_count: 1,
+    value: "lunch".to_string()
+};
+
+use std::fmt::Display;
+let boxed_displayable: &RcBox<dyn Display> = &boxed_lunch;
+
+```
+
+---
+
+# Clone
+
+- Slouží ke klonování sebe sama. 
+- Základní implementace jde vytvořit přes ```#[derive(Clone)]```
+- operace může být drahá časově a paměťově
+
+```rust
+trait Clone: Sized {
+    fn clone(&self) -> Self;
+    fn clone_from(&mut self, source: &Self) {
+        *self = source.clone()
+    }
+}
+```
+
+---
+
+# Copy
+
+- běžně se používá s klonováním. Tj. provede implicitní klonování typu
+- zlepšuje sice pohodlí při používání, ale má jistá omezení a cenu
+
+```rust
+trait Copy: Clone { }
+
+impl Copy for MyType { }
+
+#[derive(Copy, Clone)]
+```
+
+---
+
+# Default
+
+- dává výchozí hodnotu
+
+```rust
+trait Default {
+    fn default() -> Self;
+}
+```
+
+```rust
+impl Default for String {
+    fn default() -> String {
+        String::new()
+    }
+}
+```
+
+---
+
+# From a Into
+
+- slouží pro konverzy mezi typy
+- při správné implementaci ```from``` je ```into``` automaticky implementováno.
+
+```rust
+trait Into<T>: Sized {
+    fn into(self) -> T;
+}
+
+trait From<T>: Sized {
+    fn from(other: T) -> Self;
+}
+```
+
+---
+
+# TryFrom TryInto
+
+- použijeme, pokud from nebo into nemusí vždy být úspěšné
+
+```rust
+pub trait TryFrom<T>: Sized {
+    type Error;
+    fn try_from(value: T) -> Result<Self, Self::Error>;
+}
+
+pub trait TryInto<T>: Sized {
+    type Error;
+    fn try_into(self) -> Result<T, Self::Error>;
+}
+```
+
+```rust
+let smaller: i32 = huge.try_into().unwrap_or(i32::MAX);
+```
+---
+
+# 
 
 ---
 
@@ -262,6 +539,43 @@ fn main() {
 
 ---
 
+# Iterovatelné typy
+
+- "Iterable" je typ, který implementuje ```IntoIterator```. 
+- pomocí metody ```into_iter``` získáme iterátor.
+
+Pozn. cyklus for automaticky volá into_iter nad typem
+
+---
+
+# cloned()
+
+```rust
+let a = ['1', '2', '3', '∞'];
+
+assert_eq!(a.iter().next(),          Some(&'1'));
+assert_eq!(a.iter().cloned().next(), Some('1'));
+```
+
+---
+
+# Cycle
+
+- neustále prochází dokola
+
+```rust
+let dirs = ["raz", "dva", "tri"];
+let mut spin = dirs.iter().cycle();
+assert_eq!(spin.next(), Some(&"raz"));
+assert_eq!(spin.next(), Some(&"dva"));
+assert_eq!(spin.next(), Some(&"tri"));
+assert_eq!(spin.next(), Some(&"raz"));
+assert_eq!(spin.next(), Some(&"dva"));
+assert_eq!(spin.next(), Some(&"tri"));
+```
+
+---
+
 # Closure
 
 Anonymní funkce. Z jiných jazyků znáte jako _lambda funkce_.
@@ -328,7 +642,6 @@ where
 2. Metody konzumující iterátor
 
 ---
-
 
 ### Map
 
@@ -509,6 +822,24 @@ fn main() {
 # Pro side efekty je vhodnější použít for cyklus...
 
 ...pokud se nejedná o poslední volání v dlouhém řetězci metod iterátorů, pak se nabízí metoda `for_each()`.
+
+---
+
+# collect()
+
+Některé typy umožňují převod na kolekci. Často použivaný je převod na vektor. K tomu slouží metoda ```collect()```.
+
+```rust
+let args: Vec<String> = std::env::args().collect();
+```
+
+Můžeme převést na jakoukoliv kolekci, která implementuje trait ```FromIterator<A>```
+
+```rust
+trait FromIterator<A>: Sized {
+    fn from_iter<T: IntoIterator<Item=A>>(iter: T) -> Self;
+}
+```
 
 ---
 
