@@ -281,7 +281,7 @@ fn main() {
 
 ---
 
-# Generika u metod
+# Generika u metod – traity
 
 ```rust
 fn largest<T: PartialOrd + Copy>(list: &[T]) -> T {
@@ -300,7 +300,7 @@ fn largest<T: PartialOrd + Copy>(list: &[T]) -> T {
 
 ---
 
-# Generika u metod
+# Generika u metod – where
 
 ```rust
 fn some_function<T, U>(t: &T, u: &U) -> i32
