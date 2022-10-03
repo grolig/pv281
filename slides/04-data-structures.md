@@ -411,11 +411,13 @@ fn generic_function<T: ?Sized>(t: &T)  { /* ... */ }
 
 ---
 
-# Clone
+### Clone
 
-- Slouží ke klonování sebe sama. 
-- Základní implementace jde vytvořit přes ```#[derive(Clone)]```
-- operace může být drahá časově a paměťově
+Umožní explicitní vytvoření hluboké kopie.
+
+Výchozí implementace jde vytvořit přes `#[derive(Clone)]`: volá `.clone()` nad všemi položkami struktury.
+
+Operace může být drahá časově i paměťově.
 
 ```rust
 trait Clone: Sized {
