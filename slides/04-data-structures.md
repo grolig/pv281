@@ -574,7 +574,14 @@ fn main() {
 
 Iterovatelný (_Iterable_) je takový typ, který implementuje `IntoIterator`. Pomocí jeho metody ```into_iter()``` získáme iterátor.
 
-Poznámka: v Rustu je `for cyklus` syntaktický cukr pro volání `into_iter()`, proto je možné psát `for x in values` bez vytvoření iterátoru. 
+Poznámka: v Rustu je `for cyklus` syntaktický cukr pro volání `into_iter()`, proto je možné napsat následující kód bez vytvoření iterátoru:
+
+```rust
+let values = vec![1, 2, 3, 4, 5];
+for x in values {
+    println!("{x}");
+}
+```
 
 ---
 
