@@ -1004,7 +1004,7 @@ Využití:
 2. Chceme mít hodnotu uloženou pouze jednou.
 
 Nejrychlejší implementace je `HashSet`.
-To platí ale jen do chvíle, než potřebujeme mít položky sežezené. Potom už použijeme `BTreeMap`.
+To platí ale jen do chvíle, než potřebujeme mít položky sežezené. Potom už použijeme `BTreeSet`.
 
 ---
 
