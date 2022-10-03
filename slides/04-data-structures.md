@@ -560,7 +560,7 @@ Můžeme využít funkce `.iter()`.
 fn main() {
     let values = vec![1, 2, 3];
 
-    let iterator = v1.iter();
+    let iterator = values.iter();
 
     // `.iter()` lze využít i ve for cyklu
     for value in iterator {
