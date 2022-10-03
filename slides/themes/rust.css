@@ -377,6 +377,8 @@ section.split {
         "slideheading slideheading"
         "columnheading columnheading"
         "leftpanel rightpanel";
+  column-gap: 1em;
+  align-items: center;
 }
 section.split h3 {
   grid-area: slideheading;
@@ -386,13 +388,13 @@ section.split h3 {
 section.split h4 {
   grid-area: columnheading;
   font-size: 1.3em;
-  margin: 0 0 0 0;
+  margin: auto;
 }
 section.split .left-column {
   grid-area: leftpanel;
-  margin: auto;
+  vertical-align: center;
 }
 section.split .right-column {
   grid-area: rightpanel;
-  margin: auto;
+  vertical-align: center;
 }
