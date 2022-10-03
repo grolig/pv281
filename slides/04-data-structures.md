@@ -448,7 +448,7 @@ impl Copy for MyType { }
 
 # Default
 
-- dává výchozí hodnotu
+Poskytuje výchozí hodnotu.
 
 ```rust
 trait Default {
