@@ -564,7 +564,7 @@ fn main() {
 
     // `.iter()` lze využít i ve for cyklu
     for value in iterator {
-        println!("Got: {}", val);
+        println!("Got: {}", value);
     }
 }
 ```
