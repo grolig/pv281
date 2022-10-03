@@ -585,7 +585,9 @@ for x in values {
 
 ---
 
-# cloned()
+# Klonování iterátoru
+
+Metoda `cloned()` aplikuje na každý prvek metodu `clone()` z traitu `Clone`.
 
 ```rust
 let a = ['1', '2', '3', '∞'];
@@ -598,11 +600,12 @@ assert_eq!(a.iter().cloned().next(), Some('1'));
 
 # Cycle
 
-- neustále prochází dokola
+Iterátor opakuje hodnoty donekonečna, metoda `next()` nikdy nevrátí `None`.
 
 ```rust
 let dirs = ["raz", "dva", "tri"];
 let mut spin = dirs.iter().cycle();
+
 assert_eq!(spin.next(), Some(&"raz"));
 assert_eq!(spin.next(), Some(&"dva"));
 assert_eq!(spin.next(), Some(&"tri"));
