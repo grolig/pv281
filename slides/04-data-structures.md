@@ -466,10 +466,10 @@ impl Default for String {
 
 ---
 
-# From a Into
+# From & Into
 
-- slouží pro konverzy mezi typy
-- při správné implementaci ```from``` je ```into``` automaticky implementováno.
+Slouží pro konverzi mezi typy. 
+Při správné implementaci ```From``` je ```Into``` automaticky implementováno.
 
 ```rust
 trait Into<T>: Sized {
@@ -483,16 +483,15 @@ trait From<T>: Sized {
 
 ---
 
-# TryFrom TryInto
+### TryFrom & TryInto
 
-- použijeme, pokud from nebo into nemusí vždy být úspěšné
+Použijeme, pokud konverze užívající `From`, resp. `Into`, může selhat.
 
 ```rust
 pub trait TryFrom<T>: Sized {
     type Error;
     fn try_from(value: T) -> Result<Self, Self::Error>;
 }
-
 pub trait TryInto<T>: Sized {
     type Error;
     fn try_into(self) -> Result<T, Self::Error>;
@@ -502,6 +501,7 @@ pub trait TryInto<T>: Sized {
 ```rust
 let smaller: i32 = huge.try_into().unwrap_or(i32::MAX);
 ```
+
 ---
 
 # 
