@@ -184,13 +184,15 @@ fn main() {
 use std::io;
 
 fn main() {
-   let lines = io::stdin().lock().lines(); // mutex
-   
+   let lines = io::stdin().lock().lines();
+
    for line in lines {
        println!("got a line: {}", line.unwrap());
    }
 }
 ```
+
+Poznámka: `.lock()` vytvoří nad `stdin` *mutex*, kterým se budeme věnovat více v šesté přednášce.
 
 ---
 
