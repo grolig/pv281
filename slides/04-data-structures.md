@@ -252,7 +252,7 @@ enum Result<T, E> {
 
 ---
 
-# Generika u metod
+### Generika u metod
 
 ```rust
 struct Point<T, U> {
@@ -270,12 +270,11 @@ impl<T, U> Point<T, U> {
 }
 
 fn main() {
-    let p1 = Point { x: 5, y: 10.4 };
-    let p2 = Point { x: "Hello", y: 'c' };
+    let first = Point { x: 5, y: 10.4 };
+    let second = Point { x: "Hello", y: 'c' };
 
-    let p3 = p1.mixup(p2);
-
-    println!("p3.x = {}, p3.y = {}", p3.x, p3.y);
+    let mixed = first.mixup(second);
+    println!("mixed.x = {}, mixed.y = {}", mixed.x, mixed.y);
 }
 
 ```
