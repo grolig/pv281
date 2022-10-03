@@ -331,8 +331,8 @@ where T: Debug + 'a
 
 # Utility traity
 
-- tak důležité traity, že jsou ve standardní knihovně 
-- nutné je znát, abychom vytvořili idiomatický kód, tj. takový který je dostateně "Rustic"
+Důležité traity, které jsou součástí standardní knihovny. 
+Je vhodné je znát, abychom psali idiomatický kód (tj. takový kód, který je dostateně _Rustic_).
 
 ---
 
