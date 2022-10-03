@@ -349,19 +349,46 @@ trait Drop {
 
 ---
 
-# Implementace Drop
+### Implementace Drop
+
+<!-- _class: split -->
+
+<div class=left-column>
 
 ```rust
-impl Drop for UserProfile {
+struct DataHolder {
+    data: String,
+}
+
+impl Drop for DataHolder {
     fn drop(&mut self) {
-        print!("Dropping {}", self.name);
-        if !self.nicknames.is_empty() {
-            print!(" (AKA {})", self.nicknames.join(", "));
-        }
-        println!("");
+        println!("
+            Dropping DataHolder with data `{}`!",
+            self.data
+        );
     }
 }
+
+fn main() {
+    let c = DataHolder {
+        data: String::from("my stuff"),
+    };
+    println!("DataHolders created.");
+}
 ```
+
+</div>
+<div class=right-column>
+
+```shell
+$ cargo run
+
+DataHolders created.
+Dropping DataHolder with data `my stuff`!
+```
+
+</div>
+
 
 ---
 
