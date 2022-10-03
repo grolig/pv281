@@ -656,7 +656,7 @@ Typ closure jakožto parametru musí být jeden z následujících traitů:
 // Poznámka: F je typické písmeno generického typu pro otypování closure.
 fn apply<F>(f: F)
 where
-    // Samotná closure nemá žádné vstupní parametry a nic nevrací
+    // Samotná closure nemá žádné vstupní parametry a nic nevrací.
     F: FnOnce(),
 {
     f();
