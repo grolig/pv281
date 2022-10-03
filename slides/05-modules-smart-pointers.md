@@ -12,7 +12,7 @@ paginate: true
 
 # Obsah
 
-TODO: pridat podminenou kompilaci, zmínit `# Další příklad generiky` u Generiky
+TODO: pridat podminenou kompilaci
 1. Generika
 2. Smart Pointer
 3. Moduly
