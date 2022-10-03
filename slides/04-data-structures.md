@@ -388,27 +388,25 @@ Dropping DataHolder with data `my stuff`!
 
 # Typ Sized
 
-- v rámci Rustu existují typy sized a unsized. Unsized nemohou být uložené do proměnných a musí se s nimi pracovat přes referenci.
-- příkladem unsized je ```dyn Trait``` (např. ```dyn Write```)
-- implicitně mají generiské typy bound Sized. Abycho mohli u struktur využít i unsized typy, musíme řici, že nemusí jít o typ Sized pomocí ```?Sized```. Tím mužeme použít i fatpointer.
+V Rustu existují typy _sized_ a _unsized_. S _unsized_ se musí pracovat přes referenci, nemohou být uložené do proměnné. 
+
+Příkladem _unsized_ je `dyn Trait` (např. `dyn Write`)
 
 ---
 
-# Použití ?Sized
+### Typ Sized
+
+Generické typy mají implicitně trait bound `Sized`, takže následující zápisy jsou ekvivalentní:
 
 ```rust
-struct RcBox<T: ?Sized> {
-    ref_count: usize,
-    value: T,
-}
+fn generic_function<T>(t: T) { /* ... */ }
 
-let boxed_lunch: RcBox<String> = RcBox {
-    ref_count: 1,
-    value: "lunch".to_string()
-};
+fn generic_function<T: Sized>(t: T)  { /* ... */ }
+```
 
-use std::fmt::Display;
-let boxed_displayable: &RcBox<dyn Display> = &boxed_lunch;
+Abychom mohli u struktur využít i _unsized_ typy, musíme řict, že nemusí jít o typ Sized pomocí `?Sized`. Všimněte si, že musí jít o referenci.
+```rust
+fn generic_function<T: ?Sized>(t: &T)  { /* ... */ }
 ```
 
 ---
