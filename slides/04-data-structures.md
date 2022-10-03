@@ -279,6 +279,7 @@ fn main() {
 # Generika u metod – traity
 
 ```rust
+/// Assume the list parameter is not empty. 
 fn largest<T: PartialOrd + Copy>(list: &[T]) -> T {
     let mut largest = list[0];
 
