@@ -315,6 +315,21 @@ fn some_function<T, U>(t: &T, u: &U) -> i32
 
 ---
 
+# Generika a lifetime
+
+```rust
+// Funkce bere referenci na `T`,
+// kdy `T` implementuje `Debug` a všechny reference v `T` žijí déle než `'a`. 
+// Také `'a` žije déle než funkce.
+fn print_ref<'a, T>(t: &'a T)
+where T: Debug + 'a
+{
+    println!("`print_ref`: t is {:?}", t);
+}
+```
+
+---
+
 # Utility traity
 
 - tak důležité traity, že jsou ve standardní knihovně 
