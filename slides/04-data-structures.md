@@ -212,7 +212,6 @@ fn main() {
     let integer = Point { x: 5, y: 10 };
     let float = Point { x: 1.0, y: 4.0 };
 }
-
 ```
 
 ---
@@ -230,7 +229,6 @@ fn main() {
     let both_float = Point { x: 1.0, y: 4.0 };
     let integer_and_float = Point { x: 5, y: 4.0 };
 }
-
 ```
 
 ---
@@ -247,7 +245,6 @@ enum Result<T, E> {
     Ok(T),
     Err(E),
 }
-
 ```
 
 ---
@@ -276,7 +273,6 @@ fn main() {
     let mixed = first.mixup(second);
     println!("mixed.x = {}, mixed.y = {}", mixed.x, mixed.y);
 }
-
 ```
 
 ---
@@ -295,7 +291,6 @@ fn largest<T: PartialOrd + Copy>(list: &[T]) -> T {
 
     largest
 }
-
 ```
 
 ---
@@ -309,7 +304,6 @@ where T: Display + Clone,
 {
     // ...
 }
-
 ```
 
 ---
@@ -415,7 +409,6 @@ let boxed_lunch: RcBox<String> = RcBox {
 
 use std::fmt::Display;
 let boxed_displayable: &RcBox<dyn Display> = &boxed_lunch;
-
 ```
 
 ---
