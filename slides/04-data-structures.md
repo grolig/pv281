@@ -415,7 +415,7 @@ fn generic_function<T: ?Sized>(t: &T)  { /* ... */ }
 
 Umožní explicitní vytvoření hluboké kopie.
 
-Výchozí implementace jde vytvořit přes `#[derive(Clone)]`: volá `.clone()` nad všemi položkami struktury.
+Výchozí implementace jde vytvořit přes `#[derive(Clone)]`: volá `.clone()` nad všemi položkami struktury. Vlastní implementace dává kontrolu nad procesem kopírování.
 
 Operace může být drahá časově i paměťově.
 
@@ -501,10 +501,6 @@ pub trait TryInto<T>: Sized {
 ```rust
 let smaller: i32 = huge.try_into().unwrap_or(i32::MAX);
 ```
-
----
-
-# 
 
 ---
 
