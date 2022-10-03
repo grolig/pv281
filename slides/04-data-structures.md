@@ -865,15 +865,16 @@ fn main() {
 
 ---
 
-# collect()
+# Collect
 
-Některé typy umožňují převod na kolekci. Často použivaný je převod na vektor. K tomu slouží metoda ```collect()```.
+Některé typy umožňují převod na kolekci, často použivaný je převod na vektor. K tomu slouží metoda `collect()`.
 
 ```rust
 let args: Vec<String> = std::env::args().collect();
+let args_turbo_fish   = std::env::args().collect::<Vec<String>>();
 ```
 
-Můžeme převést na jakoukoliv kolekci, která implementuje trait ```FromIterator<A>```
+Můžeme převést na jakoukoliv kolekci, která implementuje trait ```FromIterator<A>```:
 
 ```rust
 trait FromIterator<A>: Sized {
