@@ -261,10 +261,7 @@ struct Point<T, U> {
 
 impl<T, U> Point<T, U> {
     fn mixup<V, W>(self, other: Point<V, W>) -> Point<T, W> {
-        Point {
-            x: self.x,
-            y: other.y,
-        }
+        Point { x: self.x, y: other.y }
     }
 }
 
@@ -575,10 +572,9 @@ fn main() {
 
 # Iterovatelné typy
 
-- "Iterable" je typ, který implementuje ```IntoIterator```. 
-- pomocí metody ```into_iter``` získáme iterátor.
+Iterovatelný (_Iterable_) je takový typ, který implementuje `IntoIterator`. Pomocí jeho metody ```into_iter()``` získáme iterátor.
 
-Pozn. cyklus for automaticky volá into_iter nad typem
+Poznámka: v Rustu je `for cyklus` syntaktický cukr pro volání `into_iter()`, proto je možné psát `for x in values` bez vytvoření iterátoru. 
 
 ---
 
