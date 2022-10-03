@@ -145,10 +145,10 @@ fn main() -> std::io::Result<()> {
 use std::fs::File;
 use std::io::{BufWriter, Write};
 
-fn main() {
+fn main() { 
     let data = "Some data!";
     let file = File::create("/tmp/foo").expect("Unable to create file");
-    let mut file = BufWriter::new(f);
+    let mut file = BufWriter::new(file);
     
     file.write_all(data.as_bytes()).expect("Unable to write data");
 }
