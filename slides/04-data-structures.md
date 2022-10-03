@@ -432,15 +432,16 @@ trait Clone: Sized {
 
 # Copy
 
-- běžně se používá s klonováním. Tj. provede implicitní klonování typu
-- zlepšuje sice pohodlí při používání, ale má jistá omezení a cenu
+Umožní implicitní duplikaci hodnoty, a to zkopírováním bitů paměti. Toto chování nelze přetížit.
+
+Vyžaduje součaně implementovat `Clone`: `#[derive(Copy, Clone)]`.
+
+Zlepšuje sice pohodlí při používání, ale má jistá omezení a cenu.
 
 ```rust
 trait Copy: Clone { }
 
 impl Copy for MyType { }
-
-#[derive(Copy, Clone)]
 ```
 
 ---
