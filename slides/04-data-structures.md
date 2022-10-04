@@ -124,7 +124,7 @@ fn main() -> std::io::Result<()> {
 
 # Flush bufferu
 
-U souboru flush nedělá nic jiného než vrácení ok. U bufferu je naopak důležitý. Rust jej zkouší volat i při traitu Drop.
+U souboru flush nedělá nic jiného než vrácení ok. U bufferu je naopak důležitý. Vynutí zápis z bufferu. Rust jej zkouší volat i při traitu Drop.
 
 ```rust
 use std::io::prelude::*;
@@ -555,6 +555,14 @@ pub trait Iterator {
 
 ---
 
+# Rychlost iterátoru
+
+Iterátory poskytují stejně rychlý (ne-li rychlejší) kód jako normální for cyklus.
+
+Jednoduché srovnání najdete v Rust book:  https://doc.rust-lang.org/book/ch13-04-performance.html
+
+---
+
 # Iterátor nad vektorem
 
 Vektor implementuje trait `Iterator`. 
@@ -637,6 +645,24 @@ fn main() {
 
     let closure_parameterless = || 1;
     println!("closure returning one: {}", closure_parameterless());
+}
+```
+
+---
+
+# Zachycení stave z vnějšího scope
+
+V rámci closure je zachycený stav z vnějšího scope.
+
+```rust
+fn main() {
+    let mut list = vec![1, 2, 3];
+    println!("Before defining closure: {:?}", list);
+
+    let mut borrows_mutably = || list.push(7);
+
+    borrows_mutably();
+    println!("After calling closure: {:?}", list);
 }
 ```
 
