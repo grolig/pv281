@@ -104,6 +104,8 @@ fn main() -> io::Result<()> {
 
 # Synchronizace na disk
 
+Pokud chceme počkat (blokující volání), dokud systém nedokončí synchronizaci souborového systému.
+
 ```rust
 use std::fs::File;
 use std::io::prelude::*;
@@ -121,6 +123,8 @@ fn main() -> std::io::Result<()> {
 ---
 
 # Flush bufferu
+
+U souboru flush nedělá nic jiného než vrácení ok. U bufferu je naopak důležitý. Rust jej zkouší volat i při traitu Drop.
 
 ```rust
 use std::io::prelude::*;
