@@ -398,3 +398,11 @@ section.split .right-column {
   grid-area: rightpanel;
   vertical-align: center;
 }
+
+/* For debugging purposes only */
+section.split .left-column,
+section.split .right-column,
+section.split .common-text,
+section.split h3 {
+  /*border: 1.5pt dashed dimgray;*/
+}
