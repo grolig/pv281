@@ -496,6 +496,84 @@ Jednolivé crates jsou zkompilovány jako .rlib, která je následně staticky l
 
 ---
 
+# Moduly
+
+Slouží k orgranizaci kódu v rámci projektu. Můžeme si je přiblížit jako Rustovou obdobu pro namespace. Je to logický kontejner pro struktury, funkce, typy aj.
+
+---
+
+# Ukázka modulu
+
+
+```rust
+mod spores {
+    use cells::{Cell, Gene};
+
+    pub struct Spore {
+       // ...
+    }
+
+    /// Simulate the production of a spore by meiosis.
+    pub fn produce_spore(factory: &mut Sporangium) -> Spore {
+        // ...
+    }
+
+    /// Extract the genes in a particular spore.
+    pub(crate) fn genes(spore: &Spore) -> Vec<Gene> {
+        // ...
+    }
+
+    /// Mix genes to prepare for meiosis (part of interphase).
+    fn recombine(parent: &mut Cell) {
+       //    ...
+    }
+
+    // ...
+}
+
+```
+
+---
+
+# Komentář k ukázce
+
+```pub``` udělá položku veřejnou, takže je přístupná mimo modul.
+```pub(crate)``` je přístupná uvnitř crate, ale nemůže být použita jinými crates. Zároveň není součástí vygenerované dokumentace.
+Cokoliv, co není označeno, se stává privátním. Může být použito pouze v rámci modulu nebo jeho potomků.
+
+---
+
+# Vnořené moduly
+
+```rust
+mod plant_structures {
+    pub mod roots {
+        pub(super) mod products {
+            pub(in crate::plant_structures::roots) struct Cytokinin {
+                ...
+            }
+        }
+    }
+    pub mod stems {
+        ...
+    }
+    pub mod leaves {
+        ...
+    }
+}
+```
+
+---
+
+# Vnořené moduly
+
+Modul může být veřejný (```pub```) stejně jako jiný typ.
+```pub(super)``` omezí viditelnost pouze na nadřazený modul.
+```pub(in ...)``` omezí viditelnost na daný modul a jeho potomky.
+
+
+---
+
 # Demostrační struktura programu
 
 ```sh
