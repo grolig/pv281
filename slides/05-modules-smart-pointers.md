@@ -155,11 +155,11 @@ fn some_function<T, U>(t: &T, u: &U) -> i32
 
 ---
 
-# Typy pointerů
-
-Pointer - základní odkaz na místo v paměti. Všechna omezení jsou definovaná borrow checkerem.
-
-Smart Pointer - chování odpovídá základnímu pointeru, ale dle varianty má další metadata a schopnosti.
+#### Pointer
+Základní odkaz na místo v paměti. Všechna omezení jsou definovaná _borrow checkerem_.
+<br />
+#### Smart Pointer
+Chování odpovídá základnímu pointeru, ale dle varianty má další metadata a schopnosti.
 
 ---
 
