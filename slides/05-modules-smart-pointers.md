@@ -303,17 +303,22 @@ Hodí se nám ve chvíli, kdy potřebujeme udělat rekurzivní struktury.
 # Box&lt;T>
 
 ```rust
-enum List {
-   Cons(i32, Box<List>),
-   Nil,
+#[derive(Debug)]
+enum List<T> {
+    Cons(T, Box<List<T>>),
+    Nil,
 }
-
-use List::{Cons, Nil};
 
 fn main() {
-let list = Cons(1, Box::new(Cons(2, Box::new(Cons(3, Box::new(Nil))))));
+    let list: List<i32> = List::Cons(1, Box::new(List::Cons(2, Box::new(List::Nil))));
+    println!("{:?}", list);
 }
+```
 
+```shell
+$ cargo run
+
+Cons(1, Cons(2, Nil))
 ```
 
 ---
