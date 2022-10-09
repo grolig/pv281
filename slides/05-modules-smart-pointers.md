@@ -14,8 +14,8 @@ paginate: true
 
 TODO: pridat podminenou kompilaci
 1. Smart Pointer
-2. Moduly
-3. Crates
+2. Crates
+3. Moduly
 4. Testování
 5. Dokumentace
 
@@ -430,6 +430,72 @@ fn main() {
 
 ---
 
+# Crate
+
+Jako názorná ukázka toho, co je to ```crate``` můžeme použít příkaz:
+
+```cargo build --verbose```
+
+---
+
+# Crate
+
+A nebo pohledem na závislosti v ```Cargo.toml```.
+
+```toml
+[dependencies]
+num = "0.4"
+image = "0.13"
+crossbeam = "0.8"
+```
+
+---
+
+# Externí závislost
+
+V Rustu 2015 bylo nutné použít extern crate. Dnes to už potřeba není. Jelikož se s tímto zápisem stále můžete setkat, tak jej zde ukazujeme.
+
+```rust
+
+extern crate pcre;
+
+extern crate std; // equivalent to: extern crate std as std;
+
+extern crate std as ruststd; // linking to 'std' under another name
+
+extern crate hello_world; // if hyphen in package name then it is replaced with an underscore
+                          // crate name cannot have hyphen
+
+extern crate foo as _; // when only linked and not referenced
+```
+
+---
+
+# Externí závislosti
+
+Dnes nám stačí použití ```use```.
+
+```rust
+use num::Complex;
+// ...
+use image::ColorType;
+use image::png::PNGEncoder;
+```
+
+---
+
+# Tranzitivní závislosti
+
+Cargo si pří překladu stáhne zdrojový kód pro každou crate. Ta může záviset na dalších - tranzitivních závislostech. Vytvoří ze graf závislostí, který je cargem vyhodnocen a zpracován.
+
+---
+
+# Kompilace crate
+
+Jednolivé crates jsou zkompilovány jako .rlib, která je následně staticky linkovaná do výsledné binárky.
+
+---
+
 # Demostrační struktura programu
 
 ```sh
@@ -697,26 +763,6 @@ mod my {
 fn main() {
     my::indirect_call();
 }
-```
-
----
-
-# Externí závislost
-
-Závislosti mohou být checknuté za překladu a přilinkované za běhu. V Rustu 2015 bylo nutné použít extern crate. Dnes to už potřeba není.
-
-```rust
-
-extern crate pcre;
-
-extern crate std; // equivalent to: extern crate std as std;
-
-extern crate std as ruststd; // linking to 'std' under another name
-
-extern crate hello_world; // if hyphen in package name then it is replaced with an underscore
-                          // crate name cannot have hyphen
-
-extern crate foo as _; // when only linked and not referenced
 ```
 
 ---
