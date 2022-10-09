@@ -149,9 +149,9 @@ fn some_function<T, U>(t: &T, u: &U) -> i32
 
 # Pro připomenutí
 
-1. Máme stack, který se uklízí automaticky na konci funkce
-2. Máme heap, kde máme velké objekty, objekty s neznámou velikostí za překladu a data, která nám musí přežít dlouho
-3. Heap se uklízí. V jiných jazycích to dělá garbage collector; v Rustu instrukce pro čištění dodá překladač
+1. Máme _stack_, který se uklízí automaticky na konci funkce.
+2. Máme _heap_, kde máme velké objekty, objekty s neznámou velikostí za překladu a data, která nám musí přežít dlouho.
+3. Heap se uklízí. V jiných jazycích to dělá _garbage collector_; v Rustu instrukce pro čištění dodá překladač.
 
 ---
 
