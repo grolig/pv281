@@ -412,9 +412,15 @@ Tehdy musíme použít `Weak<T>`, který není vlastníkem dat a ta mohou být o
 
 ---
 
-# Rc<T>
+<!-- _class: split -->
+
+### Rc&lt;T>
+
+<div class=left-column>
 
 ```rust
+use std::rc::Rc;
+
 enum List {
     Cons(i32, Rc<List>),
     Nil,
@@ -434,8 +440,21 @@ fn main() {
     }
     println!("count after c goes out of scope = {}", Rc::strong_count(&a));
 }
-
 ```
+
+</div>
+<div class=right-column>
+
+```shell
+$ cargo run
+
+count after creating a: 1
+count after creating b: 2
+count after creating c: 3
+count after c is dropped: 2
+```
+
+</div>
 
 ---
 
