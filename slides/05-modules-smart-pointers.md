@@ -1280,7 +1280,7 @@ pub fn add_one(x: i32) -> i32 {
 
 ---
 
-# Ukázka komplexnější dokumentace
+### Ukázka komplexnější dokumentace
 
 ```rust
 //! # Art
