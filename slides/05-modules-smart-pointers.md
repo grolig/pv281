@@ -1320,8 +1320,8 @@ pub mod utils {
 /// Finally, we print the sum of `x` and `y`:
 /// 
 /// ```
-/// # let x = 5;
-/// # let y = 6;
+/// let x = 5;
+/// let y = 6;
 /// println!("{}", x + y);
 /// assert_eq!(x + y, 11);
 /// ```
@@ -1334,6 +1334,7 @@ pub mod utils {
 ```rust
 /// Následující dokumentační testy jsou ekvivalentní. Novější verze umožňuje vynechat deklaraci funkce.
 /// Řádky začínající `# ` se využijí pro kompilaci testů, ale nebudou viditelné v dokumentaci.
+///
 /// ```
 /// use std::io;
 /// # fn main() -> io::Result<()> {
