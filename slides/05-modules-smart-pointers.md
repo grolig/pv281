@@ -426,13 +426,14 @@ fn main() {
 
 ---
 
-# <!--fit--> Modularita
+# <!--fit--> Crates
 
 ---
 
 # Crate
 
-Jako názorná ukázka toho, co je to ```crate``` můžeme použít příkaz:
+Crate je nejmenší jednotka kompilace, např. i soubor.
+Crate může být **binary crate** nebo **library crate**.
 
 ```cargo build --verbose```
 
@@ -453,7 +454,7 @@ crossbeam = "0.8"
 
 # Externí závislost
 
-V Rustu 2015 bylo nutné použít extern crate. Dnes to už potřeba není. Jelikož se s tímto zápisem stále můžete setkat, tak jej zde ukazujeme.
+V Rustu 2015 bylo nutné použít `extern crate`, od Rustu 2018 **už to potřeba není**. Jelikož se s tímto zápisem stále můžete setkat, tak jej zde ukazujeme:
 
 ```rust
 
@@ -493,6 +494,27 @@ Cargo si pří překladu stáhne zdrojový kód pro každou crate. Ta může zá
 # Kompilace crate
 
 Jednolivé crates jsou zkompilovány jako .rlib, která je následně staticky linkovaná do výsledné binárky.
+
+---
+
+### Package
+
+Package je "kolekce" alespoň jedné _crate_. Je definovaný v `Cargo.toml`. 
+Package může obsahovat několik **binary crates** (další se umisťují do `src/bin/`) a nejvýše jednu **library crate**:
+
+```sh
+foo
+├── Cargo.toml
+└── src
+    ├── main.rs
+    ├── lib.rs
+    └── bin
+        └── my_other_bin.rs
+```
+
+---
+
+# <!--fit--> Modularita
 
 ---
 
@@ -1061,25 +1083,6 @@ name = "server_app"
 
 [dependencies]
 common_functionality = { path = "../common_functionality" }
-```
-
----
-
-### Další vlastnosti modulového systému  
-
-Balíček (_package_) je "kolekce" alespoň jedné _crate_.
-Crate je nejmenší jednotka kompilace, např. i soubor.
-Crate může být **binary crate** nebo **library crate**.
-Balíček může obsahovat několik **binary crates** (další se umisťují do `src/bin/`) a nejvýše jednu **library crate**:
-
-```sh
-foo
-├── Cargo.toml
-└── src
-    ├── main.rs
-    ├── lib.rs
-    └── bin
-        └── my_other_bin.rs
 ```
 
 ---
