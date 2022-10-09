@@ -403,11 +403,12 @@ fn main() {
 
 # Rc&lt;T>
 
-Pokud potřebujeme více vlastníku, tak můžeme využít reference counting. Pokud existuje jakýkoliv odkaz, tak data nejsou uvolněna. 
+Pokud potřebujeme více vlastníků, tak můžeme využít _reference counting_. Pokud existuje jakýkoliv odkaz, tak data nejsou uvolněna. 
 
-T v Rc je imutabilní. Pokud chceme, aby se obsah dal měnit, tak musíme použít kombinace s Cell nebo RefCell.
+`T` v `Rc` je imutabilní. Pokud chceme, aby se obsah dal měnit, tak musíme použít kombinace s `Cell` nebo `RefCell`.
 
-Pokud tvoříme cyklické vazby (například odkazování mezi potomkem a rodičem stromu) můžeme využít alternativu Weak, které není vlastníkem dat a ta mohou být odstraněna. Jinak bychom mohli způsobit memory leak.
+Pokud tvoříme pomocí `Rc` cyklické vazby (např. obousměrné odkazy mezi potomkem a rodičem stromu), může dojít k _memory leaku_, protože čítač nikdy neklesne na 0.
+Tehdy musíme použít `Weak<T>`, který není vlastníkem dat a ta mohou být odstraněna.
 
 ---
 
