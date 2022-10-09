@@ -215,7 +215,12 @@ fn main() {
 
 ---
 
-# Drop
+
+<!-- _class: split -->
+
+### Drop
+
+<div class=left-column>
 
 ```rust
 struct CustomSmartPointer {
@@ -224,7 +229,10 @@ struct CustomSmartPointer {
 
 impl Drop for CustomSmartPointer {
     fn drop(&mut self) {
-        println!("Dropping CustomSmartPointer with data `{}`!", self.data);
+        println!
+            "Dropping CustomSmartPointer with data `{}`!",
+            self.data
+        );
     }
 }
 
@@ -239,6 +247,20 @@ fn main() {
 }
 
 ```
+
+</div>
+<div class=right-column>
+
+```shell
+$ cargo run
+
+CustomSmartPointers created.
+Dropping CustomSmartPointer with data `other stuff`!
+Dropping CustomSmartPointer with data `my stuff`!
+```
+
+</div>
+
 
 ---
 
