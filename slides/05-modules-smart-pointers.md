@@ -178,11 +178,15 @@ Poznámka: `String` je smart pointer, např. kapacitu si drží jako metadata. D
 ```rust
 use std::ops::Deref;
 
-impl<T> Deref for MyBox<T> {
+struct DerefExample<T> {
+    value: T
+}
+
+impl<T> Deref for DerefExample<T> {
     type Target = T;
 
     fn deref(&self) -> &Self::Target {
-        &self.0
+        &self.value
     }
 }
 
