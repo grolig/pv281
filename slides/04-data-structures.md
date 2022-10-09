@@ -338,7 +338,7 @@ Je vhodné je znát, abychom psali idiomatický kód (tj. takový kód, který j
 # Drop
 
 Rust obecně odvádí dobrou práci při uvolnění zdrojů. Občas ale chceme uvolnění přizpusobit, a k tomu slouží trait `Drop`.
-Metodu `drop()` Rust volá automaticky při uvolňování paměti, nebo se dá volat i explicitně.
+Metodu `drop()` Rust volá automaticky při uvolňování paměti.
 
 ```rust
 trait Drop {
