@@ -197,7 +197,6 @@ impl<T> Deref for DerefExample<T> {
         &self.value
     }
 }
-
 ```
 
 </div>
@@ -262,7 +261,6 @@ fn main() {
     };
     println!("CustomSmartPointers created.");
 }
-
 ```
 
 </div>
@@ -336,7 +334,6 @@ Je určena pouze pro jednovláknové použití. Vícevláknové alternativy budo
 # Cell&lt;T>
 
 ```rust
-
 use std::cell::Cell;
 
 struct SomeStruct {
@@ -359,7 +356,6 @@ fn main() {
     my_struct.special_field.set(new_value);
     assert_eq!(my_struct.special_field.get(), new_value);
 }
-
 ```
 
 ---
@@ -568,7 +564,6 @@ crate
          ├── take_order
          ├── serve_order
          └── take_payment
-
 ```
 
 ---
@@ -582,7 +577,6 @@ crate
      ├── hosting.rs
      └── serving
          └── mod.rs
-
 ```
 
 ---
@@ -659,7 +653,6 @@ pub fn eat_at_restaurant() {
     // to see or modify the seasonal fruit that comes with the meal
     // meal.seasonal_fruit = String::from("blueberries");
 }
-
 ```
 
 ---
@@ -678,7 +671,6 @@ pub fn eat_at_restaurant() {
     let order1 = back_of_house::Appetizer::Soup;
     let order2 = back_of_house::Appetizer::Salad;
 }
-
 ```
 
 ---
@@ -703,7 +695,6 @@ pub fn eat_at_restaurant() {
     hosting::add_to_waitlist();
     hosting::add_to_waitlist();
 }
-
 ```
 
 ---
@@ -724,7 +715,6 @@ pub fn eat_at_restaurant() {
     hosting::add_to_waitlist();
     hosting::add_to_waitlist();
 }
-
 ```
 
 ---
@@ -745,7 +735,6 @@ pub fn eat_at_restaurant() {
     add_to_waitlist();
     add_to_waitlist();
 }
-
 ```
 
 ---
@@ -754,7 +743,6 @@ pub fn eat_at_restaurant() {
 
 ```rust
 use std::io::{self, Write};
-
 ```
 
 ---
@@ -763,7 +751,6 @@ use std::io::{self, Write};
 
 ```rust
 use std::collections::*;
-
 ```
 
 ---
@@ -832,7 +819,6 @@ mod my {
 fn main() {
     my::indirect_call();
 }
-
 ```
 
 ---
@@ -873,7 +859,6 @@ Pokud tvoříme projekt, který má více samostatně použitelných knihoven, a
 │   └── src
 │       └── main.rs
 └── target
-
 ```
 
 ---
@@ -887,7 +872,6 @@ members = [
     "adder",
     "add-one",
 ]
-
 ```
 
 ---
@@ -896,7 +880,6 @@ members = [
 
 ```sh
 cargo new adder
-
 ```
 
 ---
@@ -905,7 +888,6 @@ cargo new adder
 
 ```sh
 cargo new add-one --lib
-
 ```
 
 
@@ -917,7 +899,6 @@ cargo new add-one --lib
 [dependencies]
 
 add-one = { path = "../add-one" }
-
 ```
 
 ---
@@ -926,7 +907,6 @@ add-one = { path = "../add-one" }
 
 ```sh
 cargo run -p adder
-
 ```
 
 ---
@@ -1013,7 +993,6 @@ mod tests {
         assert!(larger.can_hold(&smaller));
     }
 }
-
 ```
 
 ---
@@ -1034,7 +1013,6 @@ mod tests {
         assert_eq!(4, add_two(2)); // máme i assert_ne
     }
 }
-
 ```
 
 ---
@@ -1060,7 +1038,6 @@ mod tests {
         );
     }
 }
-
 ```
 
 ---
@@ -1092,7 +1069,6 @@ mod tests {
         Guess::new(200);
     }
 }
-
 ```
 
 ---
@@ -1111,7 +1087,6 @@ mod tests {
         }
     }
 }
-
 ```
 
 ---
