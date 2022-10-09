@@ -281,18 +281,18 @@ Dropping CustomSmartPointer with data `my stuff`!
 
 ---
 
-# Varianty Smart Pointerů
+# Varianty smart pointerů
 
-1. Box<T>
-2. Cell<T>
-3. RefCell<T>
-4. Rc<T>
-6. Ref<T>
-7. RefMut<T>
+#### Box&lt;T>
+#### Cell&lt;T>
+#### RefCell&lt;T>
+#### Rc&lt;T>
+#### Ref&lt;T>
+#### RefMut&lt;T>
 
 ---
 
-# Box<T>
+# Box&lt;T>
 
 Je nejjednodušším smart pointerem. Ukládá data na haldě (nikoli na zásobníku) i ve chvíli, kdy je jejich velikost známá za překladu. Samotný pointer může být na zásobníku, ale data ne.
 
@@ -300,7 +300,7 @@ Hodí se nám ve chvíli, kdy potřebujeme udělat rekurzivní struktury.
 
 ---
 
-# Box<T>
+# Box&lt;T>
 
 ```rust
 enum List {
@@ -318,7 +318,7 @@ let list = Cons(1, Box::new(Cons(2, Box::new(Cons(3, Box::new(Nil))))));
 
 ---
 
-# Cell<T>
+# Cell&lt;T>
 
 Umožňuje mutaci uvnitř imutabilní struktury. Má funkce get a set. Get vrací kopii dat.
 
@@ -328,7 +328,7 @@ Je pro jednovláknové použití. Vícevláknové alternativy budou příště.
 
 ---
 
-# Cell<T>
+# Cell&lt;T>
 
 ```rust
 
@@ -360,7 +360,7 @@ fn main() {
 
 ---
 
-# RefCell<T>
+# RefCell&lt;T>
 
 Dává sdílený přístup k T, ale narozdíl od Cell je kontrolovaná za běhu. Má metody, která vrací mutovatelnou nebo nemutovatelnou referenci. Musíme si sami napsat kontrolu, jestli se povedlo získat referenci.
 
@@ -370,7 +370,7 @@ Pokud existuje nemutovatelná reference, tak můžeme získat další nemutovate
 
 ---
 
-# RefCell<T>
+# RefCell&lt;T>
 
 ```rust
 fn main() {
@@ -395,7 +395,7 @@ fn main() {
 
 ---
 
-# Rc<T>
+# Rc&lt;T>
 
 Pokud potřebujeme více vlastníku, tak můžeme využít reference counting. Pokud existuje jakýkoliv odkaz, tak data nejsou uvolněna. 
 
@@ -465,7 +465,9 @@ fn main() {
 
 ---
 
-# Ref<T>
+# Ref&lt;T>
+
+Typ obalující imutabilně vypůjčenou hodnotu z `RefCell<T>`.
 
 ```rust
 use std::cell::{RefCell, Ref};
@@ -479,7 +481,9 @@ assert_eq!(*b2, 5)
 
 ---
 
-# RefMut<T>
+# RefMut&lt;T>
+
+Typ obalující mutabilně vypůjčenou hodnotu z `RefCell<T>`.
 
 ```rust
 use std::cell::{RefCell, RefMut};
