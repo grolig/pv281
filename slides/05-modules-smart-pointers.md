@@ -471,24 +471,23 @@ enum List {
     Nil,
 }
 
-use crate::List::{Cons, Nil};
+use List::{Cons, Nil};
 use std::cell::RefCell;
 use std::rc::Rc;
 
 fn main() {
     let value = Rc::new(RefCell::new(5));
 
-    let a = Rc::new(Cons(Rc::clone(&value), Rc::new(Nil)));
+    let tail = Rc::new(Cons(Rc::clone(&value), Rc::new(Nil)));
 
-    let b = Cons(Rc::new(RefCell::new(3)), Rc::clone(&a));
-    let c = Cons(Rc::new(RefCell::new(4)), Rc::clone(&a));
+    let head_1 = Cons(Rc::new(RefCell::new(3)), Rc::clone(&tail));
+    let head_2 = Cons(Rc::new(RefCell::new(4)), Rc::clone(&tail));
 
-    *value.borrow_mut() += 10; // borrow_mut vrací RefMut, proto je tu třeba *
-                               // tímto jde získat jednu mutující referenci a n nemutujících
+    *value.borrow_mut() += 10; // borrow_mut vrací RefMut, proto je tu třeba *.
 
-    println!("a after = {:?}", a);
-    println!("b after = {:?}", b);
-    println!("c after = {:?}", c);
+    println!("tail   = {:?}", tail);
+    println!("head_1 = {:?}", head_1);
+    println!("head_2 = {:?}", head_2);
 }
 ```
 
