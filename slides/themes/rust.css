@@ -396,11 +396,9 @@ section.split .common-text {
 }
 section.split .left-column {
   grid-area: leftpanel;
-  vertical-align: center;
 }
 section.split .right-column {
   grid-area: rightpanel;
-  vertical-align: center;
 }
 
 /* For debugging purposes only */
