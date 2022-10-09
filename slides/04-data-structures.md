@@ -104,7 +104,7 @@ fn main() -> io::Result<()> {
 
 # Synchronizace na disk
 
-Pokud chceme počkat (blokující volání), dokud systém nedokončí synchronizaci souborového systému.
+Použijeme, pokud chceme počkat (_blokující volání_), dokud systém nedokončí synchronizaci souborového systému.
 
 ```rust
 use std::fs::File;
@@ -124,7 +124,8 @@ fn main() -> std::io::Result<()> {
 
 # Flush bufferu
 
-U souboru flush nedělá nic jiného než vrácení ok. U bufferu je naopak důležitý. Vynutí zápis z bufferu. Rust jej zkouší volat i při traitu Drop.
+Vynucení zápisu z bufferu, Rust jej volá i v metodě traitu `Drop`.
+Poznámka: `File::flush` nic nedělá a jen vrací `Ok(())`. 
 
 ```rust
 use std::io::prelude::*;
@@ -650,7 +651,7 @@ fn main() {
 
 ---
 
-# Zachycení stave z vnějšího scope
+# Zachycení stavu z vnějšího scope
 
 V rámci closure je zachycený stav z vnějšího scope.
 
