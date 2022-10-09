@@ -435,13 +435,15 @@ fn main() {
 Crate je nejmenší jednotka kompilace, např. i soubor.
 Crate může být **binary crate** nebo **library crate**.
 
-```cargo build --verbose```
+Jako názorná ukázka toho, co to `crate` je, můžeme použít příkaz...
+
+`cargo build --verbose`
 
 ---
 
 # Crate
 
-A nebo pohledem na závislosti v ```Cargo.toml```.
+...nebo se stačí podívat na závislosti v `Cargo.toml`:
 
 ```toml
 [dependencies]
