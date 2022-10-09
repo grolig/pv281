@@ -377,17 +377,19 @@ Platí stejná pravidla pro získávání referencí jako při _borrow checkingu
 # RefCell&lt;T>
 
 ```rust
+use std::cell::RefCell;
+
 fn main() {
-    use std::cell::RefCell;
     let container = RefCell::new(11);
+    
     {
         let _c = container.borrow();
         // You may borrow as immutable as many times as you want,...
         assert!(container.try_borrow().is_ok());
-        // ...but cannot borrow as mutable because 
-        // it is already borrowed as immutable.
+        // ...but cannot borrow as mutable because it is already borrowed as immutable.
         assert!(container.try_borrow_mut().is_err());
     } 
+    
     // After the first borrow as mutable...
     let _c = container.borrow_mut();
     // ...you cannot borrow in any way.
