@@ -574,36 +574,9 @@ Modul může být veřejný (```pub```) stejně jako jiný typ.
 
 ---
 
-# Demostrační struktura programu
+### Klíčové slovo mod
 
-```sh
-crate
- └── front_of_house
-     ├── hosting
-     │   ├── add_to_waitlist
-     │   └── seat_at_table
-     └── serving
-         ├── take_order
-         ├── serve_order
-         └── take_payment
-```
-
----
-
-# Možná souborová struktura
-
-```sh
-.
- └── front_of_house
-     ├── mod.rs
-     ├── hosting.rs
-     └── serving
-         └── mod.rs
-```
-
----
-
-# Klíčové slovo mod
+Vytvářejme `library crate` modelující restauraci:
 
 ```rust
 mod front_of_house {
@@ -625,61 +598,127 @@ mod front_of_house {
 
 ---
 
-# Odkaz do jiného modulu
+### Strom modulů
+
+Obsah souborů `src/main.rs` a `src/lib.rs` tvoří implicitní modul zvaný `crate` v kořeni modulového stromu:
+
+```
+crate
+ └── front_of_house
+     ├── hosting
+     │   ├── add_to_waitlist
+     │   └── seat_at_table
+     └── serving
+         ├── take_order
+         ├── serve_order
+         └── take_payment
+```
+
+---
+
+### Volání funkce z jiného modulu
+
+Absolutní cesty začínají názvem crate nebo literálem `crate`.
+Relativní cesty začínají klíčovými slovy `self`, `super` nebo názvem modulu.
 
 ```rust
 mod front_of_house {
-    pub mod hosting {
-        pub fn add_to_waitlist() {}
+    mod hosting {
+        fn add_to_waitlist() {}
     }
 }
 
-pub fn eat_at_restaurant() {
-    // Absolute path
-    crate::front_of_house::hosting::add_to_waitlist();
+fn eat_at_restaurant() {
+    crate::front_of_house::hosting::add_to_waitlist(); // Absolute path from the current crate
+    
+    name_of_the_crate::path::to::the::function(); // Absolute path from an external crate (dependency)
 
-    // Relative path
+    front_of_house::hosting::add_to_waitlist();  // Relative path
+}        
+```
+
+---
+
+# Viditelnost
+
+V Rustu jsou všechny položky (funkce, metody, struktury, enumy, moduly i konstanty) **private by default** vůči svému rodičovskému modulu.
+
+To znamená, že rodičovský modul nemůže použít _private_ položky potomka. Naopak to ale neplatí, potomek může používat položky rodiče. To nám například umožní _unit testing_ private funkcí.
+
+Pro úroveň výš zviditelníme položku klíčovým slovem `pub`. Celá cesta k položce musí být `pub`, abychom položku mohli použít.
+
+---
+
+# Viditelnost
+
+Předchozí příklad by se nezkompiloval bez přidání dvou klíčových slov `pub`. `front_of_house` je sourozenec vůči `eat_at_restaurant()`, ten veřejný být nemusí.
+
+```rust
+mod front_of_house { 
+    pub mod hosting { // celá cesta k funkci musí být `pub`
+        pub fn add_to_waitlist() {} // i funkce samotná musí být `pub`
+    }
+}
+
+fn eat_at_restaurant() {
+    crate::front_of_house::hosting::add_to_waitlist();
     front_of_house::hosting::add_to_waitlist();
 }        
 ```
 
 ---
 
-# Veřejné struktury
+<!-- _class: split -->
+
+### Veřejné struktury
+
+<div class=left-column>
 
 ```rust
 mod back_of_house {
     pub struct Breakfast {
         pub toast: String,
-        seasonal_fruit: String,
+        fruit: String,
     }
 
     impl Breakfast {
         pub fn summer(toast: &str) -> Breakfast {
             Breakfast {
                 toast: String::from(toast),
-                seasonal_fruit: String::from("peaches"),
+                fruit: String::from("peaches"),
             }
         }
     }
 }
+```
 
+</div>
+<div class=right-column>
+
+```rust
 pub fn eat_at_restaurant() {
-    // Order a breakfast in the summer with Rye toast
-    let mut meal = back_of_house::Breakfast::summer("Rye");
+    // Order a breakfast in the summer with Dark toast
+    let mut meal = back_of_house::Breakfast::summer("Dark");
+    
     // Change our mind about what bread we'd like
     meal.toast = String::from("Wheat");
     println!("I'd like {} toast please", meal.toast);
 
-    // The next line won't compile if we uncomment it; we're not allowed
-    // to see or modify the seasonal fruit that comes with the meal
-    // meal.seasonal_fruit = String::from("blueberries");
+    // The next line won't compile if we uncomment it;
+    // we're not allowed to see or modify the seasonal
+    // fruit that comes with the meal
+    
+    // meal.fruit = String::from("blueberries");
 }
 ```
+
+</div>
 
 ---
 
 # Veřejné enumy
+
+Enum zviditelňujeme jako celek:
 
 ```rust
 mod back_of_house {
@@ -730,7 +769,7 @@ mod front_of_house {
     }
 }
 
-use self::front_of_house::hosting; // <- tady je rozdil
+use self::front_of_house::hosting; // <- Tady je rozdil.
 
 pub fn eat_at_restaurant() {
     hosting::add_to_waitlist();
@@ -753,7 +792,7 @@ mod front_of_house {
 use crate::front_of_house::hosting::add_to_waitlist;
 
 pub fn eat_at_restaurant() {
-    add_to_waitlist();
+    add_to_waitlist(); // <- Teď je rozdil i tady.
     add_to_waitlist();
     add_to_waitlist();
 }
@@ -761,10 +800,14 @@ pub fn eat_at_restaurant() {
 
 ---
 
-# Use pro více modulů/členů
+# Use pro více položek
 
 ```rust
 use std::io::{self, Write};
+```
+
+```rust
+use std::{cmp::Ordering, io};
 ```
 
 ---
@@ -775,9 +818,14 @@ use std::io::{self, Write};
 use std::collections::*;
 ```
 
+Už jsme se setkali s *prelude pattern*em, kde jsou nejdůležitější položky zviditelněny na jednom místě:
+```rust
+use std::io::prelude::*;
+```
+
 ---
 
-# super
+### Klíčové slovo `super`
 
 ```rust
 fn function() {
@@ -801,25 +849,23 @@ mod my {
         }
     }
 
-    // ...
+    // Continued on the next slide...
 }
 ```
 
 ---
 
-# super
+### Klíčové slovo `super`
 
 ```rust
 mod my {
-    // ... 
+    // ...continued from the previous slide. 
 
     pub fn indirect_call() {
         // Let's access all the functions named `function` from this scope!
-        print!("called `my::indirect_call()`, that\n> ");
+        println!("called `my::indirect_call()`, that then:");
         
-        // The `self` keyword refers to the current module scope - in this case `my`.
-        // Calling `self::function()` and calling `function()` directly both give
-        // the same result, because they refer to the same function.
+        // The `self` keyword refers to the current module scope - `my`. Calling `self::function()` and `function()` both give the same result.
         self::function();
         function();
         
@@ -829,9 +875,7 @@ mod my {
         // The `super` keyword refers to the parent scope (outside the `my` module).
         super::function();
         
-        // This will bind to the `cool::function` in the *crate* scope.
-        // In this case the crate scope is the outermost scope.
-        {
+        { // This will bind to the `cool::function` in the *crate* scope. In this case the crate scope is the outermost scope.
             use crate::cool::function as root_function;
             root_function();
         }
@@ -845,21 +889,151 @@ fn main() {
 
 ---
 
-# Workspace
+### Klíčové slovo `super`
 
-Pokud tvoříme projekt, který má více samostatně použitelných knihoven, ale chceme se na ně odkazovat bez nutnosti publikování, tak můžeme použít workspace.
+```shell
+$ cargo run
+
+called `my::indirect_call()`, that then: 
+called `my::function()`
+called `my::function()`
+called `my::cool::function()`
+called `function()`
+called `cool::function()`
+```
+
+---
+
+<!-- _class: split -->
+
+### Moduly a soubory
+
+<div class=left-column>
+
+###### src/lib.rs
+
+```rust
+mod front_of_house;
+
+use crate::front_of_house::hosting::add_to_waitlist;
+
+pub fn eat_at_restaurant() {
+    add_to_waitlist();
+}
+```
+
+###### src/front_of_house.rs
+
+```rust
+pub mod hosting;
+```
+
+###### src/front_of_house/hosting.rs
+
+```rust
+pub fn add_to_waitlist() {}
+```
+
+</div>
+<div class=right-column>
+
+###### Adresářová struktura
+
+```
+src
+├── front_of_house
+│   └── hosting.rs
+├── front_of_house.rs
+└── lib.rs
+```
+
+###### Modulový strom
+
+```
+crate
+└── mod front_of_house: pub
+    └── mod hosting: pub
+```
+
+</div>
+
+---
+
+<!-- _class: split -->
+
+### Moduly a soubory – mod.rs
+
+<div class=left-column>
+
+###### src/lib.rs
+
+```rust
+mod front_of_house;
+
+use crate::front_of_house::hosting::add_to_waitlist;
+
+pub fn eat_at_restaurant() {
+    add_to_waitlist();
+}
+```
+
+###### src/front_of_house/mod.rs
+
+```rust
+pub mod hosting;
+```
+
+###### src/front_of_house/hosting.rs
+
+```rust
+pub fn add_to_waitlist() {}
+```
+
+</div>
+<div class=right-column>
+
+###### Adresářová struktura
+
+```sh
+src
+├── front_of_house
+│   ├── hosting.rs
+│   └── mod.rs # <- Zde je rozdíl.
+└── lib.rs
+```
+
+###### Modulový strom
+
+```
+crate
+└── mod front_of_house: pub
+    └── mod hosting: pub
+```
+
+</div>
+
+---
+
+### Workspace
+
+Umožňuje se odkazovat napříč crates bez nutnosti je publikovat.
+Crates we _workspace_ sdílí společný adresář pro output.
 
 ```sh
 ├── Cargo.lock
 ├── Cargo.toml
-├── add-one
-│   ├── Cargo.toml
-│   └── src
-│       └── lib.rs
-├── adder
-│   ├── Cargo.toml
-│   └── src
-│       └── main.rs
+├── common_functionality
+│   ├── src
+│   │   └── lib.rs
+│   └── Cargo.toml
+├── client_app
+│   ├── src
+│   │   └── main.rs
+│   └── Cargo.toml
+├── server_app
+│   ├── src
+│   │   └── main.rs
+│   └── Cargo.toml
 └── target
 ```
 
@@ -871,55 +1045,39 @@ Pokud tvoříme projekt, který má více samostatně použitelných knihoven, a
 [workspace]
 
 members = [
-    "adder",
-    "add-one",
+    "common_functionality",
+    "client_app",
+    "server_app"
 ]
 ```
 
 ---
 
-# Nová binárka do workspacu
-
-```sh
-cargo new adder
-```
-
----
-
-# Nová libka do workspacu
-
-```sh
-cargo new add-one --lib
-```
-
-
----
-
-# Závislost na libce v binárce
+### Závislost binárky na knihovně ve workspace
 
 ```toml
+[package]
+name = "server_app"
+
 [dependencies]
-
-add-one = { path = "../add-one" }
+common_functionality = { path = "../common_functionality" }
 ```
 
 ---
 
-# Následné spuštění
+### Další vlastnosti modulového systému  
 
-```sh
-cargo run -p adder
-```
-
----
-
-# Připomenutí konvencí pro binárky
+Balíček (_package_) je "kolekce" alespoň jedné _crate_.
+Crate je nejmenší jednotka kompilace, např. i soubor.
+Crate může být **binary crate** nebo **library crate**.
+Balíček může obsahovat několik **binary crates** (další se umisťují do `src/bin/`) a nejvýše jednu **library crate**:
 
 ```sh
 foo
 ├── Cargo.toml
 └── src
     ├── main.rs
+    ├── lib.rs
     └── bin
         └── my_other_bin.rs
 ```
