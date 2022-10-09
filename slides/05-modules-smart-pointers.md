@@ -1335,9 +1335,20 @@ pub mod utils {
 
 ---
 
-# Operátor `?` v dokumentačních testech
+### Operátor `?` v dokumentačních testech
 
 ```rust
+/// Následující dokumentační testy jsou ekvivalentní. Novější verze umožňuje vynechat deklaraci funkce.
+/// Řádky začínající `# ` se využijí pro kompilaci testů, ale nebudou viditelné v dokumentaci.
+/// ```
+/// use std::io;
+/// # fn main() -> io::Result<()> {
+/// let mut input = String::new();
+/// io::stdin().read_line(&mut input)?;
+/// # Ok(())
+/// # }
+/// ```
+///
 /// ```
 /// use std::io;
 /// let mut input = String::new();
