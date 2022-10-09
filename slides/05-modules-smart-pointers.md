@@ -171,9 +171,17 @@ Poznámka: `String` je smart pointer, např. kapacitu si drží jako metadata. D
 
 ---
 
-# Deref coercion
+<!-- _class: split -->
 
-= automatická dereference parametrů funkcí/metod
+### Deref coercion
+
+<div class=common-text>
+
+Automatický převod mezi referencemi parametrů funkcí/metod. Trait `Deref` umožňuje používat operátor dereference <code>*</code>.
+
+</div>
+
+<div class=left-column>
 
 ```rust
 use std::ops::Deref;
@@ -191,6 +199,19 @@ impl<T> Deref for DerefExample<T> {
 }
 
 ```
+
+</div>
+<div class=right-column>
+
+```rust
+fn main() {
+    let x = DerefExample { value: 'a' };
+    
+    assert_eq!('a', *x);
+}
+```
+
+</div>
 
 ---
 
