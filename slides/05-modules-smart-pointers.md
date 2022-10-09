@@ -476,11 +476,10 @@ extern crate foo as _; // when only linked and not referenced
 
 # Externí závislosti
 
-Dnes nám stačí použití ```use```.
+Dnes nám stačí použít `use` (více o něm později):
 
 ```rust
 use num::Complex;
-// ...
 use image::ColorType;
 use image::png::PNGEncoder;
 ```
@@ -489,7 +488,7 @@ use image::png::PNGEncoder;
 
 # Tranzitivní závislosti
 
-Cargo si pří překladu stáhne zdrojový kód pro každou crate. Ta může záviset na dalších - tranzitivních závislostech. Vytvoří ze graf závislostí, který je cargem vyhodnocen a zpracován.
+Cargo si pří překladu stáhne zdrojový kód pro každou crate. Ta může záviset na dalších, tranzitivních závislostech. Vytvoří ze graf závislostí, který je cargem vyhodnocen a zpracován.
 
 ---
 
