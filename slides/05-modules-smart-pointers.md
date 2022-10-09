@@ -215,6 +215,23 @@ fn main() {
 
 ---
 
+### Kde je operátor `->`?
+
+V jazycích C a C++ se rozlišuje mezi `.` a `->` tak, že následující zápisy jsou ekvivalentní:
+
+```c++
+object->something();
+(*object).something();
+```
+
+Rust při volání `object.something()` automaticky přidává `&`, `&mut`, či `*`, aby `object` typově odpovídal signatuře `something()`:
+
+```rust
+p1.distance(&p2);
+(&p1).distance(&p2);
+```
+
+---
 
 <!-- _class: split -->
 
