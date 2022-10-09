@@ -352,11 +352,10 @@ fn main() {
 
     let new_value = 100;
 
-    // ERROR: `my_struct` is immutable
+    // ERROR: `my_struct` is immutable.
     // my_struct.regular_field = new_value;
 
-    // WORKS: although `my_struct` is immutable, `special_field` is a `Cell`,
-    // which can always be mutated
+    // WORKS: although `my_struct` is immutable, `special_field` is a `Cell`, which can always be mutated.
     my_struct.special_field.set(new_value);
     assert_eq!(my_struct.special_field.get(), new_value);
 }
