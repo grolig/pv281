@@ -978,7 +978,7 @@ crate
 ### Workspace
 
 Umožňuje se odkazovat napříč crates bez nutnosti je publikovat.
-Crates we _workspace_ sdílí společný adresář pro output.
+Crates ve _workspace_ sdílí společný adresář pro output.
 
 ```sh
 ├── Cargo.lock
