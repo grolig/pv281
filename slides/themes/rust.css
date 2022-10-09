@@ -372,7 +372,7 @@ section.split {
   padding-top: 0;
   display: grid;
   grid-template-columns: 45% 45%;
-  grid-template-rows: 1.5em 1.3em auto;
+  grid-template-rows: 3em min-content min-content auto;
   grid-template-areas:
         "slideheading slideheading"
         "commontext commontext"
