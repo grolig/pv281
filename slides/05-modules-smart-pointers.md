@@ -677,6 +677,22 @@ pub fn eat_at_restaurant() {
 
 ---
 
+# Konstanty a static
+
+```rust
+pub const ROOM_TEMPERATURE_C: f64 = 20.0;  // degrees Celsius
+
+pub static ROOM_TEMPERATURE_F: f64 = 68.0;  // degrees Fahrenheit
+```
+
+Konstanta je podobná C ```#define```. Pří kompilace je hodnota dosazena na každé místo, kde je použitá.
+
+Statické proměnné žíjí od startu až do konce běhu programu. V bezpečném Rustu nemohou být mutabilní.
+
+Používejte konstanty pro měnší hodnoty - magická čísla nebo řetězce. Pro větší věci, kde chcete udělat borrow, tak využijte static.
+
+---
+
 # Veřejné enumy
 
 Enum zviditelňujeme jako celek:
@@ -783,6 +799,14 @@ Už jsme se setkali s *prelude pattern*em, kde jsou nejdůležitější položky
 ```rust
 use std::io::prelude::*;
 ```
+
+---
+
+# Prelude
+
+Prelude je velmi často i u knihoven třetích stran, aby zpříjemnil práci a dal k dispozici nejpoužívanější traity, typy aj. Narozdíl od prelude ze std (```use std::prelude::v1::*;```) nejsou takové moduly importovány automaticky. 
+
+Vznikne vlastním vytvořením modulu prelude.
 
 ---
 
@@ -972,11 +996,11 @@ crate
 ```
 
 </div>
+###### Modulový strom
 
----
-
+```
 ### Workspace
-
+└── mod front_of_house: pub
 Umožňuje se odkazovat napříč crates bez nutnosti je publikovat.
 Crates ve _workspace_ sdílí společný adresář pro output.
 
@@ -996,27 +1020,32 @@ Crates ve _workspace_ sdílí společný adresář pro output.
 │   │   └── main.rs
 │   └── Cargo.toml
 └── target
-```
-
----
-
+├── client_app
+│   ├── src
+│   │   └── main.rs
+│   └── Cargo.toml
 # Cargo.toml workspacu
 
 ```toml
 [workspace]
-
+└── target
 members = [
     "common_functionality",
     "client_app",
     "server_app"
 ]
+
+```toml
+[workspace]
+
+# Připomenutí konvencí pro binárky
 ```
 
 ---
 
 ### Závislost binárky na knihovně ve workspace
-
-```toml
+[dependencies]
+common_functionality = { path = "../common_functionality" }
 [package]
 name = "server_app"
 
