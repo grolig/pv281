@@ -1061,29 +1061,26 @@ common_functionality = { path = "../common_functionality" }
 
 # Testy
 
-Jednotkové testy jsou v souboru s implementací. Integrační testy jsou ve složce tests.
+Jednotkové testy jsou v souboru s implementací.
+Integrační testy jsou ve složce `tests`, na stejné úrovni jako `src`.
 
-Spouštíme je přes 
+Testy spouštíme pomocí 
 ```sh
 cargo test
 ```
 
 ---
 
-# Panika v testu
+# Panika v testu...
 
-Zfailuje test.
+...failne test.
 
 ```rust
 #[cfg(test)]
 mod tests {
-    #[test]
-    fn exploration() {
-        assert_eq!(2 + 2, 4);
-    }
 
     #[test]
-    fn another() {
+    fn test_function() {
         panic!("Make this test fail");
     }
 }
@@ -1091,7 +1088,11 @@ mod tests {
 
 ---
 
-# Makro assert
+<!-- _class: split -->
+
+### Makro assert!
+
+<div class=left-column>
 
 ```rust
 #[derive(Debug)]
@@ -1102,10 +1103,16 @@ struct Rectangle {
 
 impl Rectangle {
     fn can_hold(&self, other: &Rectangle) -> bool {
-        self.width > other.width && self.height > other.height
+        self.width > other.width
+            && self.height > other.height
     }
 }
+```
 
+</div>
+<div class=right-column>
+
+```rust
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -1126,9 +1133,11 @@ mod tests {
 }
 ```
 
+</div>
+
 ---
 
-# assert_eq!
+# Makro assert_eq!
 
 ```rust
 pub fn add_two(a: i32) -> i32 {
@@ -1141,14 +1150,16 @@ mod tests {
 
     #[test]
     fn it_adds_two() {
-        assert_eq!(4, add_two(2)); // máme i assert_ne
+        assert_eq!(4, add_two(2));
+        
+        assert_ne!(69, add_two(2));
     }
 }
 ```
 
 ---
 
-# vlastní zprávy při failu
+### Vlastní zprávy při failu testu
 
 ```rust
 pub fn greeting(name: &str) -> String {
@@ -1162,6 +1173,7 @@ mod tests {
     #[test]
     fn greeting_contains_name() {
         let result = greeting("Carol");
+        
         assert!(
             result.contains("Carol"),
             "Greeting did not contain name, value was `{}`",
@@ -1173,7 +1185,7 @@ mod tests {
 
 ---
 
-# testování paniky
+# Testování zpanikaření funkce
 
 ```rust
 pub struct Guess {
@@ -1204,17 +1216,18 @@ mod tests {
 
 ---
 
-# result jako výsledek testu
+# Result jako výsledek testu
 
 ```rust
 #[cfg(test)]
 mod tests {
+
     #[test]
-    fn it_works() -> Result<(), String> {
+    fn test_two_plus_two() -> Result<(), String> {
         if 2 + 2 == 4 {
             Ok(())
         } else {
-            Err(String::from("two plus two does not equal four"))
+            Err(String::from("Two plus two does not equal four! Literally 1984."))
         }
     }
 }
