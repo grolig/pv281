@@ -375,6 +375,7 @@ section.split {
   grid-template-rows: 1.5em 1.3em auto;
   grid-template-areas:
         "slideheading slideheading"
+        "commontext commontext"
         "columnheading columnheading"
         "leftpanel rightpanel";
   column-gap: 1em;
@@ -389,6 +390,9 @@ section.split h4 {
   grid-area: columnheading;
   font-size: 1.3em;
   margin: auto;
+}
+section.split .common-text {
+  grid-area: commontext;
 }
 section.split .left-column {
   grid-area: leftpanel;
