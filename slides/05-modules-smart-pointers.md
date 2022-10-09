@@ -511,13 +511,19 @@ head_2 = Cons(RefCell { value: 4 }, Cons(RefCell { value: 15 }, Nil))
 Typ obalující imutabilně vypůjčenou hodnotu z `RefCell<T>`.
 
 ```rust
-use std::cell::{RefCell, Ref};
+use std::cell::{Ref, RefCell};
 
-let c = RefCell::new((5, 'b'));
-let b1: Ref<(u32, char)> = c.borrow();
-let b2: Ref<u32> = Ref::map(b1, |t| &t.0);
-assert_eq!(*b2, 5)
+fn main() {
+    let cell:  RefCell<(u32, char)> = RefCell::new((5, 'b'));
+    let ref_1: Ref<(u32, char)>     = cell.borrow();
+    let ref_2: Ref<u32>             = Ref::map(ref_1, |t| &t.0);
 
+    assert_eq!(*ref_2, 5);
+    assert_eq!(*cell.borrow(), (5, 'b'));
+
+    // ERROR: borrow of moved value: `ref_1`
+    // assert_eq!(*ref_1, (5, 'b'));
+}
 ```
 
 ---
