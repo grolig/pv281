@@ -366,11 +366,11 @@ fn main() {
 
 # RefCell&lt;T>
 
-Dává sdílený přístup k T, ale narozdíl od Cell je kontrolovaná za běhu. Má metody, která vrací mutovatelnou nebo nemutovatelnou referenci. Musíme si sami napsat kontrolu, jestli se povedlo získat referenci.
+Dává sdílený přístup k `T`, ale narozdíl od `Cell` je kontrolovaná za běhu.
 
-Pokud neexistuje žádná reference můžeme dostat mutovatelnou i nemutovatelnou reference.
-Pokud existuje mutovatelná reference, tak nejde získat jiná.
-Pokud existuje nemutovatelná reference, tak můžeme získat další nemutovatelnou referenci.
+Má metody, která vrací _mutovatelnou_ nebo _nemutovatelnou_ referenci. Musíme si sami napsat kontrolu, jestli se povedlo získat referenci.
+
+Platí stejná pravidla pro získávání referencí jako při _borrow checkingu_ za překladu. Pokud ale pravidla porušíme, vlákno zpanikaří.
 
 ---
 
