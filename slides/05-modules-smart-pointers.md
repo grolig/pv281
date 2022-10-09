@@ -165,9 +165,9 @@ Chování odpovídá základnímu pointeru, ale dle varianty má další metadat
 
 # Smart Pointer
 
-Smart Pointer implementuje trait Deref a Drop. Z toho je jasné, že je to struktura. Je vlastníkem dat, na která odkazuje.
+Smart Pointer implementuje trait `Deref` a `Drop`. Z toho je jasné, že je to struktura. Je vlastníkem dat, na která odkazuje.
 
-Pozn.: String je smart pointer. Datové struktury jsou smart pointery.
+Poznámka: `String` je smart pointer, např. kapacitu si drží jako metadata. Datové struktury, jako např. `Vec<T>`, jsou také smart pointery.
 
 ---
 
