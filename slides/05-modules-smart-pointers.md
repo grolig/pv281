@@ -1259,8 +1259,9 @@ pub fn add_one(x: i32) -> i32 {
 
 ---
 
-# Vytvoření sekcí
+### Dokumentační komentář k souboru
 
+`src/lib.rs`:
 ```rust
 //! # My Crate
 //!
@@ -1268,18 +1269,20 @@ pub fn add_one(x: i32) -> i32 {
 //! calculations more convenient.
 
 /// Adds one to the number given.
-// --snip--
+pub fn add_one(x: i32) -> i32 {
+    x + 1
+}
 ```
 
 ---
 
-![w:768 h:512](./assets/05-images/doc-1.png)
+![w:768 h:353](./assets/05-images/doc-1.png)
 
 ---
 
-# Ukázka Dokumentace
+# Ukázka komplexnější dokumentace
 
-```
+```rust
 //! # Art
 //!
 //! A library for modeling artistic concepts.
@@ -1306,14 +1309,14 @@ pub mod utils {
     /// Combines two primary colors in equal amounts to create
     /// a secondary color.
     pub fn mix(c1: PrimaryColor, c2: PrimaryColor) -> SecondaryColor {
-        // --snip--
+        // ...
     }
 }
 ```
 
 ---
 
-![w:768 h:512](./assets/05-images/doc-2.png)
+![w:768 h:398](./assets/05-images/doc-2.png)
 
 ---
 
@@ -1332,7 +1335,7 @@ pub mod utils {
 
 ---
 
-# ? v doc testech
+# Operátor `?` v dokumentačních testech
 
 ```rust
 /// ```
@@ -1345,7 +1348,7 @@ pub mod utils {
 
 ---
 
-# Poznámky k dokumentaci
+# Příkazy související s dokumentací
 
 Generujeme pomocí
 ```sh
