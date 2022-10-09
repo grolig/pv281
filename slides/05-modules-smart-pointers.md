@@ -535,15 +535,19 @@ Typ obalující mutabilně vypůjčenou hodnotu z `RefCell<T>`.
 ```rust
 use std::cell::{RefCell, RefMut};
 
-let c = RefCell::new((5, 'b'));
-{
-    let b1: RefMut<(u32, char)> = c.borrow_mut();
-    let mut b2: RefMut<u32> = RefMut::map(b1, |t| &mut t.0);
-    assert_eq!(*b2, 5);
-    *b2 = 42;
-}
-assert_eq!(*c.borrow(), (42, 'b'));
+fn main() {
+    let cell: RefCell<(u32, char)> = RefCell::new((5, 'b'));
 
+    {
+        let ref_1:     RefMut<(u32, char)> = cell.borrow_mut();
+        let mut ref_2: RefMut<u32>         = RefMut::map(ref_1, |t| &mut t.0);
+
+        assert_eq!(*ref_2, 5);
+        *ref_2 = 42;
+    }
+
+    assert_eq!(*cell.borrow(), (42, 'b'));
+}
 ```
 
 ---
