@@ -520,79 +520,7 @@ foo
 
 # Moduly
 
-Slouží k orgranizaci kódu v rámci projektu. Můžeme si je přiblížit jako Rustovou obdobu pro namespace. Je to logický kontejner pro struktury, funkce, typy aj.
-
----
-
-# Ukázka modulu
-
-
-```rust
-mod spores {
-    use cells::{Cell, Gene};
-
-    pub struct Spore {
-       // ...
-    }
-
-    /// Simulate the production of a spore by meiosis.
-    pub fn produce_spore(factory: &mut Sporangium) -> Spore {
-        // ...
-    }
-
-    /// Extract the genes in a particular spore.
-    pub(crate) fn genes(spore: &Spore) -> Vec<Gene> {
-        // ...
-    }
-
-    /// Mix genes to prepare for meiosis (part of interphase).
-    fn recombine(parent: &mut Cell) {
-       //    ...
-    }
-
-    // ...
-}
-
-```
-
----
-
-# Komentář k ukázce
-
-```pub``` udělá položku veřejnou, takže je přístupná mimo modul.
-```pub(crate)``` je přístupná uvnitř crate, ale nemůže být použita jinými crates. Zároveň není součástí vygenerované dokumentace.
-Cokoliv, co není označeno, se stává privátním. Může být použito pouze v rámci modulu nebo jeho potomků.
-
----
-
-# Vnořené moduly
-
-```rust
-mod plant_structures {
-    pub mod roots {
-        pub(super) mod products {
-            pub(in crate::plant_structures::roots) struct Cytokinin {
-                ...
-            }
-        }
-    }
-    pub mod stems {
-        ...
-    }
-    pub mod leaves {
-        ...
-    }
-}
-```
-
----
-
-# Vnořené moduly
-
-Modul může být veřejný (```pub```) stejně jako jiný typ.
-```pub(super)``` omezí viditelnost pouze na nadřazený modul.
-```pub(in ...)``` omezí viditelnost na daný modul a jeho potomky.
-
+Slouží k orgranizaci kódu v rámci projektu. Můžete si je představit jako Rustovou obdobu pro `namespace`. Je to logický kontejner pro struktury, funkce, typy, ...
 
 ---
 
@@ -687,6 +615,16 @@ fn eat_at_restaurant() {
     front_of_house::hosting::add_to_waitlist();
 }        
 ```
+
+---
+
+# Alternativy k pub
+
+`pub` udělá položku veřejnou, takže je přístupná kdekoliv mimo modul.
+`pub(crate)` udělá položku přístupnou uvnitř crate, ale nemůže být použita jinými crates. Zároveň není součástí vygenerované dokumentace.
+`pub(in <path>)` udělá položku veřejnou pro zmíněnou cestu, která ale musí být nějakým předkem dané položky.
+`pub(super)` udělá položku veřejnou jen pro nadřazený modul.
+
 
 ---
 
