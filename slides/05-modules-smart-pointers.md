@@ -325,11 +325,11 @@ Cons(1, Cons(2, Nil))
 
 # Cell&lt;T>
 
-Umožňuje mutaci uvnitř imutabilní struktury. Má funkce get a set. Get vrací kopii dat.
+Umožňuje mutaci uvnitř imutabilní struktury. Má metody `get` a `set`. Metoda `get` vrací kopii dat.
 
-Je vhodná pro menší data - z důvodů vracení kopie.
+Je vhodná pro menší data, a to z důvodu vracení kopie.
 
-Je pro jednovláknové použití. Vícevláknové alternativy budou příště.
+Je určena pouze pro jednovláknové použití. Vícevláknové alternativy budou v příští přednášce.
 
 ---
 
