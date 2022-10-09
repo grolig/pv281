@@ -996,17 +996,16 @@ crate
 ```
 
 </div>
-###### Modulový strom
 
-```
+---
+
 ### Workspace
-└── mod front_of_house: pub
 Umožňuje se odkazovat napříč crates bez nutnosti je publikovat.
 Crates ve _workspace_ sdílí společný adresář pro output.
 
 ```sh
 ├── Cargo.lock
-├── Cargo.toml
+├── Cargo.toml # <- Cargo.toml workspacu
 ├── common_functionality
 │   ├── src
 │   │   └── lib.rs
@@ -1020,32 +1019,27 @@ Crates ve _workspace_ sdílí společný adresář pro output.
 │   │   └── main.rs
 │   └── Cargo.toml
 └── target
-├── client_app
-│   ├── src
-│   │   └── main.rs
-│   └── Cargo.toml
+```
+
+---
+
 # Cargo.toml workspacu
 
 ```toml
 [workspace]
-└── target
+
 members = [
     "common_functionality",
     "client_app",
     "server_app"
 ]
-
-```toml
-[workspace]
-
-# Připomenutí konvencí pro binárky
 ```
 
 ---
 
 ### Závislost binárky na knihovně ve workspace
-[dependencies]
-common_functionality = { path = "../common_functionality" }
+
+```toml
 [package]
 name = "server_app"
 
