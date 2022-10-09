@@ -458,7 +458,11 @@ count after c is dropped: 2
 
 ---
 
-# Rc<T> s RefCell<U>
+<!-- _class: split -->
+
+### Kombinace Rc&lt;T> s RefCell&lt;U>
+
+<div class=left-column>
 
 ```rust
 #[derive(Debug)]
@@ -486,8 +490,20 @@ fn main() {
     println!("b after = {:?}", b);
     println!("c after = {:?}", c);
 }
-
 ```
+
+</div>
+<div class=right-column>
+
+```shell
+$ cargo run
+
+tail   = Cons(RefCell { value: 15 }, Nil)
+head_1 = Cons(RefCell { value: 3 }, Cons(RefCell { value: 15 }, Nil))
+head_2 = Cons(RefCell { value: 4 }, Cons(RefCell { value: 15 }, Nil))
+```
+
+</div>
 
 ---
 
