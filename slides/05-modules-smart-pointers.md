@@ -619,17 +619,7 @@ mod front_of_house {
 
 ### Strom modulů
 
-Pro zobrazení modulů v crate, je dostupný nástroj cargo install cargo-modules:
-```cargo install cargo-modules```
-
-Spustíme ho pomocí:
-```cargo modules generate tree```
-
----
-
-### Strom modulů
-
-Obsah souborů `src/main.rs` a `src/lib.rs` tvoří implicitní modul zvaný `crate` v kořeni modulového stromu:
+Obsah `src/main.rs` a `src/lib.rs` tvoří implicitní modul `crate` v kořeni modulového stromu:
 
 ```
 crate
@@ -642,6 +632,8 @@ crate
          ├── serve_order
          └── take_payment
 ```
+
+Poznámka: výpis stromu utilitou [cargo-modules](https://crates.io/crates/cargo-modules/).
 
 ---
 
