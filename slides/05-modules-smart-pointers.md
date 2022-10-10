@@ -269,7 +269,6 @@ fn main() {
     assert!(container.try_borrow().is_err());
     assert!(container.try_borrow_mut().is_err());
 }
-
 ```
 
 ---
@@ -458,7 +457,6 @@ crossbeam = "0.8"
 V Rustu 2015 bylo nutné použít `extern crate`, od Rustu 2018 **už to potřeba není**. Jelikož se s tímto zápisem stále můžete setkat, tak jej zde ukazujeme:
 
 ```rust
-
 extern crate pcre;
 
 extern crate std; // equivalent to: extern crate std as std;
@@ -493,7 +491,7 @@ Cargo si pří překladu stáhne zdrojový kód pro každou crate. Ta může zá
 
 # Kompilace crate
 
-Jednolivé crates jsou zkompilovány jako .rlib, která je následně staticky linkovaná do výsledné binárky.
+Jednolivé crates jsou zkompilovány jako `.rlib`, která je následně staticky linkovaná do výsledné binárky.
 
 ---
 
@@ -526,11 +524,11 @@ fn main() {
 
 ---
 
-# Podmíněná kompilace features
+# Podmíněná kompilace – features
 
-V Cargo.toml přídáme sekci features.
+V Cargo.toml přídáme sekci `[features]`.
 
-```
+```toml
 [features]
 default = ["ico", "webp"]
 bmp = []
@@ -541,7 +539,7 @@ webp = []
 
 ---
 
-# Podmíněná kompilace features
+### Podmíněná kompilace –  features
 
 A v kódu můžeme dle nastavení přidat části kódu.
 
@@ -708,19 +706,18 @@ fn eat_at_restaurant() {
 
 ---
 
-# Konstanty a static
+### Konstanty a static
 
 ```rust
 pub const ROOM_TEMPERATURE_C: f64 = 20.0;  // degrees Celsius
-
 pub static ROOM_TEMPERATURE_F: f64 = 68.0;  // degrees Fahrenheit
 ```
 
-Konstanta je podobná C ```#define```. Pří kompilace je hodnota dosazena na každé místo, kde je použitá.
+Konstanta je podobná `#define` v C. Pří kompilaci je hodnota dosazena na každé místo, kde je použitá.
 
 Statické proměnné žíjí od startu až do konce běhu programu. V bezpečném Rustu nemohou být mutabilní.
 
-Používejte konstanty pro měnší hodnoty - magická čísla nebo řetězce. Pro větší věci, kde chcete udělat borrow, tak využijte static.
+Používejte konstanty pro menší hodnoty – magická čísla nebo řetězce. Pro větší věci, kde chcete udělat borrow, využijte static.
 
 ---
 
@@ -883,9 +880,9 @@ use std::io::prelude::*;
 
 # Prelude
 
-Prelude je velmi často i u knihoven třetích stran, aby zpříjemnil práci a dal k dispozici nejpoužívanější traity, typy aj. Narozdíl od prelude ze std (```use std::prelude::v1::*;```) nejsou takové moduly importovány automaticky. 
+Prelude je velmi často i u knihoven třetích stran, aby zpříjemnil práci a dal k dispozici nejpoužívanější traity, typy aj. Narozdíl od [prelude ze std](https://doc.rust-lang.org/std/prelude/index.html) (např. `use std::prelude::v1::*;`) nejsou takové moduly importovány automaticky. 
 
-Vznikne vlastním vytvořením modulu prelude.
+Vznikne vlastním vytvořením modulu `prelude`.
 
 ---
 
@@ -1144,22 +1141,26 @@ cargo test
 
 ---
 
-# Výhody podmíněné existence testu
+### Výhody podmíněné existence testu
 
 ```rust
 struct BufWriter<T> {
   #[cfg(test)]
-  write_through: usize,
-  // other fields...
+  write_through: usize, // <- neexistuje se mimo test 
+  
+  // ...
 }
 
 impl<T: Write> Write for BufWriter<T> {
   fn write(&mut self, buf: &[u8]) -> Result<usize> {
     // ...
+    
     if self.full() {
       #[cfg(test)]
-      self.write_through += 1;
+      self.write_through += 1; // <- neprovede se mimo test 
       let n = self.inner.write(&self.buffer[..])?;
+    }
+    
     // ...
   }
 }
@@ -1477,7 +1478,7 @@ cargo test --doc
 
 # Fuzzing
 
-Fuzzing je myšlenka generování náhodných (nebo semináhodných) vstupů a sledování jestli program spadne.
+Fuzzing je myšlenka generování náhodných (nebo semináhodných) vstupů a sledování, jestli program spadne.
 
 ```rust
 libfuzzer_sys::fuzz_target!(|data: &[u8]| {
@@ -1491,20 +1492,21 @@ libfuzzer_sys::fuzz_target!(|data: &[u8]| {
 
 # Property based testing
 
-Doporučené je použít crate proptest.
+Doporučujeme použít crate `proptest`.
 
 ```rust
 proptest! {
-    // snip...
+    // ...
 
     #[test]
     fn parses_date_back_to_original(y in 0u32..10000,
-                                    m in 1u32..13, d in 1u32..32) {
+                                    m in 1u32..13,
+                                    d in 1u32..32) {
         let (y2, m2, d2) = parse_date(
             &format!("{:04}-{:02}-{:02}", y, m, d)).unwrap();
-        // prop_assert_eq! is basically the same as assert_eq!, but doesn't
-        // cause a bunch of panic messages to be printed on intermediate
-        // test failures. Which one to use is largely a matter of taste.
+            
+        // `prop_assert_eq!` is similar to `assert_eq!`, but triggers less panic messages on test failures.
+        // Which one to use is largely a matter of taste.
         prop_assert_eq!((y, m, d), (y2, m2, d2));
     }
 }
