@@ -548,10 +548,8 @@ A v kódu můžeme dle nastavení přidat části kódu.
 pub mod webp;
 ```
 
-
 ```rust
 fn my_function() -> u32 {
-    // ...some code 
     let x: u32 = 2;
 
     #[cfg(feature = "png")]
@@ -598,6 +596,7 @@ Slouží k orgranizaci kódu v rámci projektu. Můžete si je představit jako 
 Vytvářejme `library crate` modelující restauraci:
 
 ```rust
+/// noun: the part of a restaurant or hotel where the employees deal directly with customers.
 mod front_of_house {
     mod hosting {
         fn add_to_waitlist() {}
@@ -1123,8 +1122,9 @@ common_functionality = { path = "../common_functionality" }
 
 # Testy
 
-Jednotkové testy jsou v souboru s implementací.
-Integrační testy jsou ve složce `tests`, na stejné úrovni jako `src`.
+**Jednotkové testy** jsou v souboru s implementací.
+**Integrační testy** jsou ve složce `tests`, na stejné úrovni jako `src`.
+**Doc testy** jsou v úryvcích kódu v dokumentačních komentářích.
 
 Testy spouštíme pomocí 
 ```sh
@@ -1204,7 +1204,7 @@ impl Rectangle {
 ```rust
 #[cfg(test)]
 mod tests {
-    use super::*;
+    use super::*; // <- Modulem `tests` jsme zanoření o úroveň níže.
 
     #[test]
     fn larger_can_hold_smaller() {
@@ -1345,6 +1345,8 @@ pub fn add_one(x: i32) -> i32 {
     x + 1
 }
 ```
+
+Poznámka: blokové doc komentáře `/** ... */` se nepoužívají.
 
 ---
 
