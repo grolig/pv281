@@ -16,6 +16,7 @@ paginate: true
 2. Plánování procesů
 3. Paralelismus v Rustu
 4. Úvod do async
+5. Todo: Perftesting
 
 
 ---

@@ -12,7 +12,6 @@ paginate: true
 
 # Obsah
 
-TODO: pridat podminenou kompilaci
 1. Smart Pointer
 2. Crates
 3. Moduly
@@ -242,7 +241,7 @@ fn main() {
 
 Dává sdílený přístup k `T`, ale narozdíl od `Cell` je kontrolovaná za běhu.
 
-Má metody, která vrací _mutovatelnou_ nebo _nemutovatelnou_ referenci. Musíme si sami napsat kontrolu, jestli se povedlo získat referenci.
+Má metody, která vrací _mutabilní_ nebo _nemutabilní_ referenci. Musíme si sami napsat kontrolu, jestli se povedlo získat referenci.
 
 Platí stejná pravidla pro získávání referencí jako při _borrow checkingu_ za překladu. Pokud ale pravidla porušíme, vlákno zpanikaří.
 
@@ -498,6 +497,77 @@ Jednolivé crates jsou zkompilovány jako .rlib, která je následně staticky l
 
 ---
 
+# Podmíněná kompilace
+
+```rust
+// This function only gets compiled if the target OS is linux
+#[cfg(target_os = "linux")]
+fn are_you_on_linux() {
+    println!("You are running linux!");
+}
+
+// And this function only gets compiled if the target OS is *not* linux
+#[cfg(not(target_os = "linux"))]
+fn are_you_on_linux() {
+    println!("You are *not* running linux!");
+}
+
+fn main() {
+    are_you_on_linux();
+
+    println!("Are you sure?");
+    if cfg!(target_os = "linux") {
+        println!("Yes. It's definitely linux!");
+    } else {
+        println!("Yes. It's definitely *not* linux!");
+    }
+}
+```
+
+---
+
+# Podmíněná kompilace features
+
+V Cargo.toml přídáme sekci features.
+
+```
+[features]
+default = ["ico", "webp"]
+bmp = []
+png = []
+ico = ["bmp", "png"]
+webp = []
+```
+
+---
+
+# Podmíněná kompilace features
+
+A v kódu můžeme dle nastavení přidat části kódu.
+
+```rust
+#[cfg(feature = "webp")]
+pub mod webp;
+```
+
+
+```rust
+fn my_function() -> u32 {
+    // ...some code 
+    let x: u32 = 2;
+
+    #[cfg(feature = "png")]
+    {
+        let y: u32 = 2;
+        x + y
+    }
+
+    x
+}
+```
+
+---
+
 ### Package
 
 Package je "kolekce" alespoň jedné _crate_. Je definovaný v `Cargo.toml`. 
@@ -546,6 +616,16 @@ mod front_of_house {
     }
 }         
 ```
+
+---
+
+### Strom modulů
+
+Pro zobrazení modulů v crate, je dostupný nástroj cargo install cargo-modules:
+```cargo install cargo-modules```
+
+Spustíme ho pomocí:
+```cargo modules generate tree```
 
 ---
 
@@ -626,6 +706,21 @@ fn eat_at_restaurant() {
 `pub(in <path>)` udělá položku veřejnou pro zmíněnou cestu, která ale musí být nějakým předkem dané položky.
 `pub(super)` udělá položku veřejnou jen pro nadřazený modul.
 
+---
+
+# Konstanty a static
+
+```rust
+pub const ROOM_TEMPERATURE_C: f64 = 20.0;  // degrees Celsius
+
+pub static ROOM_TEMPERATURE_F: f64 = 68.0;  // degrees Fahrenheit
+```
+
+Konstanta je podobná C ```#define```. Pří kompilace je hodnota dosazena na každé místo, kde je použitá.
+
+Statické proměnné žíjí od startu až do konce běhu programu. V bezpečném Rustu nemohou být mutabilní.
+
+Používejte konstanty pro měnší hodnoty - magická čísla nebo řetězce. Pro větší věci, kde chcete udělat borrow, tak využijte static.
 
 ---
 
@@ -674,22 +769,6 @@ pub fn eat_at_restaurant() {
 ```
 
 </div>
-
----
-
-# Konstanty a static
-
-```rust
-pub const ROOM_TEMPERATURE_C: f64 = 20.0;  // degrees Celsius
-
-pub static ROOM_TEMPERATURE_F: f64 = 68.0;  // degrees Fahrenheit
-```
-
-Konstanta je podobná C ```#define```. Pří kompilace je hodnota dosazena na každé místo, kde je použitá.
-
-Statické proměnné žíjí od startu až do konce běhu programu. V bezpečném Rustu nemohou být mutabilní.
-
-Používejte konstanty pro měnší hodnoty - magická čísla nebo řetězce. Pro větší věci, kde chcete udělat borrow, tak využijte static.
 
 ---
 
@@ -1065,6 +1144,29 @@ cargo test
 
 ---
 
+# Výhody podmíněné existence testu
+
+```rust
+struct BufWriter<T> {
+  #[cfg(test)]
+  write_through: usize,
+  // other fields...
+}
+
+impl<T: Write> Write for BufWriter<T> {
+  fn write(&mut self, buf: &[u8]) -> Result<usize> {
+    // ...
+    if self.full() {
+      #[cfg(test)]
+      self.write_through += 1;
+      let n = self.inner.write(&self.buffer[..])?;
+    // ...
+  }
+}
+```
+
+---
+
 # Panika v testu...
 
 ...failne test.
@@ -1369,6 +1471,43 @@ cargo test --examples
 Dokumentaci přes
 ```sh
 cargo test --doc
+```
+
+---
+
+# Fuzzing
+
+Fuzzing je myšlenka generování náhodných (nebo semináhodných) vstupů a sledování jestli program spadne.
+
+```rust
+libfuzzer_sys::fuzz_target!(|data: &[u8]| {
+  if let Ok(s) = std::str::from_utf8(data) {
+      let _ = url::Url::parse(s);
+  }
+});
+```
+
+---
+
+# Property based testing
+
+Doporučené je použít crate proptest.
+
+```rust
+proptest! {
+    // snip...
+
+    #[test]
+    fn parses_date_back_to_original(y in 0u32..10000,
+                                    m in 1u32..13, d in 1u32..32) {
+        let (y2, m2, d2) = parse_date(
+            &format!("{:04}-{:02}-{:02}", y, m, d)).unwrap();
+        // prop_assert_eq! is basically the same as assert_eq!, but doesn't
+        // cause a bunch of panic messages to be printed on intermediate
+        // test failures. Which one to use is largely a matter of taste.
+        prop_assert_eq!((y, m, d), (y2, m2, d2));
+    }
+}
 ```
 
 ---
