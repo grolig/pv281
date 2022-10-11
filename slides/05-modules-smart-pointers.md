@@ -965,7 +965,8 @@ called `cool::function()`
 ###### src/lib.rs
 
 ```rust
-mod front_of_house;
+mod front_of_house; // bez tohoto nebude modul
+                    // front_of_house dohledan
 
 use crate::front_of_house::hosting::add_to_waitlist;
 
@@ -1063,6 +1064,20 @@ crate
 ```
 
 </div>
+
+---
+
+# Integrace knihovny do binarky
+
+Pokud je projekt pojmenovaný `restaurant`, tak v rámci main.rs:
+
+```rust
+use restaurant::front_of_house;
+
+fn main() {
+    // ...
+}
+```
 
 ---
 
