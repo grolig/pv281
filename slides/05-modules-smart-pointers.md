@@ -965,8 +965,8 @@ called `cool::function()`
 ###### src/lib.rs
 
 ```rust
-mod front_of_house; // bez tohoto nebude modul
-                    // front_of_house dohledan
+mod front_of_house; // <- bez tohoto nebude modul 
+                    // `front_of_house` dohledatelný
 
 use crate::front_of_house::hosting::add_to_waitlist;
 
@@ -1021,7 +1021,8 @@ crate
 ###### src/lib.rs
 
 ```rust
-mod front_of_house;
+mod front_of_house; // <- bez tohoto nebude modul 
+                    // `front_of_house` dohledatelný
 
 use crate::front_of_house::hosting::add_to_waitlist;
 
