@@ -44,7 +44,7 @@ Vlákna jsou méně náročná na zdroje systému.
 
 ### Vlákna
 
-![w:512](./assets/06-images/4_01_ThreadDiagram.jpeg)
+![h:512](./assets/06-images/4_01_ThreadDiagram.jpeg)
 
 [Operating Systems, Chapter 4: Threads](https://www.cs.uic.edu/~jbell/CourseNotes/OperatingSystems/4_Threads.html)
 
@@ -64,15 +64,15 @@ Vlákna jsou méně náročná na zdroje systému.
 
 ---
 
-![w:512 h:512](./assets/06-images/windows_dispatcher_database.jpeg)
+![h:512](./assets/06-images/windows_dispatcher_database.jpeg)
 
 ---
 
-![w:512 h:512](./assets/06-images/windows_priorities.jpeg)
+![h:512](./assets/06-images/windows_priorities.jpeg)
 
 ---
 
-![w:512 h:512](./assets/06-images/windows_irql_vs_threadp.jpeg)
+![h:512](./assets/06-images/windows_irql_vs_threadp.jpeg)
 
 ---
 
@@ -93,11 +93,11 @@ thread musí na něco čekat
 
 ---
 
-![w:512 h:512](./assets/06-images/widnows_thread_switching_2.jpeg)
+![h:512](./assets/06-images/widnows_thread_switching_2.jpeg)
 
 ---
 
-![w:512 h:512](./assets/06-images/widnows_thread_switching_1.jpeg)
+![h:512](./assets/06-images/widnows_thread_switching_1.jpeg)
 
 ---
 
@@ -123,7 +123,7 @@ Initialized - interní stav po čerstvém vytvoření vlákna.
 
 ---
 
-![w:512 h:512](./assets/06-images/windows_thread_states.jpeg)
+![h:512](./assets/06-images/windows_thread_states.jpeg)
 
 ---
 
@@ -155,7 +155,7 @@ Existují modely one-to-one, one-to-many a many-to-many.
 
 ---
 
-![w:512 h:512](./assets/06-images/many-to-many-model.png)
+![h:512](./assets/06-images/many-to-many-model.png)
 
 ---
 
