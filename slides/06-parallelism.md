@@ -26,18 +26,26 @@ paginate: true
 
 # Proces
 
-Každý proces má vlastní paměťový prostor. Tj. vlastní stack a vlastní heap.
+Každý proces má vlastní paměťový prostor,
+tj. vlastní _stack_ a vlastní _heap_.
+
 Přepínaní kontextu je drahé.
-Komunikace mezi procesy je pomalejší (sdílená paměť, msg queue, sockety...).
+
+Komunikace mezi procesy je pomalejší
+(sdílená paměť, message queue, sockety, ...).
+
 Celkově na zdroje má větší náročnost.
 
 ---
 
 # Vlákna
 
-Vlákna sdílí pamět (konkrétně heap).
+Vlákna sdílí pamět, konkrétně _heap_.
+
 Přepínání kontextu je drahé, ale levnější než u procesů.
-Komunikace mezi vlákny je rychlá - díky sdílené haldě.
+
+Komunikace mezi vlákny je rychlá právě díky sdílené haldě.
+
 Vlákna jsou méně náročná na zdroje systému.
 
 ---
@@ -54,13 +62,17 @@ Vlákna jsou méně náročná na zdroje systému.
 
 ---
 
-# Plánování ve Windows
+### Plánování ve Windows
 
-1. Thread má prioritu 0-31 (nejvyšší)
-2. Vlákno má přidělené časové rámce. Časové rámce jsou dávány v rámci round-robin
-3. Rámec trvá na klientských Win 2 hodinové cykly. Na serverových 12. Jeden cyklus je na většině x64 systému asi 15ms.
-4. Pokud není ve vyšší prioritě kdo by běžel, prioritu dostane nižší level 
-5. Pokud běží nižší proces a najednou je k dispozici s vyšší prioritou, tak mu systém sebere čas
+Thread má **prioritu** v rozsahu 0–31 (31 je nejvyšší)
+
+Vlákno má přidělené časové rámce. Časové rámce jsou poskytovány pomocí **round-robin** algoritmu.
+
+Rámec trvá na klientských Win **2** hodinové cykly, na serverových **12**. Jeden cyklus je na většině x64 systémů asi **15 ms**.
+
+Pokud není žádné vlákno ve vyšší prioritě připraveno běžet, na řadu se dostane priorita nižší.
+
+Pokud běží vlákno s nižší prioritou a najednou je k dispozici s vyšší prioritou, tak nižšímu systém sebere čas.
 
 ---
 
@@ -78,18 +90,21 @@ Vlákna jsou méně náročná na zdroje systému.
 
 # Přepínání vláken
 
-Při přepínání se napřed uloží kontext threadu, který končí.
-Umístí se nakonec fronty dané priority.
+Při přepínání se napřed uloží kontext vlákna, které končí.
+
+Vlákno se umístí na konec fronty dané priority.
+
 Najde se thread s nejvyšší prioritou, který může běžet.
+
 Ten se vytáhne z fronty, načte se jeho kontext a začne se vykonávat.
 
 ---
 
 # Důvody přepnutí
 
-dostupný thread s vyšší prioritou
-vypršel časový úsek pro běh
-thread musí na něco čekat
+- Je dostupné vlákno s vyšší prioritou.
+- Vypršel časový úsek pro běh.
+- Vlákno musí na něco čekat a vzdá se svého času.
 
 ---
 
