@@ -42,9 +42,11 @@ Vlákna jsou méně náročná na zdroje systému.
 
 ---
 
-![w:512 h:512](./assets/06-images/4_01_ThreadDiagram.jpeg)
+### Vlákna
 
-https://www.cs.uic.edu/~jbell/CourseNotes/OperatingSystems/4_Threads.html
+![w:512](./assets/06-images/4_01_ThreadDiagram.jpeg)
+
+[Operating Systems, Chapter 4: Threads](https://www.cs.uic.edu/~jbell/CourseNotes/OperatingSystems/4_Threads.html)
 
 ---
 
