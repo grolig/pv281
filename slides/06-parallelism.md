@@ -101,25 +101,28 @@ thread musí na něco čekat
 
 ---
 
-# Stavy vlákna
+### Stavy vlákna
 
-Ready - plánovač pro běh bere pouze tato vlákna.
+`Ready` - plánovač pro běh bere v potaz pouze tato vlákna
 
-Deferred ready - vlákna naplánovaná na konkrétním procesoru, ale ještě nezaplánovaná. Existuje kvůli minimalizaci locku na plánovací databázi.
+`Deferred ready` - vlákna naplánovaná na konkrétním procesoru, ale ještě nezaplánovaná. Existuje kvůli minimalizaci locku na plánovací databázi.
 
-Standby - vlákno přípravené na běh na konkrétním procesoru. Jakmile to bude možné, tak dojde k přepnutí kontextu. Na jádro je jen jedno standby vlákno. Může být přeskočeno prempcí nebo pokud bude vlákno s vyšší prioritou spustitelné.
+`Standby` - vlákno přípravené na běh na konkrétním procesoru; jakmile to bude možné, tak dojde k přepnutí kontextu. Na jádro je jen jedno standby vlákno. Může být přeskočeno preempcí nebo pokud bude vlákno s vyšší prioritou spustitelné.
 
-Running Once - stav při přepnutí kontextu
+`Running Once` - stav při přepnutí kontextu
 
-Waiting - vlákno na něco čeká. Buď samo pomocí synchronizačního prostředku, na úrovni systému na I/O operaci atd.
+---
 
-Gate Waiting - čeká na gate dispatcher objektu. 
+### Stavy vlákna
+`Waiting` - vlákno na něco čeká – samo pomocí synchronizačního prostředku, na úrovni systému, na I/O operaci,...
 
-Transition - Vlákno by mohlo být ready, ale systém odstránkoval zásobník z paměti, tak se čeká, než ho zase dá zpět do paměti.
+`Gate Waiting` - čeká na gate dispatcher objektu
 
-Terminated - skončil a může být dealokován
+`Transition` - vlákno by mohlo být ready, ale systém odstránkoval zásobník z paměti, tak se čeká, než ho zase dá zpět do paměti
 
-Initialized - interní stav po čerstvém vytvoření vlákna.
+`Terminated` - vlákno skončilo a může být dealokováno
+
+`Initialized` - interní stav po čerstvém vytvoření vlákna
 
 ---
 
