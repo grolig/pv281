@@ -334,10 +334,11 @@ for handle in handles {
 
 # Asynchronní programování
 
-Koncept pro psaní konkurentních programů využívající malého množství OS vláken například pro I/O operace.
+Koncept pro psaní konkurentních programů.
+Využívá malého množství OS vláken například pro I/O operace.
 
 V Rustu platí:
-Je jedno i vícevláknový.
+Je jedno- i vícevláknový.
 Async nic nestojí.
 Nemá runtime.
 
@@ -348,7 +349,6 @@ Nemá runtime.
 ```toml
 [dependencies]
 futures = "0.3"
-
 ```
 
 ---
