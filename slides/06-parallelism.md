@@ -12,11 +12,10 @@ paginate: true
 
 # Obsah
 
-1. TODO: nahradit lifetimes za něco jiného
-2. Plánování procesů
-3. Paralelismus v Rustu
-4. Úvod do async
-5. TODO: Perftesting
+1. Plánování procesů
+2. Paralelismus v Rustu
+3. Úvod do async
+4. Perftesting
 
 ---
 
@@ -400,6 +399,134 @@ fn bar() -> impl Future<Output = u8> {
         x + 5
     }
 }
+```
+
+---
+
+# Perftesting
+
+---
+
+# Bench atribut
+
+```rust
+#![feature(test)]
+
+extern crate test;
+
+pub fn add_two(a: i32) -> i32 {
+    a + 2
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use test::Bencher;
+
+    #[test]
+    fn it_works() {
+        assert_eq!(4, add_two(2));
+    }
+
+    #[bench]
+    fn bench_add_two(b: &mut Bencher) {
+        b.iter(|| add_two(2));
+    }
+}
+```
+
+---
+
+# Spuštění testu
+
+```
+cargo bench
+```
+
+```
+$ cargo bench
+   Compiling adder v0.0.1 (file:///home/user/tmp/adder)
+     Running target/release/adder-91b3e234d4ed382a
+
+running 2 tests
+test tests::it_works ... ignored
+test tests::bench_add_two ... bench:         1 ns/iter (+/- 0)
+
+test result: ok. 0 passed; 0 failed; 1 ignored; 1 measured
+```
+
+---
+
+# Optimalizace a benchmarking
+
+Optimalizer vypustí část kódu, kterou pokládá za zbytečnou.
+
+```rust
+#![feature(test)]
+
+extern crate test;
+use test::Bencher;
+
+#[bench]
+fn bench_xor_1000_ints(b: &mut Bencher) {
+    b.iter(|| {
+        (0..1000).fold(0, |old, new| old ^ new); // <- řešením je vrátit hodnotu. Tj odstranit ;
+    });
+}
+```
+
+---
+
+# Blackbox
+
+```rust
+#![feature(test)]
+
+extern crate test;
+
+b.iter(|| {
+    let n = test::black_box(1000);
+
+    (0..n).fold(0, |a, b| a ^ b)
+})
+```
+
+---
+
+# Crate criterion
+
+```toml
+[dev-dependencies]
+criterion = "0.3"
+
+[[bench]]
+name = "my_benchmark"
+harness = false
+```
+
+---
+
+# Crate criterion
+
+Vytvořete soubor v `/benches/bench_name.rs`.
+
+```rust
+use criterion::{black_box, criterion_group, criterion_main, Criterion};
+
+fn fibonacci(n: u64) -> u64 {
+    match n {
+        0 => 1,
+        1 => 1,
+        n => fibonacci(n-1) + fibonacci(n-2),
+    }
+}
+
+fn criterion_benchmark(c: &mut Criterion) {
+    c.bench_function("fib 20", |b| b.iter(|| fibonacci(black_box(20))));
+}
+
+criterion_group!(benches, criterion_benchmark);
+criterion_main!(benches);
 ```
 
 ---
