@@ -199,6 +199,10 @@ Existují modely one-to-one, one-to-many a many-to-many.
 
 ---
 
+# <!--fit--> Práce s thready v Rustu
+
+---
+
 <!-- _class: split -->
 
 ### Práce s thready v Rustu
