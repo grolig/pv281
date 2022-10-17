@@ -621,6 +621,7 @@ thread::scope(|s| {
 
     s.spawn(|_| {
         println!("thread #2 says: {}", greeting);
+        // pozn. pozor pokud bychom chteli neco mutovat
     });
 
     // diky scope nemusime delat rucne join
@@ -636,55 +637,173 @@ thread::scope(|s| {
 # Asynchronní programování
 
 Koncept pro psaní konkurentních programů.
-Využívá malého množství OS vláken například pro I/O operace.
+Umožňuje využívat neblokující operace na jednom vlákně například pro I/O.
 
 V Rustu platí:
 Je jedno- i vícevláknový.
-Async nic nestojí.
-Nemá runtime.
+Async nic nestojí (více méně).
+Nemá výchozí runtime.
 
 ---
 
-# Cargo.toml
+# Asynchronní přístup vs vlákna
 
-```toml
-[dependencies]
-futures = "0.3"
+- můžeme si říct, že ale podobného efektu (neblokovaná aplikace) dosáhneme pomocí vláken
+- vlákna jsou řízená OS, jejich přepínání je relativně drahé
+- mohou zabírat i stovky KB paměti (co v případě vlákna pro každého klienta?)
+
+---
+
+# Ukázka synchronního kódu
+
+```rust
+use std::net;
+
+fn cheapo_request(host: &str, port: u16, path: &str)
+                      -> std::io::Result<String>
+{
+    let mut socket = net::TcpStream::connect((host, port))?;
+
+    let request = format!("GET {} HTTP/1.1\r\nHost: {}\r\n\r\n", path, host);
+    socket.write_all(request.as_bytes())?;
+    socket.shutdown(net::Shutdown::Write)?;
+
+    let mut response = String::new();
+    socket.read_to_string(&mut response)?;
+
+    Ok(response)
+}
 ```
 
 ---
 
-# async, .await
+# Převod na asynchronní 
 
 ```rust
-use futures::executor::block_on;
+use async_std::io::prelude::*; 
+use async_std::net;
 
-async fn hello_world() {
-    println!("hello, world!");
-}
+async fn cheapo_request(host: &str, port: u16, path: &str) // <- funkce musi byt async
+                            -> std::io::Result<String>
+{
+    let mut socket = net::TcpStream::connect((host, port)).await?; // <- pouzivame await na zajisteni neblokujiciho volani
 
-fn main() {
-    let future = hello_world(); // Nothing is printed
-    block_on(future); // `future` is run and "hello, world!" is printed
+    let request = format!("GET {} HTTP/1.1\r\nHost: {}\r\n\r\n", path, host);
+    socket.write_all(request.as_bytes()).await?;
+    socket.shutdown(net::Shutdown::Write)?;
+
+    let mut response = String::new();
+    socket.read_to_string(&mut response).await?;
+
+    Ok(response)
 }
 ```
 
 ---
 
-# async, .await
+# Future
 
 ```rust
-// `foo()` returns a type that implements `Future<Output = u8>`.
-// `foo().await` will result in a value of type `u8`.
-async fn foo() -> u8 { 5 }
+trait Future {
+    type Output;
+    fn poll(&mut self, wake: fn()) -> Poll<Self::Output>;
+}
 
-fn bar() -> impl Future<Output = u8> {
-    // This `async` block results in a type that implements
-    // `Future<Output = u8>`.
-    async {
-        let x: u8 = foo().await;
-        x + 5
+enum Poll<T> {
+    Ready(T),
+    Pending,
+}
+```
+
+---
+
+# Princip poolingu
+
+
+---
+
+# Spojení se synchronním kódem - block_on
+
+```rust
+fn main() -> std::io::Result<()> {
+    use async_std::task;
+
+    let response = task::block_on(cheapo_request("example.com", 80, "/"))?;
+    println!("{}", response);
+    Ok(())
+}
+```
+
+---
+
+# Vytvoření asynchronních tasků na jednom vlákně
+
+```rust
+pub async fn many_requests(requests: Vec<(String, u16, String)>)
+                           -> Vec<std::io::Result<String>>
+{
+    use async_std::task;
+
+    let mut handles = vec![];
+    for (host, port, path) in requests {
+        handles.push(task::spawn_local(cheapo_request(&host, port, &path))); // <- spawn_local jako analogie spawn vlakna
     }
+
+    let mut results = vec![];
+    for handle in handles {
+        results.push(handle.await);
+    }
+
+    results
+}
+```
+
+---
+
+# Asynchronní blok
+
+```rust
+let serve_one = async {
+    use async_std::net;
+
+    // Listen for connections, and accept one.
+    let listener = net::TcpListener::bind("localhost:8087").await?;
+    let (mut socket, _addr) = listener.accept().await?;
+
+    // Talk to client on `socket`.
+    ...
+};
+```
+
+---
+
+# Funkce z asynchronního bloku
+
+```rust
+use std::io;
+use std::future::Future;
+
+fn cheapo_request<'a>(host: &'a str, port: u16, path: &'a str)
+    -> impl Future<Output = io::Result<String>> + 'a
+{
+    async move {
+        ... function body ...
+    }
+}
+```
+
+---
+
+# Vytvoření tasku na threadpoolu
+
+```rust
+use async_std::task;
+
+let mut handles = vec![];
+for (host, port, path) in requests {
+    handles.push(task::spawn(async move {
+        cheapo_request(&host, port, &path).await
+    }));
 }
 ```
 
