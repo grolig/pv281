@@ -17,6 +17,7 @@ paginate: true
 3. Paralelismus v Rustu
 4. Asynchronní programování v Rustu
 5. Perftesting
+TODO: add output of Criterion
 
 ---
 
