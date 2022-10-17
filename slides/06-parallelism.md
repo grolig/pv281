@@ -763,7 +763,7 @@ thread::scope(|s| {
         // Pozor, pokud bychom tu chtěli něco mutovat!
     });
 
-    // Díky scope nemusíme děat ručně `join` vláken.
+    // Díky scope nemusíme dělat ručně `join` vláken.
 });
 ```
 
