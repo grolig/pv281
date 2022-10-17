@@ -609,6 +609,26 @@ for handle in handles {
 
 ---
 
+# Scoped thread
+
+```rust
+let greeting = String::from("Hello world!");
+
+thread::scope(|s| {
+    s.spawn(|_| {
+        println!("thread #1 says: {}", greeting); // sdilime promenne jako greeting
+    });
+
+    s.spawn(|_| {
+        println!("thread #2 says: {}", greeting);
+    });
+
+    // diky scope nemusime delat rucne join
+});
+```
+
+---
+
 # Úvod do asynchronního programování
 
 ---
