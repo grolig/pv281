@@ -495,17 +495,6 @@ documents.into_iter()
 
 ---
 
-# Poznámky k pipeline
-
-Pipeline nemá linární zvýšení výkonu.
-
-U pipeline může lehce vzniknout _bottleneck_.
-
-Optimalizací může být synchronní kanál
-`let (sender, receiver) = mpsc::sync_channel(1000);`.
-
----
-
 # Implementace off_thread
 
 ```rust
@@ -548,6 +537,17 @@ impl<T> OffThreadExt for T
     }
 }
 ```
+
+---
+
+# Poznámky k pipeline
+
+Pipeline nemá linární zvýšení výkonu.
+
+U pipeline může lehce vzniknout _bottleneck_.
+
+Optimalizací může být synchronní kanál
+`let (sender, receiver) = mpsc::sync_channel(1000);`.
 
 ---
 
