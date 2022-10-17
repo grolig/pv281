@@ -21,7 +21,9 @@ paginate: true
 
 # Concurency vs parallelism
 
-Běžně se setkáme s oběma výrazy. Rozdíl se dobře vysvětluje českým překladem na současnost a souběžnost.
+Běžně se setkáme s oběma výrazy.
+
+Rozdíl se dobře vysvětluje českým překladem na **současnost** a **souběžnost**.
 
 ---
 
@@ -182,8 +184,11 @@ Existují modely one-to-one, one-to-many a many-to-many.
 
 ---
 
-# Práce s thready v Rustu
+<!-- _class: split -->
 
+### Práce s thready v Rustu
+
+<div class=left-column>
 
 ```rust
 use std::thread;
@@ -192,23 +197,53 @@ use std::time::Duration;
 fn main() {
     thread::spawn(|| {
         for i in 1..10 {
-            println!("hi number {} from the spawned thread!", i);
+            println!(
+                "hi number {} from the spawned thread!", 
+                i
+            );
             thread::sleep(Duration::from_millis(1));
         }
     });
 
     for i in 1..5 {
-        println!("hi number {} from the main thread!", i);
+        println!(
+            "hi number {} from the main thread!",
+            i
+        );
         thread::sleep(Duration::from_millis(1));
     }
 
-    // před ukončením programu musíme počkat na dokončení práce vláken
+    // před ukončením programu bychom měli
+    // počkat na dokončení práce všech vláken
 }
 ```
 
+</div>
+<div class=right-column>
+
+```shell
+$ cargo run
+
+hi number 1 from the main thread!
+hi number 1 from the spawned thread!
+hi number 2 from the main thread!
+hi number 2 from the spawned thread!
+hi number 3 from the main thread!
+hi number 3 from the spawned thread!
+hi number 4 from the main thread!
+hi number 4 from the spawned thread!
+```
+
+</div>
+
+
 ---
 
-# Práce s thready v Rustu
+<!-- _class: split -->
+
+### Práce s thready v Rustu
+
+<div class=left-column>
 
 ```rust
 use std::thread;
@@ -217,23 +252,52 @@ use std::time::Duration;
 fn main() {
     let handle = thread::spawn(|| {
         for i in 1..10 {
-            println!("hi number {} from the spawned thread!", i);
+            println!(
+                "hi number {} from the spawned thread!",
+                i
+            );
             thread::sleep(Duration::from_millis(1));
         }
     });
 
     for i in 1..5 {
-        println!("hi number {} from the main thread!", i);
+        println!(
+            "hi number {} from the main thread!",
+            i
+        );
         thread::sleep(Duration::from_millis(1));
     }
 
-    handle.join().unwrap();
+    handle.join().unwrap(); // <- zde je rozdíl
 }
 ```
 
+</div>
+<div class=right-column>
+
+```shell
+$ cargo run
+
+hi number 1 from the main thread!
+hi number 1 from the spawned thread!
+hi number 2 from the main thread!
+hi number 3 from the main thread!
+hi number 4 from the main thread!
+hi number 2 from the spawned thread!
+hi number 3 from the spawned thread!
+hi number 4 from the spawned thread!
+hi number 5 from the spawned thread!
+hi number 6 from the spawned thread!
+hi number 7 from the spawned thread!
+hi number 8 from the spawned thread!
+hi number 9 from the spawned thread!
+```
+
+</div>
+
 ---
 
-# Běžně používané přítupy k paralelismu
+# <!--fit--> Běžně používané přístupy k paralelismu
 
 ---
 
@@ -257,7 +321,7 @@ fn process_files_in_parallel(filenames: Vec<String>) -> io::Result<()> {
 
     // Join: Wait for all threads to finish.
     for handle in thread_handles {
-        handle.join().unwrap()?; // pozn. pokud dojde k panice uvnitr vlakne, tak se propaguje
+        handle.join().unwrap()?; // Note that panic from inside the thread propagates upward!
     }
 
     Ok(())
@@ -271,18 +335,16 @@ fn process_files_in_parallel(filenames: Vec<String>) -> io::Result<()> {
 - jednoduchý na implementaci
 - nevytváří bottleneck
 - výkonnostní matematika je jednoduchá
-- je jednoducké se bavit o korektnosti programu
+- je jednoduché se bavit o korektnosti programu
 
 ---
 
-# Alternativní implementace přes rayon
+### Alternativní implementace přes `rayon`
 
 ```rust
 use rayon::prelude::*;
 
-fn process_files_in_parallel(filenames: Vec<String>, glossary: &GigabyteMap)
-    -> io::Result<()>
-{
+fn process_files_in_parallel(filenames: Vec<String>, glossary: &GigabyteMap) -> io::Result<()> {
     filenames.par_iter()
         .map(|filename| process_file(filename, glossary))
         .reduce_with(|r1, r2| {
@@ -294,13 +356,15 @@ fn process_files_in_parallel(filenames: Vec<String>, glossary: &GigabyteMap)
 
 ---
 
-# Přenos dat pomocí kanálů - odesílání
+### Přenos dat pomocí kanálů – odesílání
 
-Kanál mpsc - několik producentů a jeden konzument.
+Kanál `mpsc` – několik producentů a jeden konzument.
 
 ```rust
 use std::{fs, thread};
 use std::sync::mpsc;
+
+// ...
 
 let (sender, receiver) = mpsc::channel();
 
@@ -314,11 +378,13 @@ let handle = thread::spawn(move || {
     }
     Ok(())
 });
+
+// ...
 ```
 
 ---
 
-# Přenos dat pomocí kanálů - příjem
+### Přenos dat pomocí kanálů – příjem
 
 ```rust
 while let Ok(text) = receiver.recv() {
@@ -331,15 +397,13 @@ while let Ok(text) = receiver.recv() {
 # Pipeline
 
 ```rust
-fn run_pipeline(documents: Vec<PathBuf>, output_dir: PathBuf)
-    -> io::Result<()>
-{
+fn run_pipeline(documents: Vec<PathBuf>, output_dir: PathBuf) -> io::Result<()> {
     // Launch all five stages of the pipeline.
     let (texts,   h1) = start_file_reader_thread(documents);
     let (pints,   h2) = start_file_indexing_thread(texts);
     let (gallons, h3) = start_in_memory_merge_thread(pints);
     let (files,   h4) = start_index_writer_thread(gallons, &output_dir);
-    let result = merge_index_files(files, &output_dir);
+    let result        = merge_index_files(files, &output_dir);
 
     // Wait for threads to finish, holding on to any errors that they encounter.
     let r1 = h1.join().unwrap();
@@ -347,9 +411,7 @@ fn run_pipeline(documents: Vec<PathBuf>, output_dir: PathBuf)
     h3.join().unwrap();
     let r4 = h4.join().unwrap();
 
-    // Return the first error encountered, if any.
-    // (As it happens, h2 and h3 can't fail: those threads
-    // are pure in-memory data processing.)
+    // Return the first error encountered, if any. Here, h2 and h3 can't fail as those threads are pure in-memory data processing.
     r1?;
     r4?;
     result
@@ -358,7 +420,7 @@ fn run_pipeline(documents: Vec<PathBuf>, output_dir: PathBuf)
 
 ---
 
-# Implementace bloku pipe
+# Implementace 1. bloku pipe
 
 ```rust
 fn start_file_reader_thread(documents: Vec<PathBuf>)
@@ -367,7 +429,7 @@ fn start_file_reader_thread(documents: Vec<PathBuf>)
     let (sender, receiver) = mpsc::channel();
 
     let handle = thread::spawn(move || {
-        ...
+        // ...
     });
 
     (receiver, handle)
@@ -376,7 +438,7 @@ fn start_file_reader_thread(documents: Vec<PathBuf>)
 
 ---
 
-# Implementace druhého bloku
+# Implementace 2. bloku pipe
 
 ```rust
 fn start_file_indexing_thread(texts: mpsc::Receiver<String>)
@@ -385,8 +447,9 @@ fn start_file_indexing_thread(texts: mpsc::Receiver<String>)
     let (sender, receiver) = mpsc::channel();
 
     let handle = thread::spawn(move || {
-        for (doc_id, text) in texts.into_iter().enumerate() { // vsimnete si, ze receiver je iterator
+        for (doc_id, text) in texts.into_iter().enumerate() { // Všimněte si, že `mpsc::Receiver` je iterovatelný.
             let index = InMemoryIndex::from_single_document(doc_id, text);
+            
             if sender.send(index).is_err() {
                 break;
             }
@@ -399,29 +462,28 @@ fn start_file_indexing_thread(texts: mpsc::Receiver<String>)
 
 ---
 
-
-
----
-
 # Piping iterátoru na channel
 
 ```rust
 documents.into_iter()
     .map(read_whole_file)
-    .errors_to(error_sender)   // filter out error results
-    .off_thread()              // spawn a thread for the above work
+    .errors_to(error_sender)     // filter out error results
+    .off_thread()                // spawn a thread for the above work
     .map(make_single_file_index)
-    .off_thread()              // spawn another thread for stage 2
-    ...
+    .off_thread()                // spawn another thread for stage 2
+    // ...
 ```
 
 ---
 
 # Poznámky k pipeline
 
-- pipeline nemá linární zvýšení výkonu
-- lehce může vzniknout bottleneck
-- optimalizací může být synchronní kanál ```let (sender, receiver) = mpsc::sync_channel(1000);```
+Pipeline nemá linární zvýšení výkonu.
+
+U pipeline může lehce vzniknout _bottleneck_.
+
+Optimalizací může být synchronní kanál
+`let (sender, receiver) = mpsc::sync_channel(1000);`.
 
 ---
 
@@ -470,13 +532,12 @@ impl<T> OffThreadExt for T
 
 ---
 
----
-
-# Synchronizační primitiva
+# <!--fit-->Synchronizační primitiva
 
 ---
 
-# Arc<T>
+# Arc&lt;T>
+
 ```rust
 use std::sync::{Arc, Mutex};
 use std::thread;
@@ -499,13 +560,14 @@ fn main() {
         handle.join().unwrap();
     }
 
-    println!("Result: {}", *counter.lock().unwrap());
+    assert_eq!(*counter.lock().unwrap(), 10);
 }
 ```
 
 ---
 
 # Mutex
+
 ```rust
 use std::sync::Mutex;
 
@@ -517,13 +579,13 @@ fn main() {
         *num = 6;
     }
 
-    println!("m = {:?}", m);
+    assert_eq!(m.lock().unwrap(), 6);
 }
 ```
 
 ---
 
-# Více konzumentů s využitím mutextu
+### Více konzumentů s využitím mutextu
 
 ```rust
 pub mod shared_channel {
@@ -545,8 +607,7 @@ pub mod shared_channel {
     }
 
     /// Create a new channel whose receiver can be shared across threads.
-    /// This returns a sender and a receiver, just like the stdlib's
-    /// `channel()`, and sometimes works as a drop-in replacement.
+    /// This returns a sender and a receiver, just like the stdlib's `channel()`, and sometimes works as a drop-in replacement.
     pub fn shared_channel<T>() -> (Sender<T>, SharedReceiver<T>) {
         let (sender, receiver) = channel();
         (sender, SharedReceiver(Arc::new(Mutex::new(receiver))))
@@ -556,69 +617,115 @@ pub mod shared_channel {
 
 ---
 
-# RwLock<T>
+### RwLock&lt;T>
 
-Umožňuje n čtenářů a jednoho zapisujícího. Mutex to neřeší.
+Umožňuje **n** čtenářů a **jednoho** zapisujícího. Mutex toto neřeší.
+
 ```rust
 use std::sync::RwLock;
 
-let lock = RwLock::new(5);
+fn main() {
+    let lock = RwLock::new(5);
 
-// many reader locks can be held at once
-{
-    let r1 = lock.read().unwrap();
-    let r2 = lock.read().unwrap();
-    assert_eq!(*r1, 5);
-    assert_eq!(*r2, 5);
-} // read locks are dropped at this point
+    { // Many reader locks can be held at once.
+        let r1 = lock.read().unwrap();
+        let r2 = lock.read().unwrap();
+        assert_eq!(*r1, 5);
+        assert_eq!(*r2, 5);
+    } // Read locks are dropped at this point.
 
-// only one write lock may be held, however
-{
-    let mut w = lock.write().unwrap();
-    *w += 1;
-    assert_eq!(*w, 6);
+    { // Only one write lock may be held, however.
+        let mut w = lock.write().unwrap();
+        *w += 1;
+        assert_eq!(*w, 6);
+
+        // Uncommenting this would wait forever as `w` would never unlock:
+        // let r = lock.read().unwrap();
+    }
+
+    let r = lock.read().unwrap();
+    assert_eq!(*r, 6);
 }
 ```
 
 ---
 
-# Bariéra
+<!-- _class: split -->
 
-Zasynchronizuje vlákna tak, aby všehna začala zároveň
+### Bariéra
+
+<div class=common-text>
+
+Synchronizuje vlákna tak, aby všechna začala zároveň.
+
+</div>
+<div class=left-column>
+
 ```rust
 use std::sync::{Arc, Barrier};
 use std::thread;
 
-let mut handles = Vec::with_capacity(10);
-let barrier = Arc::new(Barrier::new(10));
-for _ in 0..10 {
-    let c = Arc::clone(&barrier);
-    // The same messages will be printed together.
-    // You will NOT see any interleaving.
-    handles.push(thread::spawn(move|| {
-        println!("before wait");
-        c.wait();
-        println!("after wait");
-    }));
-}
-// Wait for other threads to finish.
-for handle in handles {
-    handle.join().unwrap();
+fn main() {
+    let mut handles = Vec::with_capacity(10);
+    let barrier = Arc::new(Barrier::new(10));
+
+    for _ in 0..10 {
+        let c = Arc::clone(&barrier);
+        
+        handles.push(thread::spawn(move || {
+            println!("before wait");
+            c.wait();
+            println!("after wait");
+        }));
+    }
+
+    for handle in handles {
+        handle.join().unwrap();
+    }
 }
 ```
 
+</div>
+<div class=right-column>
+
+```shell
+$ cargo run
+
+before wait
+before wait
+before wait
+before wait
+before wait
+before wait
+before wait
+before wait
+before wait
+before wait
+after wait
+after wait
+after wait
+after wait
+after wait
+after wait
+after wait
+after wait
+after wait
+after wait
+```
+
+</div>
+
 ---
 
-# Alternativní implementace primitiv
+#### Alternativní implementace primitiv
 
-Synchronizační prostředky ve std nemusí být nejrychlejší. Běžně používaná crate poskytující rychlejší implementaci je `parking_lot`.
+Synchronizační prostředky v `std` nemusí být nejrychlejší.
+Běžně používaná crate poskytující rychlejší implementaci je např. `parking_lot`.
 
----
+#### Další synchronizační prostředky
 
-# Další synchronizační prostředky
-
-Pokud budete hledat pokročilejší synchronizační prostřeky, tak je najdete v crate `crossbeam`.
-
+Pokud budete hledat pokročilejší synchronizační prostředky,
+tak je najdete např. v crate `crossbeam`.
 
 ---
 
@@ -629,21 +736,21 @@ let greeting = String::from("Hello world!");
 
 thread::scope(|s| {
     s.spawn(|_| {
-        println!("thread #1 says: {}", greeting); // sdilime promenne jako greeting
+        println!("thread #1 says: {}", greeting); // Sdílíme proměnné jako `greeting`
     });
 
     s.spawn(|_| {
         println!("thread #2 says: {}", greeting);
-        // pozn. pozor pokud bychom chteli neco mutovat
+        // Pozor, pokud bychom tu chtěli něco mutovat!
     });
 
-    // diky scope nemusime delat rucne join
+    // Díky scope nemusíme děat ručně `join` vláken.
 });
 ```
 
 ---
 
-# Úvod do asynchronního programování
+# <!--fit--> Úvod do asynchronního programování
 
 ---
 
@@ -654,16 +761,18 @@ Umožňuje využívat neblokující operace na jednom vlákně například pro I
 
 V Rustu platí:
 Je jedno- i vícevláknový.
-Async nic nestojí (více méně).
+Async víceméně nic nestojí.
 Nemá výchozí runtime.
 
 ---
 
 # Asynchronní přístup vs vlákna
 
-- můžeme si říct, že ale podobného efektu (neblokovaná aplikace) dosáhneme pomocí vláken
-- vlákna jsou řízená OS, jejich přepínání je relativně drahé
-- mohou zabírat i stovky KB paměti (co v případě vlákna pro každého klienta?)
+Můžeme si říct, že přece podobného efektu (_neblokovaná aplikace_) dosáhneme pomocí vláken.
+
+Vlákna jsou řízená OS, jejich přepínání je relativně drahé.
+Vlákna mohou zabírat i stovky KB paměti
+(což se v případě vlákna pro každého klienta prodraží).
 
 ---
 
@@ -672,9 +781,7 @@ Nemá výchozí runtime.
 ```rust
 use std::net;
 
-fn cheapo_request(host: &str, port: u16, path: &str)
-                      -> std::io::Result<String>
-{
+fn cheapo_request(host: &str, port: u16, path: &str) -> std::io::Result<String> {
     let mut socket = net::TcpStream::connect((host, port))?;
 
     let request = format!("GET {} HTTP/1.1\r\nHost: {}\r\n\r\n", path, host);
@@ -696,10 +803,9 @@ fn cheapo_request(host: &str, port: u16, path: &str)
 use async_std::io::prelude::*; 
 use async_std::net;
 
-async fn cheapo_request(host: &str, port: u16, path: &str) // <- funkce musi byt async
-                            -> std::io::Result<String>
-{
-    let mut socket = net::TcpStream::connect((host, port)).await?; // <- pouzivame await na zajisteni neblokujiciho volani
+// Funkce musí být označená jako `async`.
+async fn cheapo_request(host: &str, port: u16, path: &str) -> std::io::Result<String> {
+    let mut socket = net::TcpStream::connect((host, port)).await?; // <- `await` zajišťuje neblokující volání
 
     let request = format!("GET {} HTTP/1.1\r\nHost: {}\r\n\r\n", path, host);
     socket.write_all(request.as_bytes()).await?;
@@ -714,57 +820,68 @@ async fn cheapo_request(host: &str, port: u16, path: &str) // <- funkce musi byt
 
 ---
 
-# Future
+### Future
 
 ```rust
 trait Future {
     type Output;
     fn poll(&mut self, wake: fn()) -> Poll<Self::Output>;
 }
-
 enum Poll<T> {
     Ready(T),
     Pending,
 }
 ```
 
+Trait je obsažen v `std`, funkcionalitu ale poskytují crates, např:
+
+```toml
+[dependencies]
+async_std = "1.12"
+```
+
 ---
 
 # Princip poolingu
 
-- task se začíná vykonávat prvním poolingem (volání await)
-- pokud vrací pending, pokračuje se dalším taskem
-- pokud všechny tasky vrátí pending, executor se uspí
-- pokud je některé operace doběhla, waker probere executor
-- executor vezme task...
+Task se začíná vykonávat prvním poolingem (volání `await`).
+
+Pokud se vrací `Poll::Pending`, pokračuje se dalším taskem.
+
+Pokud všechny tasky vrací `Poll::Pending`, _executor_ se uspí.
+
+Pokud je některé operace doběhla, _waker_ probere *executor*a.
+
+_Executor_ ví, že operace doběhla, a předá data tam, kde jsou potřeba. 
 
 ---
 
-# Spojení se synchronním kódem - block_on
+### Spojení se synchronním kódem – `block_on`
 
 ```rust
-fn main() -> std::io::Result<()> {
-    use async_std::task;
+use async_std::task::block_on;
 
-    let response = task::block_on(cheapo_request("example.com", 80, "/"))?;
+fn main() -> std::io::Result<()> {
+    let response = block_on(cheapo_request("example.com", 80, "/"))?;
+    
     println!("{}", response);
+    
     Ok(())
 }
 ```
 
 ---
 
-# Vytvoření asynchronních tasků na jednom vlákně
+### Vytvoření asynchronních tasků na jednom vlákně
 
 ```rust
-pub async fn many_requests(requests: Vec<(String, u16, String)>)
-                           -> Vec<std::io::Result<String>>
-{
-    use async_std::task;
+use async_std::task::spawn_local;
 
+pub async fn many_requests(requests: Vec<(String, u16, String)>) -> Vec<std::io::Result<String>> {
     let mut handles = vec![];
     for (host, port, path) in requests {
-        handles.push(task::spawn_local(cheapo_request(&host, port, &path))); // <- spawn_local jako analogie spawn vlakna
+        // `spawn_local` analogické k vytvoření vlákna
+        handles.push(spawn_local(cheapo_request(&host, port, &path)));
     }
 
     let mut results = vec![];
@@ -781,31 +898,34 @@ pub async fn many_requests(requests: Vec<(String, u16, String)>)
 # Asynchronní blok
 
 ```rust
-let serve_one = async {
-    use async_std::net;
-
-    // Listen for connections, and accept one.
-    let listener = net::TcpListener::bind("localhost:8087").await?;
-    let (mut socket, _addr) = listener.accept().await?;
-
-    // Talk to client on `socket`.
-    ...
-};
+fn main() {
+    let serve_one = async {
+        use async_std::net;
+    
+        // Listen for connections, and accept one.
+        let listener = net::TcpListener::bind("localhost:8087").await?;
+        let (mut socket, _addr) = listener.accept().await?;
+    
+        // Talk to client on `socket`.
+        // ...
+    };
+}
 ```
 
 ---
 
 # Funkce z asynchronního bloku
 
+Výstupním typem musí být `impl Future<Output = T>`:
+
 ```rust
 use std::io;
 use std::future::Future;
 
-fn cheapo_request<'a>(host: &'a str, port: u16, path: &'a str)
-    -> impl Future<Output = io::Result<String>> + 'a
+fn cheapo_request<'a>(host: &'a str, port: u16, path: &'a str) -> impl Future<Output = io::Result<String>> + 'a
 {
     async move {
-        ... function body ...
+        // ... function body
     }
 }
 ```
@@ -875,7 +995,6 @@ io::stdin().read_line(&mut input).await?;
 println!("You typed: {}", input.trim());
 
 io::stdout().write(&[42]).await?;
-
 ```
 
 ---
@@ -891,9 +1010,10 @@ async fn main() -> std::io::Result<()> {
 
 ---
 
-# Async v traitu
+### Async v traitu
 
-- aktuálně není možné použít async v traitu. Je třeba použít makro z async-trait
+Aktuálně bohužel není možné použít `async` v traitu.
+Je třeba použít makro z crate `async-trait`.
 
 ```rust
 use async_trait::async_trait;
@@ -919,11 +1039,13 @@ impl Advertisement for Modal {
 
 ---
 
-# Perftesting
+# <!--fit--> Perftesting
 
 ---
 
 # Bench atribut
+
+Aktuálně jde o **unstable** feature, takže je potřeba **nightly compiler**.
 
 ```rust
 #![feature(test)]
@@ -986,7 +1108,7 @@ use test::Bencher;
 #[bench]
 fn bench_xor_1000_ints(b: &mut Bencher) {
     b.iter(|| {
-        (0..1000).fold(0, |old, new| old ^ new); // <- řešením je vrátit hodnotu. Tj odstranit ;
+        (0..1000).fold(0, |old, new| old ^ new); // <- Řešením je vrátit hodnotu, tj. odstranit `;`.
     });
 }
 ```
@@ -1009,7 +1131,7 @@ b.iter(|| {
 
 ---
 
-# Crate criterion
+# Crate `criterion`
 
 ```toml
 [dev-dependencies]
@@ -1022,9 +1144,9 @@ harness = false
 
 ---
 
-# Crate criterion
+### Crate `criterion`
 
-Vytvořete soubor v `/benches/bench_name.rs`.
+Soubor `/benches/bench_name.rs`:
 
 ```rust
 use criterion::{black_box, criterion_group, criterion_main, Criterion};
