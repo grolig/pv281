@@ -19,6 +19,12 @@ paginate: true
 
 ---
 
+# Concurency vs parallelism
+
+Běžně se setkáme s oběma výrazy. Rozdíl se dobře vysvětluje českým překladem na současnost a souběžnost.
+
+---
+
 # <!--fit--> Paralelismus
 
 ---
@@ -177,6 +183,8 @@ Existují modely one-to-one, one-to-many a many-to-many.
 ---
 
 # Práce s thready v Rustu
+
+
 ```rust
 use std::thread;
 use std::time::Duration;
@@ -193,12 +201,15 @@ fn main() {
         println!("hi number {} from the main thread!", i);
         thread::sleep(Duration::from_millis(1));
     }
+
+    // před ukončením programu musíme počkat na dokončení práce vláken
 }
 ```
 
 ---
 
 # Práce s thready v Rustu
+
 ```rust
 use std::thread;
 use std::time::Duration;
@@ -222,41 +233,246 @@ fn main() {
 
 ---
 
-# Přenos dat pomocí kanálů
+# Běžně používané přítupy k paralelismu
+
+---
+
+# Fork-Join
+
 ```rust
-use std::sync::mpsc;
-use std::thread;
+use std::{thread, io};
 
-fn main() {
-    let (tx, rx) = mpsc::channel();
+fn process_files_in_parallel(filenames: Vec<String>) -> io::Result<()> {
+    // Divide the work into several chunks.
+    const NTHREADS: usize = 8;
+    let worklists = split_vec_into_chunks(filenames, NTHREADS);
 
-    thread::spawn(move || {
-        let val = String::from("hi");
-        tx.send(val).unwrap();
-    });
+    // Fork: Spawn a thread to handle each chunk.
+    let mut thread_handles = vec![];
+    for worklist in worklists {
+        thread_handles.push(
+            thread::spawn(move || process_files(worklist))
+        );
+    }
 
-    let received = rx.recv().unwrap();
-    println!("Got: {}", received);
+    // Join: Wait for all threads to finish.
+    for handle in thread_handles {
+        handle.join().unwrap()?; // pozn. pokud dojde k panice uvnitr vlakne, tak se propaguje
+    }
+
+    Ok(())
 }
 ```
 
 ---
 
-# Mutex
+# Fork-join
+
+- jednoduchý na implementaci
+- nevytváří bottleneck
+- výkonnostní matematika je jednoduchá
+- je jednoducké se bavit o korektnosti programu
+
+---
+
+# Alternativní implementace přes rayon
+
 ```rust
-use std::sync::Mutex;
+use rayon::prelude::*;
 
-fn main() {
-    let m = Mutex::new(5);
-
-    {
-        let mut num = m.lock().unwrap();
-        *num = 6;
-    }
-
-    println!("m = {:?}", m);
+fn process_files_in_parallel(filenames: Vec<String>, glossary: &GigabyteMap)
+    -> io::Result<()>
+{
+    filenames.par_iter()
+        .map(|filename| process_file(filename, glossary))
+        .reduce_with(|r1, r2| {
+            if r1.is_err() { r1 } else { r2 }
+        })
+        .unwrap_or(Ok(()))
 }
 ```
+
+---
+
+# Přenos dat pomocí kanálů - odesílání
+
+Kanál mpsc - několik producentů a jeden konzument.
+
+```rust
+use std::{fs, thread};
+use std::sync::mpsc;
+
+let (sender, receiver) = mpsc::channel();
+
+let handle = thread::spawn(move || {
+    for filename in documents {
+        let text = fs::read_to_string(filename)?;
+
+        if sender.send(text).is_err() {
+            break;
+        }
+    }
+    Ok(())
+});
+```
+
+---
+
+# Přenos dat pomocí kanálů - příjem
+
+```rust
+while let Ok(text) = receiver.recv() {
+    do_something_with(text);
+}
+```
+
+---
+
+# Pipeline
+
+```rust
+fn run_pipeline(documents: Vec<PathBuf>, output_dir: PathBuf)
+    -> io::Result<()>
+{
+    // Launch all five stages of the pipeline.
+    let (texts,   h1) = start_file_reader_thread(documents);
+    let (pints,   h2) = start_file_indexing_thread(texts);
+    let (gallons, h3) = start_in_memory_merge_thread(pints);
+    let (files,   h4) = start_index_writer_thread(gallons, &output_dir);
+    let result = merge_index_files(files, &output_dir);
+
+    // Wait for threads to finish, holding on to any errors that they encounter.
+    let r1 = h1.join().unwrap();
+    h2.join().unwrap();
+    h3.join().unwrap();
+    let r4 = h4.join().unwrap();
+
+    // Return the first error encountered, if any.
+    // (As it happens, h2 and h3 can't fail: those threads
+    // are pure in-memory data processing.)
+    r1?;
+    r4?;
+    result
+}
+```
+
+---
+
+# Implementace bloku pipe
+
+```rust
+fn start_file_reader_thread(documents: Vec<PathBuf>)
+    -> (mpsc::Receiver<String>, thread::JoinHandle<io::Result<()>>)
+{
+    let (sender, receiver) = mpsc::channel();
+
+    let handle = thread::spawn(move || {
+        ...
+    });
+
+    (receiver, handle)
+}
+```
+
+---
+
+# Implementace druhého bloku
+
+```rust
+fn start_file_indexing_thread(texts: mpsc::Receiver<String>)
+    -> (mpsc::Receiver<InMemoryIndex>, thread::JoinHandle<()>)
+{
+    let (sender, receiver) = mpsc::channel();
+
+    let handle = thread::spawn(move || {
+        for (doc_id, text) in texts.into_iter().enumerate() { // vsimnete si, ze receiver je iterator
+            let index = InMemoryIndex::from_single_document(doc_id, text);
+            if sender.send(index).is_err() {
+                break;
+            }
+        }
+    });
+
+    (receiver, handle)
+}
+```
+
+---
+
+
+
+---
+
+# Piping iterátoru na channel
+
+```rust
+documents.into_iter()
+    .map(read_whole_file)
+    .errors_to(error_sender)   // filter out error results
+    .off_thread()              // spawn a thread for the above work
+    .map(make_single_file_index)
+    .off_thread()              // spawn another thread for stage 2
+    ...
+```
+
+---
+
+# Poznámky k pipeline
+
+- pipeline nemá linární zvýšení výkonu
+- lehce může vzniknout bottleneck
+- optimalizací může být synchronní kanál ```let (sender, receiver) = mpsc::sync_channel(1000);```
+
+---
+
+# Implementace off_thread
+
+```rust
+use std::sync::mpsc;
+
+pub trait OffThreadExt: Iterator {
+    /// Transform this iterator into an off-thread iterator: the
+    /// `next()` calls happen on a separate worker thread, so the
+    /// iterator and the body of your loop run concurrently.
+    fn off_thread(self) -> mpsc::IntoIter<Self::Item>;
+}
+```
+
+---
+
+# Implementace off_thread
+
+```rust
+use std::thread;
+
+impl<T> OffThreadExt for T
+    where T: Iterator + Send + 'static,
+          T::Item: Send + 'static
+{
+    fn off_thread(self) -> mpsc::IntoIter<Self::Item> {
+        // Create a channel to transfer items from the worker thread.
+        let (sender, receiver) = mpsc::sync_channel(1024);
+
+        // Move this iterator to a new worker thread and run it there.
+        thread::spawn(move || {
+            for item in self {
+                if sender.send(item).is_err() {
+                    break;
+                }
+            }
+        });
+
+        // Return an iterator that pulls values from the channel.
+        receiver.into_iter()
+    }
+}
+```
+
+---
+
+---
+
+# Synchronizační primitiva
 
 ---
 
@@ -284,6 +500,57 @@ fn main() {
     }
 
     println!("Result: {}", *counter.lock().unwrap());
+}
+```
+
+---
+
+# Mutex
+```rust
+use std::sync::Mutex;
+
+fn main() {
+    let m = Mutex::new(5);
+
+    {
+        let mut num = m.lock().unwrap();
+        *num = 6;
+    }
+
+    println!("m = {:?}", m);
+}
+```
+
+---
+
+# Více konzumentů s využitím mutextu
+
+```rust
+pub mod shared_channel {
+    use std::sync::{Arc, Mutex};
+    use std::sync::mpsc::{channel, Sender, Receiver};
+
+    /// A thread-safe wrapper around a `Receiver`.
+    #[derive(Clone)]
+    pub struct SharedReceiver<T>(Arc<Mutex<Receiver<T>>>);
+
+    impl<T> Iterator for SharedReceiver<T> {
+        type Item = T;
+
+        /// Get the next item from the wrapped receiver.
+        fn next(&mut self) -> Option<T> {
+            let guard = self.0.lock().unwrap();
+            guard.recv().ok()
+        }
+    }
+
+    /// Create a new channel whose receiver can be shared across threads.
+    /// This returns a sender and a receiver, just like the stdlib's
+    /// `channel()`, and sometimes works as a drop-in replacement.
+    pub fn shared_channel<T>() -> (Sender<T>, SharedReceiver<T>) {
+        let (sender, receiver) = channel();
+        (sender, SharedReceiver(Arc::new(Mutex::new(receiver))))
+    }
 }
 ```
 
