@@ -609,6 +609,19 @@ for handle in handles {
 
 ---
 
+# Alternativní implementace primitiv
+
+Synchronizační prostředky ve std nemusí být nejrychlejší. Běžně používaná crate poskytující rychlejší implementaci je `parking_lot`.
+
+---
+
+# Další synchronizační prostředky
+
+Pokud budete hledat pokročilejší synchronizační prostřeky, tak je najdete v crate `crossbeam`.
+
+
+---
+
 # Scoped thread
 
 ```rust
@@ -719,6 +732,11 @@ enum Poll<T> {
 
 # Princip poolingu
 
+- task se začíná vykonávat prvním poolingem (volání await)
+- pokud vrací pending, pokračuje se dalším taskem
+- pokud všechny tasky vrátí pending, executor se uspí
+- pokud je některé operace doběhla, waker probere executor
+- executor vezme task...
 
 ---
 
@@ -804,6 +822,34 @@ for (host, port, path) in requests {
     handles.push(task::spawn(async move {
         cheapo_request(&host, port, &path).await
     }));
+}
+```
+
+---
+
+# Async v traitu
+
+- aktuálně není možné použít async v traitu. Je třeba použít makro z async-trait
+
+```rust
+use async_trait::async_trait;
+
+#[async_trait]
+trait Advertisement {
+    async fn run(&self);
+}
+
+struct Modal;
+
+#[async_trait]
+impl Advertisement for Modal {
+    async fn run(&self) {
+        self.render_fullscreen().await;
+        for _ in 0..4u16 {
+            remind_user_to_join_mailing_list().await;
+        }
+        self.hide_for_now().await;
+    }
 }
 ```
 
