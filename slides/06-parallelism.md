@@ -827,6 +827,70 @@ for (host, port, path) in requests {
 
 ---
 
+# Async IO
+
+```rust
+use async_std::fs::File;
+use async_std::prelude::*;
+
+let mut f = File::open("foo.txt").await?;
+let mut buffer = [0; 10];
+
+// read up to 10 bytes
+let n = f.read(&mut buffer).await?;
+
+println!("The bytes: {:?}", &buffer[..n]);
+```
+
+---
+
+# Asynch BufReader
+
+```rust
+use async_std::fs::File;
+use async_std::io::BufReader;
+use async_std::prelude::*;
+
+let f = File::open("foo.txt").await?;
+let mut reader = BufReader::new(f);
+let mut buffer = String::new();
+
+// read a line into buffer
+reader.read_line(&mut buffer).await?;
+
+println!("{}", buffer);
+```
+
+---
+
+# Stdin a stdout
+
+```rust
+use async_std::io;
+
+let mut input = String::new();
+
+io::stdin().read_line(&mut input).await?;
+
+println!("You typed: {}", input.trim());
+
+io::stdout().write(&[42]).await?;
+
+```
+
+---
+
+# Async main
+
+```rust
+#[async_std::main]
+async fn main() -> std::io::Result<()> {
+    Ok(())
+}
+```
+
+---
+
 # Async v traitu
 
 - aktuálně není možné použít async v traitu. Je třeba použít makro z async-trait
