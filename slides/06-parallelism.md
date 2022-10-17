@@ -693,7 +693,7 @@ fn main() {
         
         handles.push(thread::spawn(move || {
             println!("before wait");
-            c.wait();
+            c.wait();                    // <- zde je bariéra
             println!("after wait");
         }));
     }
