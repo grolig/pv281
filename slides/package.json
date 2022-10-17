@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "build": "rimraf dist && npm run -s og-image && npm run -s deck",
-    "deck": "marp --html --no-stdin 03-enums-and-structures.md -o dist/index.html && cpy \"assets/**/*\" dist/assets",
+    "deck": "marp --html --no-stdin 06-enums-and-structures.md -o dist/index.html && cpy \"assets/**/*\" dist/assets",
     "now-build": "npm run -s deck",
     "og-image": "marp --html 03-enums-and-structures.md -o dist/og-image.jpg",
-    "start": "marp -ps --html ."
+    "start": "marp -s --html ."
   },
   "author": "",
   "license": "ISC",
