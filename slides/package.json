@@ -8,7 +8,8 @@
     "deck": "marp --html --no-stdin 06-enums-and-structures.md -o dist/index.html && cpy \"assets/**/*\" dist/assets",
     "now-build": "npm run -s deck",
     "og-image": "marp --html 03-enums-and-structures.md -o dist/og-image.jpg",
-    "start": "marp -s --html ."
+    "start": "marp -s --html .",
+    "preview": "marp -ps --html ."
   },
   "author": "",
   "license": "ISC",
