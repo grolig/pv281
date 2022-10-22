@@ -14,49 +14,61 @@ paginate: true
 
 1. Tokio
 2. Serde
-3. Network Programming
-
+3. Síťové programování
+3. Síťové programování v Tokiu
 
 ---
 
-# Asynchronní programování
+# <!-- fit --> Tokio
 
-Pro zopakování: při běžné blokující I/O operaci systém preemptivně sebere vláknu čas, protože čeká na dokončení operace. S asynchronních programováním jsou operace, které není možné ihned dokončit přesunuty do pozadí a mezitím se vykonává jiné kód.
+---
 
-Takovým blokům kódu se říká tasky. Ty jsou běžně reprezentovány green thready.
+### Připomenutí asynchronního programování
+
+Při běžné blokující I/O operaci systém preemptivně sebere vláknu čas, protože čeká na dokončení operace.
+
+V asynchronním programování jsou operace, které není možné ihned dokončit, přesunuty do pozadí a mezitím se vykonává jiný kód.
+
+Takovým blokům kódu se říká **_tasky_**. Ty jsou běžně reprezentovány pomocí _green threadů_.
 
 ---
 
 # Tokio
 
-Je nejpoužívanější asynchronní runtime pro Rust. Umožnuje asynchronní operace nad I/O a zjednodušuje síťové programování. (TCP, UDP, Unix sockety, dále timers, synchronizaci, různé plánovače, aj.)
+Nejpoužívanější _asynchronní runtime_ pro Rust.
 
-Standardní knihovna v Rustu poskytuje rozhraní pro asynchronní programování, ale neposkytuje implementované funkce. Proto je potřeba zvolit některou z komunitních implementací. 
+Umožnuje asynchronní operace nad I/O a zjednodušuje síťové programování. (TCP, UDP, Unix sockety, dále timers, synchronizaci, různé plánovače, aj.)
 
-Výhodou je výkon, spolehlivost, odzkoušenost a flexibilita.
+Pro připomenutí: _std_ poskytuje pouze rozhraní pro asynchronní programování, ale neposkytuje implementované funkce. Proto je potřeba zvolit některou z komunitních implementací. 
+
+Výhodou Tokia je výkon, spolehlivost, odzkoušenost a flexibilita.
 
 ---
 
 # K čemu nepoužívat Tokio
 
-## Paralelní výpočty
-Tokio je určené pro scénáře, kdy jednotlivé úlohy čekají na IO. Pokud potřebujete paralelizovat výpočty, můžete využít rayon nebo sami pracovat s thready. Rayon a Tokio můžete mixovat dohromady.
+#### Paralelní výpočty
+Tokio je určené pro scénáře, kdy jednotlivé úlohy čekají na I/O. Pokud potřebujete paralelizovat výpočty, můžete využít `rayon` nebo sami pracovat s thready. Rayon a Tokio můžete mixovat dohromady.
 
-## Single request
-Pokud potřebujete poslat jeden požadavek a nemusíte jich paralelizovat několik současně, tak je otázka, jestli se vyplatí práce navíc s využítím Tokia a není lepší použít blokující volání. Nebude mezi nimi výkonostně rozdíl.
+#### Single requests
+Pokud potřebujete poslat jeden požadavek a nemusíte jich paralelizovat několik současně, je otázka, jestli se vyplatí práce navíc s využítím Tokia a není lepší použít blokující volání. Nebude mezi nimi výkonostně rozdíl.
 
 ---
 
-# Tokio dependency
+# Tokio závislost
 
 ```toml
-tokio = { version = "1", features = ["full"] }
+[package]
+name = "my-crate"
+version = "0.1.0"
 
+[dependencies]
+tokio = { version = "1", features = ["full"] }
 ```
 
 ---
 
-# Použití Tokio
+# Použití Tokia
 
 ```rust
 async fn say_world() {
@@ -65,19 +77,19 @@ async fn say_world() {
 
 #[tokio::main]
 async fn main() {
-    // `say_world()` se ihned nespoustí. Async funkce jsou lazy.
+    // `say_world()` se ihned nespouští, async funkce jsou "lazy".
     let op = say_world();
 
     println!("hello");
 
-    // Await `.await` na `op` provede `say_world` a počká na výsledek.
+    // `.await` na `op` provede `say_world()` a počká na výsledek.
     op.await;
 }
 ```
 
 ---
 
-# Makro tokio::main
+# Makro `#[tokio::main]`
 
 ```rust
 #[tokio::main]
@@ -99,34 +111,38 @@ fn main() {
 
 ---
 
-![w:700 h:400](./assets/07-images/work_stealing.png)
+![h:512](./assets/07-images/work_stealing.png)
 
 ---
 
-![w:700 h:300](./assets/07-images/message_passing.png)
+![w:700](./assets/07-images/message_passing.png)
 
 ---
 
 # Práce se soubory
 
-Práce se soubory je paralelní, ale není skutečeně asynchronní na úrovni OS. Tokio spustí souborové operace jako blokující v samostatných vláknech.
+Práce se soubory je paralelní, ale na úrovni OS není skutečně asynchronní.
 
-Pozn. neblokující operace v crate tokio_uring
+Tokio spustí souborové operace jako blokující v samostatných vláknech.
+
+Poznámka: neblokující operace najdete v crate `tokio_uring`.
 
 ---
 
 # Čtení ze souboru
+
 ```rust
 use tokio::io::{self, AsyncReadExt};
-use tokio::fs::File;
+use tokio::fs::File; // <- Note that we aren't using File from std.
 
 #[tokio::main]
 async fn main() -> io::Result<()> {
     let mut f = File::open("foo.txt").await?;
     let mut buffer = Vec::new();
 
-    // read the whole file
+    // It's usually a bad idea to read the whole file at once, but this is just an example.
     f.read_to_end(&mut buffer).await?;
+
     Ok(())
 }
 ```
@@ -134,6 +150,7 @@ async fn main() -> io::Result<()> {
 ---
 
 # Zápis do souboru
+
 ```rust
 use tokio::io::{self, AsyncWriteExt};
 use tokio::fs::File;
@@ -143,13 +160,14 @@ async fn main() -> io::Result<()> {
     let mut buffer = File::create("foo.txt").await?;
 
     buffer.write_all(b"some bytes").await?;
+
     Ok(())
 }
 ```
 
 ---
 
-# Použití TCP socketu
+### Použití TCP socketu
 
 ```rust
 use tokio::io::{self, AsyncReadExt, AsyncWriteExt};
@@ -161,28 +179,20 @@ async fn main() -> io::Result<()> {
 
     loop {
         let (mut socket, _) = listener.accept().await?;
-
+        
         tokio::spawn(async move {
             let mut buf = vec![0; 1024];
 
             loop {
                 match socket.read(&mut buf).await {
-                    // Return value of `Ok(0)` signifies that the remote has
-                    // closed
-                    Ok(0) => return,
+                    Ok(0) => return, // Return value of `Ok(0)` signifies that the remote has closed
                     Ok(n) => {
                         if socket.write_all(&buf[..n]).await.is_err() {
                             return;
                         }
                     }
-                    Err(_) => {
-                        return;
-                    }
-                }
-            }
-        });
-    }
-}
+                    Err(_) => return,
+}}});}} // <- This has to be done so the code fits on the slide.
 ```
 
 ---
@@ -190,16 +200,14 @@ async fn main() -> io::Result<()> {
 # Asynchronní mutex
 
 ```rust
-use tokio::sync::Mutex; // note! This uses the Tokio mutex
+use tokio::sync::Mutex; // <- Note that we aren't using Mutex from std.
 
-// This compiles!
-// (but restructuring the code would be better in this case)
 async fn increment_and_do_stuff(mutex: &Mutex<i32>) {
     let mut lock = mutex.lock().await;
     *lock += 1;
 
     do_something_async().await;
-} // lock goes out of scope here
+} // <- Mutex lock goes out of scope here.
 ```
 
 ---
@@ -208,21 +216,23 @@ async fn increment_and_do_stuff(mutex: &Mutex<i32>) {
 
 Synchronizace je drahá. Proto se snažíme kód psát tak, aby byl nezávislý a nebylo třeba ho synchronizovat.
 
-Pokud je třeba rychlejší implementace mutexu (nebo například podpora pro Windows XP), tak existuje crate parking_lot.
-https://crates.io/crates/parking_lot
+Pokud potřebujeme rychlejší implementace mutexu (nebo například podporu Windows XP), tak existuje crate [parking_lot](https://crates.io/crates/parking_lot).
 
 ---
 
-# Message passing
+# Message passing channels
 
-mpsc:      multi-producer, single-consumer channel.
-oneshot:   single-producer, single consumer channel. 
-broadcast: multi-producer, multi-consumer. 
-watch:     single-producer, multi-consumer. 
+`mpsc`: multi-producer, single-consumer
+
+`oneshot`: single-producer, single consumer
+
+`broadcast`: multi-producer, multi-consumer 
+
+`watch`: single-producer, multi-consumer 
  
 ---
 
-# Ukázkové implementace
+# <!-- fit --> Ukázkové implementace
 
 ---
 
@@ -275,11 +285,11 @@ async fn main() {
 
 # Stream
 
-Jedná se o asynchronní variantu k iterátorům. Bohužel zatím nejdou použít ve for cyklu a musíme použít while let.
+Asynchronní varianta k iterátorům. Bohužel zatím nejdou použít ve `for cyklu` a musíme použít `while let`.
 
-Místo funkce into_iter() používáme její asynchronní obdobu into_stream().
+Místo metody `into_iter()` používáme její asynchronní obdobu `into_stream()`.
 
-Po použití potřebujeme crate tokio-stream. Streamy zatím nejsou standardizované v std. Ale neočekává se změna oproti tomu, co se tady naučíme.
+Po použití potřebujeme crate `tokio-stream`. Trait pro streamy zatím není standardizovaný v std.
 
 ---
 
@@ -300,27 +310,34 @@ async fn main() {
 
 ---
 
-# into_stream()
+<!-- _class: split -->
+
+### Příklad: komunikace s Redis serverem
+
+<div class=left-column>
 
 ```rust
+use mini_redis::{client, Result};
 use tokio_stream::StreamExt;
-use mini_redis::client;
 
-async fn publish() -> mini_redis::Result<()> {
+async fn publish() -> Result<()> {
     let mut client = client::connect("127.0.0.1:6379").await?;
 
     client.publish("numbers", "1".into()).await?;
     client.publish("numbers", "two".into()).await?;
     client.publish("numbers", "3".into()).await?;
+    
     Ok(())
 }
 
-async fn subscribe() -> mini_redis::Result<()> {
+async fn subscribe() -> Result<()> {
     let client = client::connect("127.0.0.1:6379").await?;
     let subscriber = client.subscribe(vec!["numbers".to_string()]).await?;
     let messages = subscriber.into_stream();
 
-    tokio::pin!(messages);
+    pin!(messages);
+    // ^ A value is pinned when it can no longer be moved in memory.
+    // Callers of the value can be confident the pointer stays valid.
 
     while let Some(msg) = messages.next().await {
         println!("got = {:?}", msg);
@@ -330,46 +347,79 @@ async fn subscribe() -> mini_redis::Result<()> {
 }
 ```
 
+</div>
+<div class=right-column>
+
+```rust
+#[tokio::main]
+async fn main() -> Result<()> {
+    tokio::spawn(async { publish().await });
+
+    subscribe().await?;
+
+    println!("DONE");
+
+    Ok(())
+}
+```
+
+```toml
+# ...
+
+[dependencies]
+tokio = { version = "1", features = ["full"] }
+tokio-stream = "0.1"
+mini-redis = "0.4"
+```
+
+</div>
+
+
+---
+
+# <!--fit--> Serializace
+
 ---
 
 # Serializace
 
-Převedení struktury nebo jiné reprezentace na textovou/binární/jinou. V některých jazycích se jí říká marshaling.
+Převedení struktury nebo jiné reprezentace na textovou/binární/jinou formu.
+V některých jazycích se jí říká _marshaling_.
 
-Je to naprosto běžná úloha, kterou dneska potřebujete ve všech programech, ať už na převod do JSONu nebo jiného formátu, který používáme ke komunikaci.
+Je to naprosto běžná úloha, kterou dneska potřebujeme ve všech programech. Například jde o převod dat do **JSON**u, který používáme ke komunikaci.
 
-Obrácený proces je deserializace. Příkladem může být načtení JSON konfigurace ze souboru do struktury.
+Obrácený proces je _deserializace_. Příkladem může být načtení **JSON** konfigurace ze souboru do struktury.
 
 ---
 
 # Serde
 
-V tuto chvíli nejpouživánější knihovna pro serialiazi dostupná v Rustu. Nemusí být vždy nejrychlejší, ale je odzkoušená a dobře dokumentovaná.
+V tuto chvíli nejpouživánější knihovna pro (de)serializaci.
+Nemusí být vždy nejrychlejší, ale je odzkoušená a dobře dokumentovaná.
 
-Hlavní část dostupná v crate serde. Jednotlivé formáty dostupné v samostatných crate - např. serde_json.
+Hlavní část dostupná v crate `serde`.
+Jednotlivé formáty dostupné v samostatných crates,
+např. `serde_json`, `serde_yaml`, ...
 
-Primárně se spoléhá na atributová makra.
+Primárně se spoléhá na _atributová makra_.
 
 ---
 
-# Závislost 
+# Serde závislosti 
 
 ```toml
 [package]
 name = "my-crate"
 version = "0.1.0"
-authors = ["Me <user@rust-lang.org>"]
 
 [dependencies]
 serde = { version = "1.0", features = ["derive"] }
-
-# serde_json is just for the example, not required in general
 serde_json = "1.0"
 ```
 
 ---
 
-# Serializace a deserializace
+### Serializace a deserializace
 
 ```rust
 use serde::{Serialize, Deserialize};
@@ -391,9 +441,16 @@ fn main() {
 }
 ```
 
+<br />
+
+```
+serialized = '{"x":1,"y":2}'
+deserialized = 'Point { x: 1, y: 2 }'
+```
+
 ---
 
-# camelCase fieldy
+# Různé konvence pojmenování
 
 ```rust
 #[derive(Serialize)]
@@ -404,9 +461,18 @@ struct Person {
 }
 ```
 
+```json
+{
+  "firstName": "Joe",
+  "lastName": "Doe"
+}
+```
+
 ---
 
-# Reprezentace enum jako čísla
+### Reprezentace enum jako čísla
+
+Použijeme crate `serde_repr`:
 
 ```rust
 use serde_repr::*;
@@ -419,27 +485,35 @@ enum SmallPrime {
     Five = 5,
     Seven = 7,
 }
+
+fn main() -> serde_json::Result<()> {
+    let j = serde_json::to_string(&SmallPrime::Seven)?;
+    assert_eq!(j, "7");
+
+    let p: SmallPrime = serde_json::from_str("2")?;
+    assert_eq!(p, SmallPrime::Two);
+
+    Ok(())
+}
 ```
 
 ---
 
-# Default hodnoty
+### Výchozí hodnoty při deserializaci
 
 ```rust
 #[derive(Deserialize, Debug)]
 struct Request {
-    // Use the result of a function as the default if "resource" is
-    // not included in the input.
+    // Use the result of a function as the default if "resource" is not included in the input.
     #[serde(default = "default_resource")]
     resource: String,
 
-    // Use the type's implementation of std::default::Default if
-    // "timeout" is not included in the input.
+    // Use the type's implementation of `std::default::Default` if "timeout" is not included in the input.
     #[serde(default)]
     timeout: Timeout,
 
-    // Use a method from the type as the default if "priority" is not
-    // included in the input. This may also be a trait method.
+    // Use a method from the type as the default if "priority" is not included in the input.
+    // It may also be a trait method.
     #[serde(default = "Priority::lowest")]
     priority: Priority,
 }
@@ -447,7 +521,7 @@ struct Request {
 
 ---
 
-# flattening
+### Structure flattening
 
 ```rust
 #[derive(Serialize, Deserialize)]
@@ -461,18 +535,17 @@ struct Pagination {
 struct Users {
     users: Vec<User>,
 
-    #[serde(flatten)]
+    #[serde(flatten)] // <- Flatten the contents of this field into the struct it is defined in.
     pagination: Pagination,
 }
 ``` 
 
 ---
 
-# skip
+### Přeskočení položky při serializaci
 
 ```rust
 use serde::Serialize;
-
 use std::collections::BTreeMap as Map;
 
 #[derive(Serialize)]
@@ -480,12 +553,11 @@ struct Resource {
     // Always serialized.
     name: String,
 
-    // Never serialized.
-    // NOTE: IT WILL TRY TO DESERIALIZE, USE skip_deserializing ALSO OR DEFAULT
+    // Never serialized. Note that it will try to deserialize, use `skip_deserializing` or `default` then.
     #[serde(skip_serializing)]
     hash: String,
 
-    // Use a method to decide whether the field should be skipped.
+    // Use a method to decide whether the field should be serialized.
     #[serde(skip_serializing_if = "Map::is_empty")]
     metadata: Map<String, String>,
 }
@@ -497,62 +569,79 @@ struct Resource {
 
 ---
 
-OSI a TCP/IP
+### OSI a TCP/IP
 
-![w:900 h:500](./assets/07-images/network_stack.png)
+![h:512](./assets/07-images/network_stack.png)
 
 
 ---
 
 # Adresování 
 
-## PC
-Počítač adresujeme pomocí IP adresy. Ta samotná nám pro socketovou komunikaci stačí. Pro veřejné služby chceme použít místo konkrétní IP doménové jméno. Takže potřebujeme A záznam na DNS. Pro synonyma využijeme CNAME. Často je potřeba vytvořit i PTR záznam (třeba kvůli mailu)
+#### Počítač
 
-## Aplikace
+Počítač adresujeme pomocí _IP adresy_, která nám pro socketovou komunikaci stačí.
+
+Pro veřejné služby chceme místo konkrétní IP použít _doménové jméno_, pro což potřebujeme `A záznam` na `DNS`.
+
+Pro synonyma využijeme `CNAME`. Často je potřeba vytvořit i `PTR záznam`, např. kvůli mailu.
+
+#### Aplikace
+
 Aplikace má přidělené číslo portu.
 
 ---
 
 # Důležité IP adresy
 
-127.0.0.1 - local loopback
+Local loopback: `127.0.0.1`
 
-Privátní adresy
-A: 10.0.0.0 — 10.255.255.255
-B: 172.16.0.0 — 172.31.255.255 
-C: 192.168.0.0 — 192.168.255.255
+#### Privátní adresy
+A: `10.0.0.0` — `10.255.255.255`
+B: `172.16.0.0` — `172.31.255.255` 
+C: `192.168.0.0` — `192.168.255.255`
 
-Fallback
-169.254.0.0 - 169.254.255.255
+#### Fallback adresy
+`169.254.0.0` — `169.254.255.255`
 
 ---
 
 # Porty
-0 - 1023: well-known porty. Bindnout je může pouze root.
-1024 - 49151: registrované porty. Některé z nich jsou vázané na konkrétní služby.
-49152 - 65535: dynamické nebo taky privátní porty.
+
+`0` — `1023`: _well-known_ porty, bindnout je může pouze root
+
+`1024` — `49151`: _registrované porty_, některé z nich jsou vázané na konkrétní služby
+
+`49152` — `65535`: _dynamické_ nebo také _privátní porty_
+
+---
+
+# <!--fit--> Síťové programování v Tokiu
 
 ---
 
 # UDP komunikace
 
-Získání socketu a provázání s portem: bind
-Komunikace one to many (strana serveru): recv_from, send_to
-Komunikace one to one (strana klienta): recv, send
+Server i klient pracují s `UdpSocket`.
+Získání socketu a provázání s portem: `bind`.
+
+Komunikace _one to many_ (strana serveru): `recv_from`, `send_to`.
+
+Komunikace _one to one_ (strana klienta): `recv`, `send`.
 
 ---
 
 # UDP server
 
 ```rust
-use tokio::net::UdpSocket;
 use std::io;
+use tokio::net::UdpSocket;
 
 #[tokio::main]
 async fn main() -> io::Result<()> {
     let sock = UdpSocket::bind("0.0.0.0:8080").await?;
     let mut buf = [0; 1024];
+    
     loop {
         let (len, addr) = sock.recv_from(&mut buf).await?;
         println!("{:?} bytes received from {:?}", len, addr);
@@ -565,7 +654,7 @@ async fn main() -> io::Result<()> {
 
 ---
 
-# UDP client
+# UDP klient
 
 ```rust
 use tokio::net::UdpSocket;
@@ -578,6 +667,7 @@ async fn main() -> io::Result<()> {
     let remote_addr = "127.0.0.1:8080";
     sock.connect(remote_addr).await?;
     let mut buf = [0; 1024];
+    
     loop {
         let len = sock.recv(&mut buf).await?;
         println!("{:?} bytes received from {:?}", len, remote_addr);
@@ -592,24 +682,24 @@ async fn main() -> io::Result<()> {
 
 # TCP komunikace
 
-Strana serveru: TcpListener
-Pomocí bind naváže číslo portu. Pomocí accept přijme připojení.
+Strana serveru: `TcpListener`.
+Pomocí `bind` naváže číslo portu.
+Pomocí `accept` přijme připojení.
 
-Strana klienta: TcpSocket
+Strana klienta: `TcpSocket`.
 
-Komunikace pomocí TcpStream
+Komunikace pomocí `TcpStream`.
 
 ---
 
-# TcpListener
+# TcpListener – server
 
 ```rust
+use std::io;
 use tokio::net::TcpListener;
 
-use std::io;
-
 async fn process_socket<T>(socket: T) {
-    // do work with socket here
+    // Do work with socket here.
 }
 
 #[tokio::main]
@@ -625,12 +715,11 @@ async fn main() -> io::Result<()> {
 
 ---
 
-# TCP socket
+# TCPSocket – klient
 
 ```rust
-use tokio::net::TcpSocket;
-
 use std::io;
+use tokio::net::TcpSocket;
 
 #[tokio::main]
 async fn main() -> io::Result<()> {
@@ -677,8 +766,9 @@ fn main() -> std::io::Result<()> {
 
     stream.write(&[1])?;
     stream.read(&mut [0; 128])?;
+    
     Ok(())
-} // the stream is closed here
+} // The stream is closed here as it's dropped.
 ```
 
 
@@ -687,10 +777,8 @@ fn main() -> std::io::Result<()> {
 # Čtení ze streamu
 
 ```rust
-use tokio::io::Interest;
-use tokio::net::TcpStream;
-use std::error::Error;
-use std::io;
+use tokio::{io::Interest, net::TcpStream};
+use std::{error::Error, io};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
@@ -701,23 +789,16 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
         if ready.is_readable() {
             let mut data = vec![0; 1024];
-            // Try to read data, this may still fail with `WouldBlock`
-            // if the readiness event is a false positive.
+
+            // Try to read data, this may still fail with `WouldBlock` if the readiness event is a false positive.
             match stream.try_read(&mut data) {
-                Ok(n) => {
-                    println!("read {} bytes", n);        
-                }
-                Err(ref e) if e.kind() == io::ErrorKind::WouldBlock => {
+                Ok(n) => println!("read {} bytes", n),
+                Err(ref e) if e.kind() == io::ErrorKind::WouldBlock => { // <- Note the match guard and reference binding.
                     continue;
                 }
-                Err(e) => {
-                    return Err(e.into());
-                }
-            }
+                Err(e) => return Err(e.into()),   
 
-        }
-    }
-}
+}}}} // <- This has to be done so the code fits on the slide.
 ```
 
 ---
@@ -725,10 +806,8 @@ async fn main() -> Result<(), Box<dyn Error>> {
 # Psaní do streamu
 
 ```rust
-use tokio::io::Interest;
-use tokio::net::TcpStream;
-use std::error::Error;
-use std::io;
+use tokio::{io::Interest, net::TcpStream};
+use std::{error::Error, io};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
@@ -738,22 +817,15 @@ async fn main() -> Result<(), Box<dyn Error>> {
         let ready = stream.ready(Interest::READABLE | Interest::WRITABLE).await?;
 
         if ready.is_writable() {
-            // Try to write data, this may still fail with `WouldBlock`
-            // if the readiness event is a false positive.
+            // Try to write data, this may still fail with `WouldBlock` if the readiness event is a false positive.
             match stream.try_write(b"hello world") {
-                Ok(n) => {
-                    println!("write {} bytes", n);
-                }
+                Ok(n) => println!("write {} bytes", n),
                 Err(ref e) if e.kind() == io::ErrorKind::WouldBlock => {
                     continue
                 }
-                Err(e) => {
-                    return Err(e.into());
-                }
-            }
-        }
-    }
-}
+                Err(e) => return Err(e.into()),
+                
+}}}} // <- This has to be done so the code fits on the slide.
 ```
 
 ---
