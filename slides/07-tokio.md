@@ -289,15 +289,14 @@ Pokud potřebujeme rychlejší implementace mutexu (nebo například podporu Win
 
 ---
 
-# MPSC
+# Použití MPSC
 
 ```rust
 use tokio::sync::mpsc;
 
 #[tokio::main]
 async fn main() {
-    // Create a new channel with a capacity of at most 32.
-    let (tx, mut rx) = mpsc::channel(32);
+    let (tx, mut rx) = mpsc::channel(32); // Create a new channel with a capacity of at most 32.
 
     let tx2 = tx.clone();
 
