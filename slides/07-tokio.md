@@ -935,9 +935,14 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
 ---
 
-# Lepší chyby s Anyhow
+# <!--fit--> Knihovny pro práci s chybami
 
-Přidáme crate `anyhow`. Funguje se všemi chybami implementující trait `std:error:Error`.
+---
+
+### crate `anyhow`
+
+Poskytuje jednoduchou práci s chybami.
+Funguje se všemi chybami implementující trait `std:error:Error`.
 
 ```rust
 use anyhow::Result;
@@ -951,9 +956,10 @@ fn get_cluster_info() -> Result<ClusterMap> {
 
 ---
 
-# Vytvoření vlastní chyby
+### crate `thiserror`
 
-`thiserror` poskytuje makro na vytvoření chyb. Tím, že jde o makro, které vygeneruje kód, se obsah crate neobjevuje ve výsledném kódu.
+Poskytuje atributové makro pro vytváření vlastních chyb.
+Vygeneruje kód za překladu, díky tomu kód zůstává přehledný.
 
 ```rust
 use thiserror::Error;
