@@ -285,6 +285,38 @@ Pokud potřebujeme rychlejší implementace mutexu (nebo například podporu Win
  
 ---
 
+# <!-- fit --> Ukázkové implementace
+
+---
+
+# MPSC
+
+```rust
+use tokio::sync::mpsc;
+
+#[tokio::main]
+async fn main() {
+    // Create a new channel with a capacity of at most 32.
+    let (tx, mut rx) = mpsc::channel(32);
+
+    let tx2 = tx.clone();
+
+    tokio::spawn(async move {
+        tx.send("sending from first handle").await;
+    });
+
+    tokio::spawn(async move {
+        tx2.send("sending from second handle").await;
+    });
+
+    while let Some(message) = rx.recv().await {
+        println!("GOT = {}", message);
+    }
+}
+```
+
+---
+
 # Použití broadcast
 
 ```rust
@@ -334,38 +366,6 @@ async fn main() {
 
     assert_eq!(20, rx.recv().await.unwrap());
     assert_eq!(30, rx.recv().await.unwrap());
-}
-```
-
----
-
-# <!-- fit --> Ukázkové implementace
-
----
-
-# MPSC
-
-```rust
-use tokio::sync::mpsc;
-
-#[tokio::main]
-async fn main() {
-    // Create a new channel with a capacity of at most 32.
-    let (tx, mut rx) = mpsc::channel(32);
-
-    let tx2 = tx.clone();
-
-    tokio::spawn(async move {
-        tx.send("sending from first handle").await;
-    });
-
-    tokio::spawn(async move {
-        tx2.send("sending from second handle").await;
-    });
-
-    while let Some(message) = rx.recv().await {
-        println!("GOT = {}", message);
-    }
 }
 ```
 
