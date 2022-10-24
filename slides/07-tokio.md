@@ -94,7 +94,7 @@ async fn main() {
 
 ---
 
-# Makro `#[tokio::main]`
+### Makro `#[tokio::main]`
 
 ```rust
 #[tokio::main]
@@ -103,14 +103,17 @@ async fn main() {
 }
 ```
 
-se překonvertuje na
+se makrem překonvertuje na
 
 ```rust
 fn main() {
-    let mut rt = tokio::runtime::Runtime::new().unwrap();
-    rt.block_on(async {
-        println!("hello");
-    })
+    tokio::runtime::Builder::new_multi_thread()
+        .enable_all()
+        .build()
+        .unwrap()
+        .block_on(async {
+            println!("Hello world");
+        })
 }
 ```
 
