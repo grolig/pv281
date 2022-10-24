@@ -15,7 +15,8 @@ paginate: true
 1. Tokio
 2. Serde
 3. Síťové programování
-3. Síťové programování v Tokiu
+4. Síťové programování v Tokiu
+5. Anyhow
 
 ---
 
@@ -193,6 +194,46 @@ async fn main() -> io::Result<()> {
                     }
                     Err(_) => return,
 }}});}} // <- This has to be done so the code fits on the slide.
+```
+
+---
+
+# tokio-uring
+
+- využívá rozhraní io-uring v Linuxu (nemá zatím podporu pro Windows) 
+- všechny kernely nejsou podporovány
+
+---
+
+# io-uring
+
+- minimalizuje počet systémových volání
+- rozhraní využívá dva ring buffery
+- jeden buffer slouží k předávání příkazů
+- druhý buffer k oznámení výsledku
+- buffery jsou sdílené mezi kernelem a user spacem
+
+---
+
+# Ukázka použití tokio-uring
+
+```rust
+use tokio_uring::fs::File;
+
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    tokio_uring::start(async {
+        let file = File::open("hello.txt").await?;
+
+        let buf = vec![0; 4096];
+
+        let (res, buf) = file.read_at(buf, 0).await;
+        let n = res?;
+
+        println!("{:?}", &buf[..n]);
+
+        Ok(())
+    })
+}
 ```
 
 ---
@@ -826,6 +867,43 @@ async fn main() -> Result<(), Box<dyn Error>> {
                 Err(e) => return Err(e.into()),
                 
 }}}} // <- This has to be done so the code fits on the slide.
+```
+
+---
+
+# Lepší chyby s Anyhow
+
+Přidáme crate `anyhow`. Funguje se všemi chybami implementující trait `std:error:Error`.
+
+```rust
+use anyhow::Result;
+
+fn get_cluster_info() -> Result<ClusterMap> {
+    let config = std::fs::read_to_string("cluster.json")?;
+    let map: ClusterMap = serde_json::from_str(&config)?;
+    Ok(map)
+}
+```
+
+---
+
+# Vytvoření vlastní chyby
+
+`thiserror` poskytuje makro na vytvoření chyb. Tím, že jde o makro, které vygeneruje kód, se obsah crate neobjevuje ve výsledném kódu.
+
+```rust
+use thiserror::Error;
+
+#[derive(Error, Debug)]
+pub enum FormatError {
+    #[error("Invalid header (expected {expected:?}, got {found:?})")]
+    InvalidHeader {
+        expected: String,
+        found: String,
+    },
+    #[error("Missing attribute: {0}")]
+    MissingAttribute(String),
+}
 ```
 
 ---
