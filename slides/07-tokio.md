@@ -205,20 +205,25 @@ async fn main() -> io::Result<()> {
 
 ---
 
-# tokio-uring
+# crate `tokio-uring`
 
-- využívá rozhraní io-uring v Linuxu (nemá zatím podporu pro Windows) 
-- všechny kernely nejsou podporovány
+Využívá rozhraní [io-uring](https://en.wikipedia.org/wiki/Io_uring) v Linuxu
+(nemá zatím podporu pro Windows) 
+
+Pozor: ne všechny Linux kernely jsou podporovány
+(viz [Requirements](https://github.com/tokio-rs/tokio-uring#requirements))
 
 ---
 
-# io-uring
+# Rozhraní io-uring
 
-- minimalizuje počet systémových volání
-- rozhraní využívá dva ring buffery
-- jeden buffer slouží k předávání příkazů
-- druhý buffer k oznámení výsledku
-- buffery jsou sdílené mezi kernelem a user spacem
+Rozhraní asynchronních I/O operací, které **minimalizuje počet systémových volání**.
+
+Rozhraní využívá dva ring buffery.
+Jeden buffer slouží k předávání příkazů.
+Druhý buffer k oznámení výsledku.
+
+Buffery jsou sdílené mezi kernelem a user spacem.
 
 ---
 
