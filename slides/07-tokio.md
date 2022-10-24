@@ -51,6 +51,10 @@ Výhodou Tokia je výkon, spolehlivost, odzkoušenost a flexibilita.
 #### Paralelní výpočty
 Tokio je určené pro scénáře, kdy jednotlivé úlohy čekají na I/O. Pokud potřebujete paralelizovat výpočty, můžete využít `rayon` nebo sami pracovat s thready. Rayon a Tokio můžete mixovat dohromady.
 
+---
+
+# K čemu nepoužívat Tokio
+
 #### Single requests
 Pokud potřebujete poslat jeden požadavek a nemusíte jich paralelizovat několik současně, je otázka, jestli se vyplatí práce navíc s využítím Tokia a není lepší použít blokující volání. Nebude mezi nimi výkonostně rozdíl.
 
@@ -273,26 +277,61 @@ Pokud potřebujeme rychlejší implementace mutexu (nebo například podporu Win
  
 ---
 
-# <!-- fit --> Ukázkové implementace
+# Použití broadcast
+
+```rust
+use tokio::sync::broadcast;
+
+#[tokio::main]
+async fn main() {
+    let (tx, mut rx1) = broadcast::channel(16);
+    let mut rx2 = tx.subscribe();
+
+    tokio::spawn(async move {
+        assert_eq!(rx1.recv().await.unwrap(), 10);
+        assert_eq!(rx1.recv().await.unwrap(), 20);
+    });
+
+    tokio::spawn(async move {
+        assert_eq!(rx2.recv().await.unwrap(), 10);
+        assert_eq!(rx2.recv().await.unwrap(), 20);
+    });
+
+    tx.send(10).unwrap();
+    tx.send(20).unwrap();
+}
+```
 
 ---
 
-# Struktura Command
+# Lag na úrovni receiveru
+
+Pokud dostaneme `RecvError::Lagged`, došlo ke ztrátě dat.
 
 ```rust
-use bytes::Bytes;
+use tokio::sync::broadcast;
 
-#[derive(Debug)]
-enum Command {
-    Get {
-        key: String,
-    },
-    Set {
-        key: String,
-        val: Bytes,
-    }
+#[tokio::main]
+async fn main() {
+    let (tx, mut rx) = broadcast::channel(2);
+
+    tx.send(10).unwrap();
+    tx.send(20).unwrap();
+    tx.send(30).unwrap();
+
+    // The receiver lagged behind
+    assert!(rx.recv().await.is_err());
+
+    // At this point, we can abort or continue with lost messages
+
+    assert_eq!(20, rx.recv().await.unwrap());
+    assert_eq!(30, rx.recv().await.unwrap());
 }
 ```
+
+---
+
+# <!-- fit --> Ukázkové implementace
 
 ---
 
@@ -601,6 +640,24 @@ struct Resource {
     // Use a method to decide whether the field should be serialized.
     #[serde(skip_serializing_if = "Map::is_empty")]
     metadata: Map<String, String>,
+}
+```
+
+---
+
+# Vlastní serializace/deserializace
+
+```rust
+pub trait Serialize {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer;
+}
+
+pub trait Deserialize<'de>: Sized {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>;
 }
 ```
 
