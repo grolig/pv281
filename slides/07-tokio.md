@@ -947,11 +947,17 @@ Funguje se všemi chybami implementující trait `std:error:Error`.
 ```rust
 use anyhow::Result;
 
-fn get_cluster_info() -> Result<ClusterMap> {
+fn get_cluster_info() -> Result<ClusterMap> { // <- Všiměte si jednoho parametru místo dvou.
     let config = std::fs::read_to_string("cluster.json")?;
     let map: ClusterMap = serde_json::from_str(&config)?;
     Ok(map)
 }
+```
+
+Pro odlišení od `std::result::Result` můžeme použít bez importu:
+
+```rust
+fn get_cluster_info() -> anyhow::Result<ClusterMap> { /* ... */ }
 ```
 
 ---
