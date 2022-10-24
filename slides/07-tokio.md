@@ -12,11 +12,12 @@ paginate: true
 
 # Obsah
 
+// TODO @grolig: check your git stash, add Redis to "Ukázky implementace"
 1. Tokio
 2. Serde
 3. Síťové programování
 4. Síťové programování v Tokiu
-5. Anyhow
+5. Knihovny pro práci s chybami
 
 ---
 
