@@ -262,6 +262,17 @@ Pro některé komplexnější věci je lepší využí jiné technologie.
 
 ---
 
+### SeaQL
+
+Relativně nová (08/2021) rodina knihoven pro práci s DB:
+`SeaQuery`, `SeaSchema`, `SeaORM`.
+
+Výhodami oproti Dieslu můžou být async podpora, ucelený ekosystém, mockovatelnost.
+
+Nevýhodami oproti Dieslu můžou být méně checků za kompilace, méně funkcionality.
+
+---
+
 # Connection pooling
 
 Vytváření a zavírání spojení je drahé a způsobuje latenci.
