@@ -13,10 +13,9 @@ paginate: true
 # Obsah
 
 1. Docker pro setup prostředí
-2. Postgres
+2. Práce s proměnnými prostředí
 3. SQLX
-4. ORM & Diesel
-
+4. ORM
 
 ---
 
@@ -275,6 +274,33 @@ fn main() {
 
 ---
 
+# structopt
+
+```rust
+use std::path::PathBuf;
+use structopt::StructOpt;
+
+/// A database applicaiton
+#[derive(StructOpt, Debug)]
+#[structopt(name = "dbapp")]
+struct Opt {
+    /// Database URL
+    #[structopt(short, long, parse(from_os_str))]
+    database_url: String,
+
+    /// Port number
+    #[structopt(short = "p", long)]
+    port: Option<i32>,
+}
+
+fn main() {
+    let opt = Opt::from_args();
+    println!("{:#?}", opt);
+}
+```
+
+---
+
 # .env
 
 ```rust
@@ -321,10 +347,111 @@ Podporuje různé asynchronní runtimy (async-std / tokio / actix) a TLS backend
 ```toml
 [dependencies]
 # tokio + rustls
-sqlx = { version = "0.5", features = [ "runtime-tokio-rustls" ] }
+sqlx = { version = "0.5", features = [ "runtime-tokio-rustls", "offline" ] }
 # async-std + native-tls
-sqlx = { version = "0.5", features = [ "runtime-async-std-native-tls" ] }
+sqlx = { version = "0.5", features = [ "runtime-async-std-native-tls", "offline" ] }
 ```
+
+---
+
+# Migrace
+
+- pro migrace nainstalujeme `sqlx-cli` 
+- ```cargo install sqlx-cli```
+
+- ujistíme se, že v projektu máme `.env` soubor s proměnnou `DATABASE_URL`
+
+---
+
+# Vytvoření databáze
+
+```sh
+sqlx database create
+sqlx database drop
+```
+
+---
+
+# Vytvoření migrace
+
+Pro vytvoření migrace použijeme příkaz `migrate add`
+
+```sh
+sqlx migrate add <name>
+Creating migrations/20211001154420_<name>.sql
+```
+
+---
+
+# Revertibilní migrace 
+
+Přepínačem -r vytvoříme revertibilní migraci
+
+```sh
+sqlx migrate add -r user
+Creating migrations/20211001154420_user.up.sql
+Creating migrations/20211001154420_user.down.sql
+```
+
+---
+
+# Vytvoření tabulky v migraci
+
+Soubor `user.up.sql`
+
+```sql
+create table "user"
+(
+    user_id       uuid primary key default gen_random_uuid(),
+    username      text unique not null,
+    password_hash text        not null
+);
+```
+
+Soubor `user.down.sql`
+```sql
+drop table user; -- nebezpecne
+```
+
+---
+
+# Spuštění migrace
+
+```sh
+sqlx migrate run
+Applied migrations/20211001154420 user (32.517835ms)
+```
+
+---
+
+# Reverzace migrace
+
+```sh
+sqlx migrate revert
+Applied 20211001154420/revert user (32.517835ms)
+```
+
+---
+
+# Spuštění migrace v aplikaci
+
+```rust
+sqlx::migrate!("db/migrations") // <- cesta ke slozce s migracemi nebo konkretni soubor migrace
+    .run(&pool)
+    .await?;
+```
+---
+
+# Prepare a offline mode
+
+Před vytvářením dotazů v aplikaci je nutné udělat prepare. Bez něj budeme mít problémy s query makry.
+
+```cargo sqlx prepare```
+
+Na CLI můžeme provést check bez připojení k db
+```cargo sqlx prepare --check```
+
+Poznámky: proměnná prostředí SQLX_OFFLINE na true enforcuje kontrolu proti offline modelu a ne DB.
 
 ---
 
@@ -388,10 +515,10 @@ sqlx::query("DELETE FROM table").execute(&pool).await?;
 ```rust
 let countries = sqlx::query!(
         "
-SELECT country, COUNT(*) as count
-FROM users
-GROUP BY country
-WHERE organization = ?
+                SELECT country, COUNT(*) as count
+            FROM users
+            GROUP BY country
+            WHERE organization = ?
         ",
         organization
     )
@@ -436,9 +563,9 @@ WHERE organization = ?
 async fn list_todos(pool: &SqlitePool) -> anyhow::Result<()> {
     let recs = sqlx::query!(
         r#"
-SELECT id, description, done
-FROM todos
-ORDER BY id
+            SELECT id, description, done
+            FROM todos
+            ORDER BY id
         "#
     )
     .fetch_all(pool)
@@ -456,6 +583,34 @@ ORDER BY id
     Ok(())
 }
 ```
+
+---
+
+# Transakce
+
+```rust
+use sqlx::postgres::PgPoolOptions;
+
+#[async_std::main]
+async fn main() -> Result<(), sqlx::Error> {
+    let pool = PgPoolOptions::new()
+        .max_connections(5)
+        .connect("postgres://postgres:password@localhost/test").await?;
+
+    let mut tx = pool.begin().await?; // <- begin slouzi i pro vytvoreni savepointu, pokud vnorime transakce
+
+    sqlx::query("INSERT INTO articles (slug) VALUES ('this-is-a-slug')")
+        .execute(&mut tx).await?; // <- otaznik zpusobi okamzity rollback pri vraceni chyby
+
+    tx.commit().await?;
+
+    // tx.rollback().await?;
+
+    Ok(())
+} // <- rollback je provedeny taky v ramci Drop na konci scopu
+
+```
+
 
 ---
 
@@ -526,22 +681,83 @@ impl TodoRepo for PostgresTodoRepo {
 
 ---
 
-# Migrations
+# Práce s časem
 
-```rust
-use sqlx::migrate::Migrator;
-use std::path::Path;
+K dispozici jsou knihovny `time` a `chrono`, který je postavený nad time. 
 
-static EMBEDDED: Migrator = sqlx::migrate!("tests/migrate/migrations");
+Problém chrono byl chybějící maintainer dělší dobu, kdy některé důležité bugy nebyly opraveny, proto hodně uživatelů přešlo na time. Dneska už maintainera má, a pravidelně dostává opravy.
 
-async fn main() -> anyhow::Result<()> {
-    let runtime = Migrator::new(Path::new("tests/migrate/migrations")).await?;
-}
+Time bylo původně postavené nad libc a taky skončilo bez maintainera. Později se objevil nový, došlo ke kompletnímu přepisu. Chrono dlouho zůstávalo na staré verzi 0.1. 
+
+Dnes už nejsou nekompatibilní. Chrono je stále používanější z obou dvou.
+
+SQLX v případě povolení obou preferuje použítí time.
+
+---
+
+# time
+
+```toml
+[dependencies]
+time = { version = "0.3", features = ["macros"] }
+sqlx = { version = "0.5", features = [ "runtime-tokio-rustls", "time" ] }
+
 
 ```
 
 ---
 
+# time
+
+```rust
+use time::{Date, PrimitiveDateTime, OffsetDateTime, UtcOffset};
+use time::Weekday::Wednesday;
+
+let date = Date::from_iso_week_date(2022, 1, Wednesday).unwrap();
+let datetime = date.with_hms(13, 0, 55).unwrap();
+let datetime_off = datetime.assume_offset(UtcOffset::from_hms(1, 2, 3).unwrap());
+
+println!("{date}, {datetime}, {datetime_off}");
+// 2022-01-01, 2022-01-01 13:00:55.0, 2022-01-01 13:00:55.0 +01:02:03
+```
+
+---
+
+# time - makra
+
+```rust
+use time::macros::{date, datetime};
+
+let date = date!(2022-01-01);
+let datetime = datetime!(2022-01-01 13:00:55);
+let datetime_off = datetime!(2022-01-01 13:00:55 +1:02:03);
+
+println!("{date}, {datetime}, {datetime_off}");
+// 2022-01-01, 2022-01-01 13:00:55.0, 2022-01-01 13:00:55.0 +01:02:03
+```
+
+---
+
+# time - offset
+
+```rust
+    assert_eq!(
+        datetime!(2000-01-01 0:00 UTC).to_offset(offset!(-1)).year(),
+        1999,
+    );
+
+    let sydney = datetime!(2000-01-01 0:00 +11);
+    let new_york = sydney.to_offset(offset!(-5));
+    let los_angeles = sydney.to_offset(offset!(-8));
+    assert_eq!(sydney.hour(), 0);
+    assert_eq!(sydney.day(), 1);
+    assert_eq!(new_york.hour(), 8);
+    assert_eq!(new_york.day(), 31);
+    assert_eq!(los_angeles.hour(), 5);
+    assert_eq!(los_angeles.day(), 31);
+```
+
+---
 
 # <!--fit--> Dotazy?
 
