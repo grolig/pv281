@@ -255,6 +255,7 @@ fn main() {
 
 ```rust
 use serde::Deserialize;
+use envy::envy;
 
 #[derive(Deserialize, Debug)]
 struct Config {
@@ -303,14 +304,17 @@ fn main() {
 
 # .env
 
-```rust
-extern crate dotenv;
+Velmi používaná knihovna dotenv, která se objevuje v tutorialech už není dále udržovaná, udžovaný fork je dotenvy.
 
-use dotenv::dotenv;
+```rust
+
+use dotenvy::dotenv;
+//use dotenv::dotenv;
 use std::env;
 
 fn main() {
-    dotenv().ok();
+    dotenvy::dotenv().unwrap();
+    // dotenv().ok();
 
     for (key, value) in env::vars() {
         println!("{}: {}", key, value);
@@ -347,9 +351,9 @@ Podporuje různé asynchronní runtimy (async-std / tokio / actix) a TLS backend
 ```toml
 [dependencies]
 # tokio + rustls
-sqlx = { version = "0.5", features = [ "runtime-tokio-rustls", "offline" ] }
+sqlx = { version = "0.6", features = [ "postgres", "runtime-tokio-rustls", "offline" ] }
 # async-std + native-tls
-sqlx = { version = "0.5", features = [ "runtime-async-std-native-tls", "offline" ] }
+sqlx = { version = "0.6", features = [ "mysql", "runtime-async-std-native-tls", "offline" ] }
 ```
 
 ---
@@ -455,6 +459,8 @@ Poznámky: proměnná prostředí SQLX_OFFLINE na true enforcuje kontrolu proti 
 
 ---
 
+# MySQL
+
 ```rust
 use sqlx::mysql::MySqlPoolOptions;
 use std::env;
@@ -478,6 +484,8 @@ async fn main() -> Result<(), sqlx::Error> {
 
 ---
 
+# Postgres
+
 ```rust
 use sqlx::postgres::PgPoolOptions;
 
@@ -500,6 +508,24 @@ async fn main() -> Result<(), sqlx::Error> {
 
 ---
 
+# Vytvoření spojení
+
+Pokud potřebujeme jedno spojení:
+
+```rust
+use sqlx::Connection;
+
+let conn = SqliteConnection::connect("sqlite::memory:").await?;
+```
+
+Pokud budeme DB používat pravidelně nebo potřebujeme více spojení:
+
+```rust
+let pool = MySqlPool::connect("mysql://user:pass@host/database").await?;
+```
+
+---
+
 # Command
 
 ```rust
@@ -510,16 +536,107 @@ sqlx::query("DELETE FROM table").execute(&pool).await?;
 
 ---
 
-# Verifikování při kompilaci
+# Fetch
+
+| Number of Rows| Method to Call* | Returns	Notes |
+|---|---|---|
+| None | .execute(...).await | sqlx::Result<DB::QueryResult> | For INSERT/UPDATE/DELETE without RETURNING. |
+|Zero or One	| .fetch_optional(...).await	| sqlx::Result<Option<{adhoc struct}>>	| Extra rows are ignored. |
+|Exactly One	| .fetch_one(...).await |	sqlx::Result<{adhoc struct}>	| Errors if no rows were returned. |Extra rows are ignored. Aggregate queries, use this. |
+|At Least One	| .fetch(...)	| impl Stream<Item = sqlx::Result<{adhoc struct}>>	| Call .try_next().await to get each row result. |
+|Multiple	| .fetch_all(...) |sqlx::Result<Vec<{adhoc struct}>> |
+
+---
+
+# Jednoduchý SQL select
+
+```rust
+use anyhow::Result;
+use dotenvy::dotenv;
+use std::env;
+use sqlx::postgres::PgPoolOptions;
+
+#[tokio::main]
+async fn main() -> Result<()> {
+    dotenvy::dotenv().unwrap();
+    let pool = PgPoolOptions::new().connect(&env::var("DATABASE_URL")?).await?;
+
+    let mut rows = sqlx::query("SELECT * FROM users WHERE email = ?")
+    .bind(email)
+    .fetch(&pool);
+
+    while let Some(row) = rows.try_next().await? {
+        let email: &str = row.try_get("email")?;
+    }
+
+    Ok(())
+}
+```
+
+---
+
+# Map na dotazu
+
+```rust
+use anyhow::Result;
+use dotenvy::dotenv;
+use std::env;
+use sqlx::postgres::PgPoolOptions;
+
+#[tokio::main]
+async fn main() -> Result<()> {
+    dotenvy::dotenv().unwrap();
+    let pool = PgPoolOptions::new().connect(&env::var("DATABASE_URL")?).await?;
+
+    let mut stream = sqlx::query("SELECT * FROM users")
+    .map(|row: PgRow| {
+        // map the row into a user-defined domain type
+    })
+    .fetch(&pool);
+
+    Ok(())
+}
+```
+
+---
+
+# S přímým mapováním do struktury
+
+```rust
+use anyhow::Result;
+use dotenvy::dotenv;
+use std::env;
+use sqlx::postgres::PgPoolOptions;
+
+#[derive(sqlx::FromRow)]
+struct User { name: String, id: i64 }
+
+#[tokio::main]
+async fn main() -> Result<()> {
+    dotenvy::dotenv().unwrap();
+    let pool = PgPoolOptions::new().connect(&env::var("DATABASE_URL")?).await?;
+
+    let mut stream = sqlx::query_as::<_, User>("SELECT * FROM users WHERE email = ? OR name = ?")
+    .bind(user_email)
+    .bind(user_name)
+    .fetch(&pool);
+
+    Ok(())
+}
+```
+
+---
+
+# Verifikace SQL při kompilaci
 
 ```rust
 let countries = sqlx::query!(
         "
-                SELECT country, COUNT(*) as count
+            SELECT country, COUNT(*) as count
             FROM users
             GROUP BY country
             WHERE organization = ?
-        ",
+        ", // <- pozor: tady musí být string literal a ne String
         organization
     )
     .fetch_all(&pool) // -> Vec<{ country: String, count: i64 }>
@@ -540,10 +657,10 @@ struct Country { country: String, count: i64 }
 
 let countries = sqlx::query_as!(Country,
         "
-SELECT country, COUNT(*) as count
-FROM users
-GROUP BY country
-WHERE organization = ?
+        SELECT country, COUNT(*) as count
+        FROM users
+        GROUP BY country
+        WHERE organization = ?
         ",
         organization
     )
@@ -557,7 +674,29 @@ WHERE organization = ?
 
 ---
 
-# Funkce pro práci s DB
+# query_with
+
+```rust
+use sqlx::{postgres::PgArguments, Arguments};
+use std::env;
+
+#[tokio::main]
+async fn main() -> Result<(), sqlx::Error> {
+    let pool = PgPoolOptions::new().connect(&env::var("DATABASE_URL")?).await?;
+
+    let mut args = PgArguments::default();
+    args.add(5);
+    args.add("foo");
+
+    sqlx::query_with!("insert into abc (a,b) values ($1, $2)", args);
+
+    Ok(())
+}
+```
+
+---
+
+# Implementace funkce pro práci s DB
 
 ```rust
 async fn list_todos(pool: &SqlitePool) -> anyhow::Result<()> {
@@ -687,6 +826,10 @@ K dispozici jsou knihovny `time` a `chrono`, který je postavený nad time.
 
 Problém chrono byl chybějící maintainer dělší dobu, kdy některé důležité bugy nebyly opraveny, proto hodně uživatelů přešlo na time. Dneska už maintainera má, a pravidelně dostává opravy.
 
+---
+
+# Práce s časem
+
 Time bylo původně postavené nad libc a taky skončilo bez maintainera. Později se objevil nový, došlo ke kompletnímu přepisu. Chrono dlouho zůstávalo na staré verzi 0.1. 
 
 Dnes už nejsou nekompatibilní. Chrono je stále používanější z obou dvou.
@@ -755,6 +898,75 @@ println!("{date}, {datetime}, {datetime_off}");
     assert_eq!(new_york.day(), 31);
     assert_eq!(los_angeles.hour(), 5);
     assert_eq!(los_angeles.day(), 31);
+```
+
+---
+
+# Redis
+
+```toml
+# if you use tokio
+redis = { version = "0.22.1", features = ["tokio-native-tls-comp"] }
+
+# if you use async-std
+redis = { version = "0.22.1", features = ["async-std-tls-comp"] }
+```
+
+---
+
+# Základní operace nad Redis serverem
+
+```rust
+use redis::Commands;
+
+fn fetch_an_integer() -> redis::RedisResult<isize> {
+    let client = redis::Client::open("redis://127.0.0.1/")?;
+    let mut con = client.get_connection()?;
+
+    let _ : () = con.set("my_key", 42)?;
+    
+    con.get("my_key")
+```
+
+---
+
+# Poznámky k implementaci
+
+`redis-rs` nemá connection pool. Pro jeho vyvoření je možné použít `bb8` nebo `deadpool`.
+
+---
+
+# Ukázka bb8 impelementace
+
+```rust
+use futures_util::future::join_all;
+use bb8_redis::{
+    bb8,
+    redis::{cmd, AsyncCommands},
+    RedisConnectionManager
+};
+
+#[tokio::main]
+async fn main() {
+    let manager = RedisConnectionManager::new("redis://localhost").unwrap();
+    let pool = bb8::Pool::builder().build(manager).await.unwrap();
+
+    let mut handles = vec![];
+
+    for _i in 0..10 {
+        let pool = pool.clone();
+
+        handles.push(tokio::spawn(async move {
+            let mut conn = pool.get().await.unwrap();
+
+            let reply: String = cmd("PING").query_async(&mut *conn).await.unwrap();
+
+            assert_eq!("PONG", reply);
+        }));
+    }
+
+    join_all(handles).await;
+}
 ```
 
 ---
