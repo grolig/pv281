@@ -542,23 +542,17 @@ sqlx::migrate!("db/migrations") // <- Cesta ke složce s migracemi nebo ke konkt
 
 ---
 
-#### Prepare
+### Offline mode
 
-Před vytvářením dotazů v aplikaci je nutné udělat `prepare`. Bez něj budeme mít problémy s makry pro dotazy.
+1. Potřeba přidat offline feature v Cargo.toml:
+`sqlx = { features = [ "offline", ... ] }`
 
-```sh
-cargo sqlx prepare
-```
+2. Potřeba uložit metadata databáze do souboru `sqlx-data.json`:
+`cargo sqlx prepare`
 
-Na CLI můžeme provést check bez připojení k databázi:
-
-```sh
-cargo sqlx prepare --check
-```
-
-#### Offline mode
-
-Proměnná prostředí `SQLX_OFFLINE=true` vynucuje kontrolu proti offline modelu a ne DB.
+#### Poznámky
+Aktuálnost metadat ověříme příkazem `cargo sqlx prepare --check`.
+Proměnná prostředí `SQLX_OFFLINE=true` vynucuje offline kontrolu.
 
 ---
 
