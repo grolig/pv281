@@ -414,8 +414,8 @@ Pro vývoj si ukládáme connection string do `.env` souboru.
 Tento soubor se neverzuje!
 
 ```sh
-echo DATABASE_URL=postgres://postgres:postgrespass@localhost:54321/simple_chat > .env
-#                 ^scheme    ^user    ^password    ^hostname ^port ^dbname
+echo DATABASE_URL=postgres://postgres:postgrespass@localhost:5432/simple_chat > .env
+#                 ^scheme    ^user    ^password    ^hostname ^port^dbname
 ```
 
 Načteme následně pomocí výše zmíněných metod.
