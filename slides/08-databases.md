@@ -40,6 +40,15 @@ na Win10/11 je nutné nainstalovat nejdříve WSL2. Alternativa je mít nainstal
 
 ---
 
+# Alternativy k Dockeru
+
+Vzhledem k licenční police se dnes přechází od použití Dockeru jako řešení kontejnerizace. Na produkci se používá v rámci Kubernetes conteinerd, a trend je ho využít i pro lokální vývoj.
+
+Rancher Desktop
+colima + nerdctl
+
+---
+
 # Práce s Dockerem
 
 spustit CMD a vyzkoušet
@@ -124,287 +133,176 @@ e01 |o..o{ e03
 
 # Postgres
 
-klasická relační SQL databáze
++ klasická relační SQL databáze
++ open-source
++ s velkým množstvím funkcí
++ velmi dobrý výkon i pro velké systémy
 
-open-source
-
-s velkým množstvím funkcí
-
-velmi dobrý výkon i pro velké systémy
-
----
-
-# ORM
-= object relation mapping
-
-V Rustu sice nemáme objekty, ale mapujeme na struktury.
+- občas neřešené starší bugy
+- performance jiných DB systémů bývá lepší
 
 ---
 
-# Důležité detaily k ORM:
+# Přístupy pro práci s databází
+
+## Ručně vytvořené SQL dotazy
++ veškeré funkce k dispozici
++ lehké optimatlizovat výkon
+
+- možnost SQL injection (vzhledem k neznalosti)
+- nutnost znát SQL a zavádět další jazyk do projektu
+
+---
+
+
+# Přístupy pro práci s databází
+
+## Query Builder
++ většina funkcí k dispozici
++ stále relativně lehké optimatlizovat výkon
++ nedochází k SQL injection
++ není zavedený další jazyk do projektu
+
+- nutná znalost SQL a k tomu knihovny, která ho na pozadí vygeneruje
+- nemáme tolik možností jako u čistého SQL
+
+
+---
+
+# Přístupy pro práci s databází
+
+# ORM = object relation mapping
 
 + omezuje množství možných útoků
 + jednoduchá a na vývoj rychlá práce s databází
 + vše typovené, a tím pádem možné odhalit chyby
 
 - ne vše podprované ORM knihovnami
-- vygenerované dotazy nemusí být ideální
+- ztráta výkonnosti - vygenerované dotazy nemusí být ideální
 
 ---
 
 # Diesel
 
-nejpoužívanější ORM v Rustu (ne že by bylo moc alternativ)
-jeden z nejrychlejších ORM systémů
-eliminuje runtime errory při práci s DB (aspoň většinu)
-je celkem lehce rozšiřitelný
++ nejpoužívanější ORM v Rustu
++ jeden z nejrychlejších ORM systémů v Rustu
++ eliminuje runtime errory při práci s DB (aspoň většinu)
++ je celkem lehce rozšiřitelný
+
+- komplexnější dotazy jsou komplikované, a musíte si stejně sami stavět dotaz
+- komplexnější věci jsou opravdu tak komplikované, že je lepší využí jiné technologie
 
 ---
 
-# Cargo.toml
+# Connection pooling
 
-```toml
-[dependencies]
-diesel = { version = "1.4.4", features = ["postgres"] }
-dotenv = "0.15.0"
-```
+- vytváření a zavření spojení je drahé a způsobuje latenci
+- spojení si můžeme uložit a nechat jej otevřené, tím nemusíme platit za jeho nové vytvoření
+- díky poolu můžeme i ovlinit minimální a maximální počet spojení
 
 ---
 
-# CLI
+# Cachování dotazu
 
-nainstalujeme CLI
-
-```sh
-cargo install diesel_cli
-```
-
-a spustíme
-
-```sh
-cargo install diesel_cli --no-default-features --features postgres
-```
-
-pozn. je potřeba mít nainstalovaného klienta na práci s DB
+- databázové dotazy je vhodné cachovat 
+- běžné je použití in-memory cache jako je Redis
+- vytáhnout výsledek z Redisu (key-value) je levnější než zpracovat dotaz nad DBMS
 
 ---
 
-# Konfigurace připojení
-
-Na DEV si uděláme connection string
-
-```sh
-echo DATABASE_URL=postgres://postgres:postgrespass@localhost/simple_chat > .env
-```
-
-Jen to nedávejte do GITu, ani to takto nedělejte pro produkční appky.
-
----
-
-# Setup Dieslu
-
-```sh
-diesel setup
-```
-
-vytvoří databázi, pokud neexistuje a složku na migrace
-
----
-
-# Migrace
-
-verzují změny ve struktuře databáze a umožňují zmigrovat data mezi verzemi
-
-```sh
-diesel migration generate create_messages
-```
- 
----
-
-# Up.sql
-
-```sql
-CREATE TABLE messages (
-  id SERIAL PRIMARY KEY,
-  text TEXT NOT NULL,
-  created_at TIMESTAMP DEFAULT NOW()
-)
-```
-
----
-
-# Down.sql
-
-```sql
-DROP TABLE messages
-```
-
----
-
-# Spuštění migrace
-
-Na produkci je potřeba dát spuštění migrace buď do nasazení nebo provést při startu aplikace.
-
-```sh
-diesel migration run
-```
-
----
-
-# Přípojení k DB
-
+# Práce s proměnnými prostředí
 
 ```rust
-#[macro_use]
-extern crate diesel;
-extern crate dotenv;
- 
-use diesel::prelude::*;
-use diesel::pg::PgConnection;
-use dotenv::dotenv;
+
 use std::env;
- 
-pub fn establish_connection() -> PgConnection {
-    dotenv().ok();
- 
-    let database_url = env::var("DATABASE_URL")
-        .expect("DATABASE_URL must be set");
-    PgConnection::establish(&database_url)
-        .expect(&format!("Error connecting to {}", database_url))
-}
-```
 
----
-
-# Struktura pro čtení
-
-```rust
-use diesel::types::Timestamp;
- 
-#[derive(Queryable)]
-pub struct Message {
-    pub id: i32,
-    pub text: String,
-    pub created_at: Timestamp,
-}
-```
-
----
-
-# Struktura pro zápis
-
-```rust
-use super::schema::messages;
- 
-#[derive(Insertable)]
-#[table_name="messages"]
-pub struct NewMessage<'a> {
-    pub text: &'a str,
-}
-
-```
-
----
-
-# Insert
-
-```rust
-use self::simple_chat::*;
-use self::models::*;
-use self::diesel::prelude::*;
- 
-use self::models::{Message, NewMessage};
- 
-pub fn create_message<'a>(conn: &PgConnection, text: &'a str) -> Message {
-    use schema::messages;
- 
-    let new_message = NewMessage {
-        text: text,
-    };
- 
-    diesel::insert_into(messages::table)
-        .values(&new_message)
-        .get_result(conn)
-        .expect("Error saving new message")
-}
-```
-
----
-
-# Select
-
-```rust
-use self::simple_chat::*;
-use self::models::*;
-use self::diesel::prelude::*;
- 
 fn main() {
-    use simple_chat::schema::messages::dsl::*;
- 
-    let connection = establish_connection();
-    let results = messages.filter(published.eq(true))
-        .limit(5)
-        .load::<Message>(&connection)
-        .expect("Error loading messages");
-        
-    let text = String::from("Prvni zprava");
-    let message = create_message(&connection, text);
- 
-    println!("Displaying {} messages", results.len());
-    for message in results {
-        println!("{}", message.text);
-        println!("----------\n");
+    let host_key = "HOST";
+    let port_key = "PORT";
+    let default_port = 8080;
+    
+    let host = match env::var(host_key) {
+        Ok(val) => val,
+        Err(err) => {
+            println!("{}: {}", err, host_key);
+            process::exit(1);
+        },
+    };
+}
+
+```
+
+---
+
+# Práce s proměnnými prostředí
+
+```rust
+
+use std::env;
+
+fn main() {
+    let host_key = "HOST";
+    let port_key = "PORT";
+    let default_port = 8080;
+    
+    let host = env!(host_key);
+    let port = option_env!(port_key);
+}
+```
+
+---
+
+# Envy
+
+```rust
+use serde::Deserialize;
+
+#[derive(Deserialize, Debug)]
+struct Config {
+  foo: u16,
+  bar: bool,
+  baz: String,
+  boom: Option<u64>
+}
+
+fn main() {
+    match envy::from_env::<Config>() {
+       Ok(config) => println!("{:#?}", config),
+       Err(error) => panic!("{:#?}", error)
     }
 }
 ```
 
 ---
 
-# r2d2
-
-Jelikož všechno, co potřebujete si musíte dodat sami, tak musíte řešit i connection pooling.
-
-Connection pooling umožňuje znovu používat databázové spojení. 
-
----
-
-# r2d2
-
-```toml
-[dependencies]
-diesel = { version = "1.0.0", features = ["postgres", "r2d2"] }
-```
-
----
-
-# Connection pool
+# .env
 
 ```rust
-use diesel::pg::PgConnection;
+extern crate dotenv;
+
 use dotenv::dotenv;
 use std::env;
-use diesel::r2d2::{ Pool, PooledConnection, ConnectionManager, PoolError };
- 
-pub type PgPool = Pool<ConnectionManager<PgConnection>>;
-pub type PgPooledConnection = PooledConnection<ConnectionManager<PgConnection>>;
- 
-fn init_pool(database_url: &str) -> Result<PgPool, PoolError> {
-    let manager = ConnectionManager::<PgConnection>::new(database_url);
-    Pool::builder().build(manager)
-}
- 
-pub fn establish_connection() -> PgPool {
+
+fn main() {
     dotenv().ok();
- 
-    let database_url = env::var("DATABASE_URL")
-         .expect("DATABASE_URL must be set");
-         
-    PgConnection::establish(&database_url)
-        .expect(&format!("Error connecting to {}", database_url));
-        
-    init_pool(&database_url).expect("Failed to create pool")
+
+    for (key, value) in env::vars() {
+        println!("{}: {}", key, value);
+    }
 }
 ```
+
+---
+
+# Konfigurace připojení
+
+Na DEV si uděláme connection string (jen to nedávejte do GITu...)
+
+```sh
+echo DATABASE_URL=postgres://postgres:postgrespass@localhost/simple_chat > .env
+```
+
+Načteme následně pomocí `dotenv`.
 
 ---
 
