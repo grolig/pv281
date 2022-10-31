@@ -952,7 +952,9 @@ Dlouhou dobu `chrono` zůstávalo závislé na staré verzi `time` `0.1`.
 
 Obě knihovny v minulosti neměli na určitou dobu maintainera, proto uživalé přecházeli mezi nimi.
 
-Dnes jsou obě udržované a také vzájemně nekompatibilní. `chrono` je používanější a obsáhlejší.
+Dnes jsou obě udržované a také vzájemně nekompatibilní.
+`chrono` je používanější a obsáhlejší.
+`time` je zase mnohem jednodušší na pochopení.
 
 `SQLx` v případě povolení obou preferuje použítí `time`.
 
