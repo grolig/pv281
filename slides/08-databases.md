@@ -258,7 +258,7 @@ Je celkem lehce rozšiřitelný.
 
 #### Nevýhody
 Na komplexnější dotazy si stejně musíte sami stavět dotaz.
-Pro některé komplexnější věci je lepší využí jiné technologie.
+Pro některé komplexnější věci je lepší využít jiné technologie.
 
 ---
 
@@ -387,9 +387,9 @@ Poznámka: `structopt` je dnes integrován v Clapu a není už vyvíjen.
 
 ---
 
-### dotenv
+### Práce se souborem .env
 
-Velmi používaná knihovna `dotenv`, která se objevuje v tutoriálech, už není dále udržovaná. Udžovaný fork je `dotenvy`.
+Velmi používaná knihovna `dotenv`, která se objevuje v tutoriálech, už není dále udržovaná. Udržovaný fork je `dotenvy`.
 
 ```rust
 // use dotenv::dotenv;
@@ -773,7 +773,6 @@ let countries = sqlx::query_as!(Country,
 
 // countries[0].country
 // countries[0].count
-
 ```
 
 ---
@@ -843,14 +842,13 @@ async fn main() -> Result<(), sqlx::Error> {
     let mut tx = pool.begin().await?; // <- `begin` slouží i pro vytváření savepointu, pokud vnořujeme transakce.
 
     sqlx::query("INSERT INTO articles (slug) VALUES ('this-is-a-slug')")
-        .execute(&mut tx).await?; // <- Otazník zpusobí okamžitý rollback, pokud nastane chyba.
+        .execute(&mut tx).await?; // <- Otazník způsobí okamžitý rollback, pokud nastane chyba.
 
     tx.commit().await?;
     // tx.rollback().await?;
 
     Ok(())
-} // <- Pokud nezavoláme commit, rollback je také provedený v rámci Drop na konci scopu
-
+} // <- Pokud nezavoláme commit, rollback je také provedený v rámci Drop na konci scopu.
 ```
 
 
@@ -1071,17 +1069,12 @@ fn fetch_an_integer() -> redis::RedisResult<isize> {
 
 ```rust
 use futures_util::future::join_all;
-use bb8_redis::{
-    bb8,
-    redis::{cmd, AsyncCommands},
-    RedisConnectionManager
-};
+use bb8_redis::{ bb8, redis::{cmd, AsyncCommands}, RedisConnectionManager };
 
 #[tokio::main]
 async fn main() {
     let manager = RedisConnectionManager::new("redis://localhost").unwrap();
     let pool = bb8::Pool::builder().build(manager).await.unwrap();
-
     let mut handles = vec![];
 
     for _i in 0..10 {
@@ -1089,7 +1082,6 @@ async fn main() {
 
         handles.push(tokio::spawn(async move {
             let mut conn = pool.get().await.unwrap();
-
             let reply: String = cmd("PING").query_async(&mut *conn).await.unwrap();
 
             assert_eq!("PONG", reply);
