@@ -92,7 +92,7 @@ Příkaz se připojí na _Docker Hub_, stáhne image, spustí démona a namapuje
 ```yaml
 # Using the default postgres/example user/password credentials
 version: '3.1'
- 
+
 services:
   db:
     image: postgres
@@ -101,13 +101,13 @@ services:
       POSTGRES_PASSWORD: example
     volumes:
       - db-data:/var/lib/postgresql/data
- 
+
   adminer:
     image: adminer
     restart: always
     ports:
-      - 8080:8080
-      
+      - "8080:8080"
+
 volumes:
   db-data:
 ```
