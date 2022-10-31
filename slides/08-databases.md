@@ -666,7 +666,7 @@ async fn main() -> Result<()> {
     dotenvy::dotenv().unwrap();
     let pool = PgPoolOptions::new().connect(&env::var("DATABASE_URL")?).await?;
 
-    let mut rows = sqlx::query("SELECT * FROM users WHERE email = ?")
+    let mut rows = sqlx::query("SELECT * FROM users WHERE email = $1")
         .bind(email)
         .fetch(&pool);
 
@@ -721,7 +721,7 @@ async fn main() -> Result<()> {
     dotenvy::dotenv().unwrap();
     let pool = PgPoolOptions::new().connect(&env::var("DATABASE_URL")?).await?;
 
-    let mut stream = sqlx::query_as::<_, User>("SELECT * FROM users WHERE email = ? OR name = ?")
+    let mut stream = sqlx::query_as::<_, User>("SELECT * FROM users WHERE email = $1 OR name = $2")
         .bind(user_email)
         .bind(user_name)
         .fetch(&pool);
@@ -740,8 +740,8 @@ let countries = sqlx::query!( // <- Všimněte si, že jde o makro.
             SELECT country, COUNT(*) as count
             FROM users
             GROUP BY country
-            WHERE organization = ?
-        ", // <- Pozor, tady musí být string slice a ne String.
+            WHERE organization = $1
+        ", // <- Pozor, tady musí být stringový literál a ne String.
         organization
     )
     .fetch_all(&pool) // Návratovým typem je `Vec<{ country: String, count: i64 }>`.
@@ -764,7 +764,7 @@ let countries = sqlx::query_as!(Country,
         SELECT country, COUNT(*) as count
         FROM users
         GROUP BY country
-        WHERE organization = ?
+        WHERE organization = $1
         ",
         organization
     )
