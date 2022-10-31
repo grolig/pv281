@@ -993,12 +993,14 @@ fn main() {
 ```rust
 use time::macros::{date, datetime};
 
-let date = date!(2022-01-01);
-let datetime = datetime!(2022-01-01 13:00:55);
-let datetime_off = datetime!(2022-01-01 13:00:55 +1:02:03);
-
-println!("{date}, {datetime}, {datetime_off}");
-// 2022-01-01, 2022-01-01 13:00:55.0, 2022-01-01 13:00:55.0 +01:02:03
+fn main() {
+    let date = date!(2022-01-01);
+    let datetime = datetime!(2022-01-01 13:00:55);
+    let datetime_off = datetime!(2022-01-01 13:00:55 +1:02:03);
+    
+    println!("{date}, {datetime}, {datetime_off}");
+    // 2022-01-01, 2022-01-01 13:00:55.0, 2022-01-01 13:00:55.0 +01:02:03
+}
 ```
 
 ---
