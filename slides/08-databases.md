@@ -12,10 +12,33 @@ paginate: true
 
 # Obsah
 
-1. Docker pro setup prostředí
-2. Práce s proměnnými prostředí
-3. SQLX
-4. ORM
+1. Velké domácí úkoly
+2. Docker a PlantUml
+3. Přístupy pro práci s databází
+4. Práce s proměnnými prostředí
+5. SQLx
+6. Práce s časem
+7. Redis
+
+---
+
+# Velké domácí úkoly
+
+Tento týden **vyjde první ze čtyř velkých domácích úkolů**.
+
+Zadání i řešení budou komplexnější,
+bude možný větší bodový zisk – **až 8 bodů**.
+
+Úkoly nemusí mít kostru ani testy, cvičící budou hodnotit kvalitu kódu, návrhu i implementace.
+
+**Termíny pro odevzdání jsou individuální pro každou skupinu**.
+
+Více informací v [Interaktivní osnově](https://is.muni.cz/auth/el/fi/podzim2022/PV281/index.qwarp?prejit=9747522).
+
+
+---
+
+# <!--fit--> Docker a PlantUML
 
 ---
 
@@ -32,42 +55,45 @@ Kontejner je standardizovaný balík softwaru, který poskytuje osekaný OS, kni
 stáhnout Docker for Desktop
 
 ```sh
-https://www.docker.com/get-started
+https://docker.com/get-started
 ```
 
-na Win10/11 je nutné nainstalovat nejdříve WSL2. Alternativa je mít nainstalované Hyper-V.
+Na Win 10/11 je nutné nainstalovat nejdříve `WSL2` nebo `Hyper-V`.
 
 ---
 
 # Alternativy k Dockeru
 
-Vzhledem k licenční police se dnes přechází od použití Dockeru jako řešení kontejnerizace. Na produkci se používá v rámci Kubernetes conteinerd, a trend je ho využít i pro lokální vývoj.
+Vzhledem k licenční politice se dnes přechází od použití Dockeru pro kontejnerizaci.
 
-Rancher Desktop
-colima + nerdctl
+Na produkci se používá v rámci Kubernetes `containerd` a trend je ho využít i pro lokální vývoj.
+
+Další alternativy:
+`podman`
+`Rancher Desktop`
+`colima` + `nerdctl`
 
 ---
 
 # Práce s Dockerem
 
-spustit CMD a vyzkoušet
+Vyzkoušení:
 
 ```sh
-docker run -dp 80:80 docker/getting-started
+docker run -d -p 80:80 docker/getting-started
 ```
 
-to se připojí na Docker Hub, stáhne image, spustí démona, namapuje porty
+Příkaz se připojí na _Docker Hub_, stáhne image, spustí démona a namapuje porty.
 
 ---
 
-# Závislosti pro dev
+# Docker compose
 
 ```yaml
-# Use postgres/example user/password credentials
+# Using the default postgres/example user/password credentials
 version: '3.1'
  
 services:
- 
   db:
     image: postgres
     restart: always
@@ -167,89 +193,100 @@ e01 |o..o{ e03
 
 ---
 
+# <!--fit--> Přístupy pro práci s databází
+
+---
+
 # Postgres
 
-+ klasická relační SQL databáze
-+ open-source
-+ s velkým množstvím funkcí
-+ velmi dobrý výkon i pro velké systémy
+Klasická relační SQL databáze.
+Open-source a s velkým množstvím funkcí.
+Velmi dobrý výkon i pro velké systémy
 
-- občas neřešené starší bugy
-- performance jiných DB systémů bývá lepší
-
----
-
-# Přístupy pro práci s databází
-
-## Ručně vytvořené SQL dotazy
-+ veškeré funkce k dispozici
-+ lehké optimatlizovat výkon
-
-- možnost SQL injection (vzhledem k neznalosti)
-- nutnost znát SQL a zavádět další jazyk do projektu
+Občas se vyskytnou neřešené starší bugy.
+Občas je výkon jiných DB systémů lepší.
 
 ---
 
+### Ručně vytvořené SQL dotazy
 
-# Přístupy pro práci s databází
+#### Výhody
+Veškeré funkce jsou k dispozici.
+Lehce lze optimalizovat výkon.
 
-## Query Builder
-+ většina funkcí k dispozici
-+ stále relativně lehké optimatlizovat výkon
-+ nedochází k SQL injection
-+ není zavedený další jazyk do projektu
-
-- nutná znalost SQL a k tomu knihovny, která ho na pozadí vygeneruje
-- nemáme tolik možností jako u čistého SQL
-
+#### Neýhody
+Možnost SQL injection (při neznalosti).
+Nutnost znát SQL.
+Nutnost zavádět další jazyk do projektu.
 
 ---
 
-# Přístupy pro práci s databází
+### Query Builder
 
-# ORM = object relation mapping
+#### Výhody
+Většina funkcí je k dispozici.
+Stále lze lehce optimalizovat výkon.
+Nedochází k SQL injection.
+Nezavádíme další jazyk do projektu.
 
-+ omezuje množství možných útoků
-+ jednoduchá a na vývoj rychlá práce s databází
-+ vše typovené, a tím pádem možné odhalit chyby
+#### Nevýhody
+Nutnost znát SQL.
+Nutnost navíc znát knihovnu, která SQL na pozadí vygeneruje.
+Nemáme tolik možností jako při psaní čistého SQL.
 
-- ne vše podprované ORM knihovnami
-- ztráta výkonnosti - vygenerované dotazy nemusí být ideální
+---
+
+### ORM (Object–relational mapping)
+
+#### Výhody
+Omezuje množství možných útoků.
+Jednoduchá a na vývoj rychlá práce s databází.
+Vše typované, což pomáhá odhalit chyby.
+
+#### Nevýhody
+ORM knihovny často nepodporují všechny funkce.
+Ztrácíme výkonnost – vygenerované dotazy nemusí být optimální.
 
 ---
 
 # Diesel
 
-+ nejpoužívanější ORM v Rustu
-+ jeden z nejrychlejších ORM systémů v Rustu
-+ eliminuje runtime errory při práci s DB (aspoň většinu)
-+ je celkem lehce rozšiřitelný
+#### Výhody
+Nejpoužívanější a jeden z nejrychlejších ORM v Rustu.
+Eliminuje většinu runtime errorů při práci s databází.
+Je celkem lehce rozšiřitelný.
 
-- komplexnější dotazy jsou komplikované, a musíte si stejně sami stavět dotaz
-- komplexnější věci jsou opravdu tak komplikované, že je lepší využí jiné technologie
+#### Nevýhody
+Na komplexnější dotazy si stejně musíte sami stavět dotaz.
+Pro některé komplexnější věci je lepší využí jiné technologie.
 
 ---
 
 # Connection pooling
 
-- vytváření a zavření spojení je drahé a způsobuje latenci
-- spojení si můžeme uložit a nechat jej otevřené, tím nemusíme platit za jeho nové vytvoření
-- díky poolu můžeme i ovlinit minimální a maximální počet spojení
+Vytváření a zavírání spojení je drahé a způsobuje latenci.
+Spojení si můžeme uložit a nechat jej otevřené, tím nemusíme platit za jeho nové vytvoření.
+
+Díky poolu můžeme i ovlinit minimální a maximální počet spojení.
 
 ---
 
 # Cachování dotazu
 
-- databázové dotazy je vhodné cachovat 
-- běžné je použití in-memory cache jako je Redis
-- vytáhnout výsledek z Redisu (key-value) je levnější než zpracovat dotaz nad DBMS
+Databázové dotazy je vhodné cachovat.
+
+Běžné je použití in-memory cache jako je Redis.
+Vytáhnout výsledek z Redisu (pár klíč-hodnota) je levnější než zpracovat dotaz nad databází.
+
+---
+
+# <!-- fit --> Práce s proměnnými prostředí
 
 ---
 
 # Práce s proměnnými prostředí
 
 ```rust
-
 use std::env;
 
 fn main() {
@@ -265,15 +302,15 @@ fn main() {
         },
     };
 }
-
 ```
 
 ---
 
 # Práce s proměnnými prostředí
 
-```rust
+Makra `env!` a `option_env!` se vyhodnocují za kompilace.
 
+```rust
 use std::env;
 
 fn main() {
@@ -288,7 +325,7 @@ fn main() {
 
 ---
 
-# Envy
+# crate `envy`
 
 ```rust
 use serde::Deserialize;
@@ -312,22 +349,20 @@ fn main() {
 
 ---
 
-# structopt
+# crate `structopt`
 
 ```rust
-use std::path::PathBuf;
 use structopt::StructOpt;
 
-/// A database applicaiton
 #[derive(StructOpt, Debug)]
 #[structopt(name = "dbapp")]
 struct Opt {
     /// Database URL
-    #[structopt(short, long, parse(from_os_str))]
+    #[structopt(env = "DATABASE_URL")]
     database_url: String,
 
     /// Port number
-    #[structopt(short = "p", long)]
+    #[structopt(env = "PORT")]
     port: Option<i32>,
 }
 
@@ -337,23 +372,24 @@ fn main() {
 }
 ```
 
+Poznámka: `structopt` je dnes integrován v Clapu a není už vyvíjen.
+
 ---
 
-# .env
+### dotenv
 
-Velmi používaná knihovna dotenv, která se objevuje v tutorialech už není dále udržovaná, udžovaný fork je dotenvy.
+Velmi používaná knihovna `dotenv`, která se objevuje v tutoriálech, už není dále udržovaná. Udžovaný fork je `dotenvy`.
 
 ```rust
-
+// use dotenv::dotenv;
 use dotenvy::dotenv;
-//use dotenv::dotenv;
 use std::env;
 
 fn main() {
-    dotenvy::dotenv().unwrap();
     // dotenv().ok();
+    dotenv().unwrap();
 
-    for (key, value) in env::vars() {
+    for (key, value) in dotenvy::vars() {
         println!("{}: {}", key, value);
     }
 }
@@ -363,21 +399,27 @@ fn main() {
 
 # Konfigurace připojení
 
-Na DEV si uděláme connection string (jen to nedávejte do GITu...)
+Pro vývoj si ukládáme connection string do `.env` souboru.
+Tento soubor se neverzuje!
 
 ```sh
-echo DATABASE_URL=postgres://postgres:postgrespass@localhost/simple_chat > .env
+echo DATABASE_URL=postgres://postgres:postgrespass@localhost:54321/simple_chat > .env
+#                 ^scheme    ^user    ^password    ^hostname ^port ^dbname
 ```
 
-Načteme následně pomocí `dotenv`.
+Načteme následně pomocí výše zmíněných metod.
+
+---
+
+# <!--fit--> SQLx
 
 ---
 
 # SQLx
 
-SQLx je crate ke kontole dotazu během kompilace. Nepoužívá žádný DSL.
+SQLx je crate pro komunikaci s databází, poskytující kontolu dotazu za kompilace.
 
-Podporuje PostgreSQL, MySQL, SQLite, and MSSQL.
+Podporuje PostgreSQL, MySQL, SQLite a MSSQL.
 
 Podporuje různé asynchronní runtimy (async-std / tokio / actix) a TLS backendy (native-tls, rustls).
 
@@ -397,10 +439,14 @@ sqlx = { version = "0.6", features = [ "mysql", "runtime-async-std-native-tls", 
 
 # Migrace
 
-- pro migrace nainstalujeme `sqlx-cli` 
-- ```cargo install sqlx-cli```
+SQLx poskytuje migrace skrze nástroj `sqlx-cli`.
 
-- ujistíme se, že v projektu máme `.env` soubor s proměnnou `DATABASE_URL`
+Instalujeme přes Cargo:
+```sh
+cargo install sqlx-cli
+```
+
+Pro práci s migracemi je potřeba `.env` soubor s proměnnou `DATABASE_URL`.
 
 ---
 
@@ -415,7 +461,7 @@ sqlx database drop
 
 # Vytvoření migrace
 
-Pro vytvoření migrace použijeme příkaz `migrate add`
+Pro vytvoření migrace použijeme příkaz `migrate add`:
 
 ```sh
 sqlx migrate add <name>
@@ -426,7 +472,7 @@ Creating migrations/20211001154420_<name>.sql
 
 # Revertibilní migrace 
 
-Přepínačem -r vytvoříme revertibilní migraci
+Přepínačem `-r` vytvoříme revertibilní migraci:
 
 ```sh
 sqlx migrate add -r user
@@ -438,7 +484,7 @@ Creating migrations/20211001154420_user.down.sql
 
 # Vytvoření tabulky v migraci
 
-Soubor `user.up.sql`
+Soubor `user.up.sql`:
 
 ```sql
 create table "user"
@@ -449,9 +495,10 @@ create table "user"
 );
 ```
 
-Soubor `user.down.sql`
+Soubor `user.down.sql`:
+
 ```sql
-drop table user; -- nebezpecne
+drop table user; --Nebezpečné!
 ```
 
 ---
@@ -465,7 +512,7 @@ Applied migrations/20211001154420 user (32.517835ms)
 
 ---
 
-# Reverzace migrace
+# Revert migrace
 
 ```sh
 sqlx migrate revert
@@ -477,22 +524,30 @@ Applied 20211001154420/revert user (32.517835ms)
 # Spuštění migrace v aplikaci
 
 ```rust
-sqlx::migrate!("db/migrations") // <- cesta ke slozce s migracemi nebo konkretni soubor migrace
+sqlx::migrate!("db/migrations") // <- Cesta ke složce s migracemi nebo ke konktrétnímu souboru migrace.
     .run(&pool)
     .await?;
 ```
+
 ---
 
-# Prepare a offline mode
+#### Prepare
 
-Před vytvářením dotazů v aplikaci je nutné udělat prepare. Bez něj budeme mít problémy s query makry.
+Před vytvářením dotazů v aplikaci je nutné udělat `prepare`. Bez něj budeme mít problémy s makry pro dotazy.
 
-```cargo sqlx prepare```
+```sh
+cargo sqlx prepare
+```
 
-Na CLI můžeme provést check bez připojení k db
-```cargo sqlx prepare --check```
+Na CLI můžeme provést check bez připojení k databázi:
 
-Poznámky: proměnná prostředí SQLX_OFFLINE na true enforcuje kontrolu proti offline modelu a ne DB.
+```sh
+cargo sqlx prepare --check
+```
+
+#### Offline mode
+
+Proměnná prostředí `SQLX_OFFLINE=true` vynucuje kontrolu proti offline modelu a ne DB.
 
 ---
 
@@ -506,7 +561,7 @@ use std::env;
 async fn main() -> Result<(), sqlx::Error> {
     let pool = MySqlPoolOptions::new()
         .max_connections(5)
-        .connect(&env::var("DATABASE_URL")?).await?;
+        .connect("mysql://root:password@localhost/test").await?;
 
     let row: (i64,) = sqlx::query_as("SELECT ?")
         .bind(150_i64)
@@ -516,7 +571,6 @@ async fn main() -> Result<(), sqlx::Error> {
 
     Ok(())
 }
-
 ```
 
 ---
@@ -540,7 +594,6 @@ async fn main() -> Result<(), sqlx::Error> {
 
     Ok(())
 }
-
 ```
 
 ---
@@ -566,9 +619,11 @@ let pool = MySqlPool::connect("mysql://user:pass@host/database").await?;
 # Command
 
 ```rust
+// Za použití jednoho připojení:
 sqlx::query("DELETE FROM table").execute(&mut conn).await?;
-sqlx::query("DELETE FROM table").execute(&pool).await?;
 
+// Za použití connection poolu:
+sqlx::query("DELETE FROM table").execute(&pool).await?;
 ```
 
 ---
@@ -607,8 +662,8 @@ async fn main() -> Result<()> {
     let pool = PgPoolOptions::new().connect(&env::var("DATABASE_URL")?).await?;
 
     let mut rows = sqlx::query("SELECT * FROM users WHERE email = ?")
-    .bind(email)
-    .fetch(&pool);
+        .bind(email)
+        .fetch(&pool);
 
     while let Some(row) = rows.try_next().await? {
         let email: &str = row.try_get("email")?;
@@ -634,10 +689,10 @@ async fn main() -> Result<()> {
     let pool = PgPoolOptions::new().connect(&env::var("DATABASE_URL")?).await?;
 
     let mut stream = sqlx::query("SELECT * FROM users")
-    .map(|row: PgRow| {
-        // map the row into a user-defined domain type
-    })
-    .fetch(&pool);
+        .map(|row: PgRow| {
+            // map the row into a user-defined domain type
+        })
+        .fetch(&pool);
 
     Ok(())
 }
@@ -645,7 +700,7 @@ async fn main() -> Result<()> {
 
 ---
 
-# S přímým mapováním do struktury
+# Přímé mapování do struktury
 
 ```rust
 use anyhow::Result;
@@ -662,9 +717,9 @@ async fn main() -> Result<()> {
     let pool = PgPoolOptions::new().connect(&env::var("DATABASE_URL")?).await?;
 
     let mut stream = sqlx::query_as::<_, User>("SELECT * FROM users WHERE email = ? OR name = ?")
-    .bind(user_email)
-    .bind(user_name)
-    .fetch(&pool);
+        .bind(user_email)
+        .bind(user_name)
+        .fetch(&pool);
 
     Ok(())
 }
@@ -675,26 +730,25 @@ async fn main() -> Result<()> {
 # Verifikace SQL při kompilaci
 
 ```rust
-let countries = sqlx::query!(
+let countries = sqlx::query!( // <- Všimněte si, že jde o makro.
         "
             SELECT country, COUNT(*) as count
             FROM users
             GROUP BY country
             WHERE organization = ?
-        ", // <- pozor: tady musí být string literal a ne String
+        ", // <- Pozor, tady musí být string slice a ne String.
         organization
     )
-    .fetch_all(&pool) // -> Vec<{ country: String, count: i64 }>
+    .fetch_all(&pool) // Návratovým typem je `Vec<{ country: String, count: i64 }>`.
     .await?;
 
 // countries[0].country
 // countries[0].count
-
 ```
 
 ---
 
-# query_as! do struktury
+# Makro query_as! do struktury
 
 ```rust
 // no traits are needed
@@ -719,7 +773,7 @@ let countries = sqlx::query_as!(Country,
 
 ---
 
-# query_with
+# Makro query_with!
 
 ```rust
 use sqlx::{postgres::PgArguments, Arguments};
@@ -741,7 +795,7 @@ async fn main() -> Result<(), sqlx::Error> {
 
 ---
 
-# Implementace funkce pro práci s DB
+# Vlastní funkce pro práci s DB
 
 ```rust
 async fn list_todos(pool: &SqlitePool) -> anyhow::Result<()> {
@@ -781,17 +835,16 @@ async fn main() -> Result<(), sqlx::Error> {
         .max_connections(5)
         .connect("postgres://postgres:password@localhost/test").await?;
 
-    let mut tx = pool.begin().await?; // <- begin slouzi i pro vytvoreni savepointu, pokud vnorime transakce
+    let mut tx = pool.begin().await?; // <- `begin` slouží i pro vytváření savepointu, pokud vnořujeme transakce.
 
     sqlx::query("INSERT INTO articles (slug) VALUES ('this-is-a-slug')")
-        .execute(&mut tx).await?; // <- otaznik zpusobi okamzity rollback pri vraceni chyby
+        .execute(&mut tx).await?; // <- Otazník zpusobí okamžitý rollback, pokud nastane chyba.
 
     tx.commit().await?;
-
     // tx.rollback().await?;
 
     Ok(())
-} // <- rollback je provedeny taky v ramci Drop na konci scopu
+} // <- Pokud nezavoláme commit, rollback je také provedený v rámci Drop na konci scopu
 
 ```
 
@@ -799,6 +852,8 @@ async fn main() -> Result<(), sqlx::Error> {
 ---
 
 # Repository pattern
+
+Abstrahuje detaily práce s databází.
 
 ```rust
 #[async_trait]
@@ -819,17 +874,23 @@ impl PostgresTodoRepo {
         }
     }
 }
-
 ```
 
 ---
 
-# Repository pattern
+<!-- _class: split -->
+
+### Repository pattern
+
+<div class=left-column>
 
 ```rust
 #[async_trait]
 impl TodoRepo for PostgresTodoRepo {
-    async fn add_todo(&self, description: String) -> anyhow::Result<i64> {
+    async fn add_todo(
+        &self,
+        description: String
+    ) -> anyhow::Result<i64> {
         let rec = sqlx::query!(
             r#"
             INSERT INTO todos ( description )
@@ -842,9 +903,21 @@ impl TodoRepo for PostgresTodoRepo {
         .await?;
 
         Ok(rec.id)
-    }
+    }  
+    
+// Continued on the next half...
+```
 
-    async fn complete_todo(&self, id: i64) -> anyhow::Result<bool> {
+</div>
+<div class=right-column>
+
+```rust
+// ...continued from the previous half.
+
+    async fn complete_todo(
+        &self,
+        id: i64
+    ) -> anyhow::Result<bool> {
         let rows_affected = sqlx::query!(
             r#"
             UPDATE todos
@@ -860,26 +933,23 @@ impl TodoRepo for PostgresTodoRepo {
         Ok(rows_affected > 0)
     }
 }
-
 ```
 
----
-
-# Práce s časem
-
-K dispozici jsou knihovny `time` a `chrono`, který je postavený nad time. 
-
-Problém chrono byl chybějící maintainer dělší dobu, kdy některé důležité bugy nebyly opraveny, proto hodně uživatelů přešlo na time. Dneska už maintainera má, a pravidelně dostává opravy.
+</div>
 
 ---
 
 # Práce s časem
 
-Time bylo původně postavené nad libc a taky skončilo bez maintainera. Později se objevil nový, došlo ke kompletnímu přepisu. Chrono dlouho zůstávalo na staré verzi 0.1. 
+Nejpoužívanější jsou knihovny `time` a `chrono`,
+přičemž `chrono` je postavené nad `time`.
+Dlouhou dobu `chrono` zůstávalo závislé na staré verzi `time` `0.1`.
 
-Dnes už nejsou nekompatibilní. Chrono je stále používanější z obou dvou.
+Obě knihovny v minulosti neměli na určitou dobu maintainera, proto uživalé přecházeli mezi nimi.
 
-SQLX v případě povolení obou preferuje použítí time.
+Dnes jsou obě udržované a také vzájemně nekompatibilní. `chrono` je používanější a obsáhlejší.
+
+`SQLx` v případě povolení obou preferuje použítí `time`.
 
 ---
 
@@ -887,10 +957,8 @@ SQLX v případě povolení obou preferuje použítí time.
 
 ```toml
 [dependencies]
-time = { version = "0.3", features = ["macros"] }
+time = { version = "0.3", features = [ "macros" ] }
 sqlx = { version = "0.5", features = [ "runtime-tokio-rustls", "time" ] }
-
-
 ```
 
 ---
@@ -901,17 +969,19 @@ sqlx = { version = "0.5", features = [ "runtime-tokio-rustls", "time" ] }
 use time::{Date, PrimitiveDateTime, OffsetDateTime, UtcOffset};
 use time::Weekday::Wednesday;
 
-let date = Date::from_iso_week_date(2022, 1, Wednesday).unwrap();
-let datetime = date.with_hms(13, 0, 55).unwrap();
-let datetime_off = datetime.assume_offset(UtcOffset::from_hms(1, 2, 3).unwrap());
-
-println!("{date}, {datetime}, {datetime_off}");
-// 2022-01-01, 2022-01-01 13:00:55.0, 2022-01-01 13:00:55.0 +01:02:03
+fn main() {
+    let date = Date::from_iso_week_date(2022, 1, Wednesday).unwrap();
+    let datetime = date.with_hms(13, 0, 55).unwrap();
+    let datetime_off = datetime.assume_offset(UtcOffset::from_hms(1, 2, 3).unwrap());
+    
+    println!("{date}, {datetime}, {datetime_off}");
+    // 2022-01-01, 2022-01-01 13:00:55.0, 2022-01-01 13:00:55.0 +01:02:03
+}
 ```
 
 ---
 
-# time - makra
+# time – makra
 
 ```rust
 use time::macros::{date, datetime};
@@ -926,9 +996,10 @@ println!("{date}, {datetime}, {datetime_off}");
 
 ---
 
-# time - offset
+# time – offset
 
 ```rust
+fn main() {
     assert_eq!(
         datetime!(2000-01-01 0:00 UTC).to_offset(offset!(-1)).year(),
         1999,
@@ -937,13 +1008,19 @@ println!("{date}, {datetime}, {datetime_off}");
     let sydney = datetime!(2000-01-01 0:00 +11);
     let new_york = sydney.to_offset(offset!(-5));
     let los_angeles = sydney.to_offset(offset!(-8));
+
     assert_eq!(sydney.hour(), 0);
     assert_eq!(sydney.day(), 1);
     assert_eq!(new_york.hour(), 8);
     assert_eq!(new_york.day(), 31);
     assert_eq!(los_angeles.hour(), 5);
     assert_eq!(los_angeles.day(), 31);
+}
 ```
+
+---
+
+# <!--fit--> Redis
 
 ---
 
@@ -959,7 +1036,7 @@ redis = { version = "0.22.1", features = ["async-std-tls-comp"] }
 
 ---
 
-# Základní operace nad Redis serverem
+# Základní operace
 
 ```rust
 use redis::Commands;
