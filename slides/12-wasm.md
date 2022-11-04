@@ -10,9 +10,9 @@ paginate: true
 
 ---
 
-# Obsah
+# Today lecture's content
 
-1. Úvod do Webassembly
+1. Introduction to Webassembly
 2. Yew
 3. Stav aplikace
 4. Funkce prohlížeče
@@ -21,33 +21,41 @@ paginate: true
 
 # Webassembly
 
-Jedná se o binární instrukční formát (mezijazyk) pro zásobníkový virtuální stroj. Čili jde o cílový kód pro jiné jazyky. Primárně je určený pro běh ve webovém prohlížeči současně s Javascriptem.
+- Binary instruction format for (virtual) state machine with a stack.
+- Compliers (for lanuages such as C, C++, Rust) can target this intermediate language.
+- The instructions are then interpreted by the web browser. WASM can run alongside existing JavaScript.
 
 ---
 
-# Výhody
+# WASM advantages
 
-- rychlost (nižší nároky na CPU a paměť)
-- paralelismus
-- bezpečnost
-- otevřenost
-- laditelnost
+- Speed (only executing instructions rather than interpreting them)
+- Smaller memory usage footprint\* than JS
+- Paralelism (we can write multithreaded code in the browser)
+- Memory Safety (only when )
+- Debugging
 
----
-
-# Nevýhody
-
-- není ještě stále vhodný pro jazyky s VM
-- může vniknout velká binárka, která se dlouho stahuje
-- nejsou dostupné stejné možnosti jako v JS
-- chybějící ekosystém
-- delší doba vývoje aplikací
+\*only when used with non-GC languages
 
 ---
 
-# Existující WASM aplikace
+# WASM Disadvantages
+
+- VM-based machines have to bundle the VM along with the app
+- The resulting WASM binary file can grow very large (impacts network performance)
+- Still cannot do everything JS can, in some cases the reliance on JS code will be inevitable
+- The immature ecosystem
+- Development time & cost (compilation, using a more strict language, also directly ties to previous point)
+
+---
+
+# Existing WASM apps
 
 - Figma
+- CAD @TODO FIND THE CORRECT LINK
+- GAMES @TODO FIND SUCH GAMES
+- egui @TODO MORE INFO
+- A bunch of [hobby projects]() @TODO LINK
 
 ---
 
@@ -266,7 +274,7 @@ html! {
 
 Key má podobnou funkcionalitu jako v Reactu. Je to unikátní identifikátor položky v seznamu. Umožňuje efektivnější vykreslení/překreslení.
 
-Ref využíváme pro manipulaci s elementem přímo na úrovni DOM. To se hodí v případech, kdy využíváme existující knihovnu v JS a chceme ovliňovat stejný element jak z RS tak JS.
+Ref využíváme pro manipulaci s elementem přímo na úrovni DOM. To se hodí v případech, kdy využíváme existující knihovnu v JS a chceme ovliňovat stejný element jak z WASM tak JS.
 
 ---
 
@@ -705,7 +713,7 @@ timeout.forget();
 
 ---
 
-# WASM klient (Reqwasm)
+# WebSocket klient (Reqwasm)
 
 ```rust
 use reqwasm::websocket::{Message, futures::WebSocket};
@@ -799,8 +807,10 @@ impl Model {
 }
 ```
 
-# <!--fit--> Dotazy?
+---
+
+# <!--fit--> Any questions?
 
 ---
 
-# <!--fit--> Děkuji za pozornost
+# <!--fit--> Thank you for your attention!
