@@ -537,7 +537,131 @@ async fn index(form: web::Form<FormData>) -> HttpResponse {
 
 ---
 
+# Yew
 
+```rust
+use actix_web::{web, App, HttpServer, Responder};
+use yew::prelude::*;
+use yew::ServerRenderer;
+
+#[function_component]
+fn App() -> Html {
+    html! {<div>{"Hello, World!"}</div>}
+}
+
+#[actix_web::main]
+async fn main() -> std::io::Result<()> {
+    let renderer = ServerRenderer::<App>::new();
+    let rendered = renderer.render().await;
+
+    HttpServer::new(|| {
+        App::new().route("/", web::get().too(|| async { HttpResponse::Ok().body(rendered) }))
+    })
+    .bind(("127.0.0.1", 8080))?
+    .run()
+    .await
+}
+```
+
+---
+
+# Yew html
+
+```rust
+use yew::prelude::*;
+
+let header_text = "Hello world".to_string();
+let header_html: Html = html! {
+    <h1>{header_text}</h1>
+};
+
+let count: usize = 5;
+let counter_html: Html = html! {
+    <p>{"My age is: "}{count}</p>
+};
+
+let combined_html: Html = html! {
+    <div>{header_html}{counter_html}</div>
+};
+```
+
+---
+
+# Yew fragment
+
+```rust
+use yew::html;
+
+html! {
+    <>
+        <div></div>
+        <p></p>
+    </>
+};
+```
+
+---
+
+# Yew CSS třídy
+
+```rust
+use yew::{classes, html};
+
+html! {
+  <div class={classes!("class-1", "class-2")}></div>
+};
+```
+
+---
+
+# Yew komponenty
+
+```rust
+use yew::{function_component, html, Html, Properties};
+
+#[derive(Properties, PartialEq)]
+pub struct Props {
+    pub text: &str,
+    pub is_loading: bool,
+}
+
+#[function_component]
+fn HelloWorld(props: &Props) -> Html {
+    html! { <>{props.text}{props.is_loading.clone()}</> }
+}
+
+// Then supply the prop
+#[function_component]
+fn App() -> Html {
+    html! {<HelloWorld is_loading={true} />}
+}
+
+```
+
+---
+
+# Yew render s propsy
+
+```rust
+#[actix_web::main]
+async fn main() -> std::io::Result<()> {
+    let loading_test = String::from("Loading: ");
+
+    let renderer = ServerRenderer::<App>::with_props(move || Props {
+        text: loading_test,
+        is_loading: true,
+    });
+
+    let rendered = renderer.render().await;
+
+    HttpServer::new(|| {
+        App::new().route("/", web::get().too(|| async { HttpResponse::Ok().body(rendered) }))
+    })
+    .bind(("127.0.0.1", 8080))?
+    .run()
+    .await
+}
+```
 
 ---
 
