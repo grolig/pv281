@@ -177,12 +177,12 @@ Jde o extrémně rychlý webový framework (actix-web), dříve postavený na ac
 
 ```toml
 [dependencies]
-actix-web = "3"
+actix-web = "4"
 ```
 
 ---
 
-# Vytvoření aplikace
+# Příprava cest v aplikaci
 
 ```rust
 use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder};
@@ -204,10 +204,215 @@ async fn manual_hello() -> impl Responder {
 
 ---
 
+# Vytvoření HTTP serveru
+
+```rust
+#[actix_web::main]
+async fn main() -> std::io::Result<()> {
+    HttpServer::new(|| {
+        App::new()
+            .service(hello)
+            .service(echo)
+            .route("/hey", web::get().to(manual_hello))
+    })
+    .bind(("127.0.0.1", 8080))?
+    .run()
+    .await
+}
+```
+
+---
+
 # Spuštění
 
 ```sh
 cargo watch -x 'run --bin app'
+```
+
+---
+
+# Scope
+
+```rust
+use actix_web::{web, App, HttpServer, Responder};
+
+async fn index() -> impl Responder {
+    "Hello world!"
+}
+
+#[actix_web::main]
+async fn main() -> std::io::Result<()> {
+    HttpServer::new(|| {
+        App::new().service(
+            // prefixes pro vsechny potomky
+            web::scope("/app")
+                // handle pro `GET /app/index.html`
+                .route("/index.html", web::get().to(index)),
+        )
+    })
+    .bind(("127.0.0.1", 8080))?
+    .run()
+    .await
+}
+```
+
+---
+
+# Použití kompozice se scope
+
+```rust
+#[actix_web::main]
+async fn main() {
+    let scope_products = web::scope("/products").service(show_products);
+    let scope_basket = web::scope("/basket")
+                                .service(show_basket)
+                                .service(add_item)
+                                .service(remove_item)
+                                .service(change_quantity);
+
+    App::new()
+    .service(scope_products);
+    .service(scope_basket);
+}
+```
+
+# Config pro modularizaci
+
+```rust
+mod products;
+
+use actix_web::{web, App, HttpResponse, HttpServer};
+
+pub fn product_config(cfg: &mut web::ServiceConfig) {
+    cfg.service(
+        web::resource("/products")
+            .service(show_products)
+            .route(web::head().to(HttpResponse::MethodNotAllowed)),
+    );
+}
+```
+
+```rust
+mod basket;
+
+use actix_web::{web, App, HttpResponse, HttpServer};
+
+pub fn basket_config(cfg: &mut web::ServiceConfig) {
+    cfg.service(
+        web::resource("/basket")
+            .service(show_basket)
+            .service(add_item)
+            .service(remove_item)
+            .service(change_quantity);
+    );
+}
+```
+
+---
+
+# Inicializace konfigu
+
+```rust
+// ...use
+
+fn config(cfg: &mut web::ServiceConfig) {
+    cfg.service(
+        web::resource("/app")
+            .route(web::get().to(|| async { HttpResponse::Ok().body("app") }))
+            .route(web::head().to(HttpResponse::MethodNotAllowed)),
+    );
+}
+
+#[actix_web::main]
+async fn main() -> std::io::Result<()> {
+    HttpServer::new(|| {
+        App::new()
+            .configure(config)
+            .service(web::scope("/api")
+                        .configure(basket_config)
+                        .configure(product_config))
+            .route(
+                "/",
+                web::get().to(|| async { HttpResponse::Ok().body("/") }),
+            )
+    })
+    .bind(("127.0.0.1", 8080))?
+    .run()
+    .await
+}
+```
+
+---
+
+# Imutabilní state
+
+```rust
+struct AppState {
+    app_name: String,
+}
+
+#[actix_web::main]
+async fn main() -> std::io::Result<()> {
+    HttpServer::new(|| {
+        App::new()
+            .app_data(web::Data::new(AppState {
+                app_name: String::from("Actix Web"),
+            }))
+            .service(index)
+    })
+    .bind(("127.0.0.1", 8080))?
+    .run()
+    .await
+}
+```
+
+---
+
+# Použití state
+
+```rust
+#[get("/")]
+async fn index(data: web::Data<AppState>) -> String {
+    let app_name = &data.app_name; // <- get app_name
+    format!("Hello {app_name}!") // <- response with app_name
+}
+```
+
+---
+
+# Mutabilní state
+
+```rust
+use actix_web::{web, App, HttpServer};
+use std::sync::Mutex;
+
+struct AppStateWithCounter {
+    counter: Mutex<i32>,
+}
+
+async fn index(data: web::Data<AppStateWithCounter>) -> String {
+    let mut counter = data.counter.lock().unwrap();
+    *counter += 1;
+
+    format!("Request number: {counter}") 
+}
+
+#[actix_web::main]
+async fn main() -> std::io::Result<()> {
+    // web::Data je mimo closure HttpServer::new
+    let counter = web::Data::new(AppStateWithCounter {
+        counter: Mutex::new(0),
+    });
+
+    HttpServer::new(move || { // presun counteru do closure
+        App::new()
+            .app_data(counter.clone())
+            .route("/", web::get().to(index))
+    })
+    .bind(("127.0.0.1", 8080))?
+    .run()
+    .await
+}
 ```
 
 ---
@@ -329,6 +534,10 @@ async fn index(form: web::Form<FormData>) -> HttpResponse {
     )
 }
 ```
+
+---
+
+
 
 ---
 
