@@ -10,6 +10,27 @@ paginate: true
 
 ### Title
 
+<div class=left-column>
+
+```rust
+
+```
+
+</div>
+<div class=right-column>
+
+```rust
+
+```
+
+</div>
+
+---
+
+<!-- _class: split -->
+
+### Title
+
 <div class=common-text>
 
 Common text.
@@ -36,3 +57,4 @@ Common text.
 </div>
 
 ---
+
