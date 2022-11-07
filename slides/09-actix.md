@@ -26,22 +26,28 @@ paginate: true
 
 ---
 
-# HTTP protokol
+### HTTP protokol
 
-Představuje komunikaci mezi serverem a klientem. Dříve šlo o textový protokol nad TCP. Ve verzi 2 se z něj stal binární protokol. Ve verzi 3 vznikl protokol QUIC (Quick UDP Internet Connections), který vyžívá více multiplexových UDP spojení.
+Zprostředkovává komunikaci mezi serverem a klientem.
 
-Pro jednoduchost se budeme bavit o HTTP1. 
+Dříve šlo o textový protokol nad TCP,
+**od verze 2** (2015) se z něj stal **binární protokol**
+a **od verze 3** (2022) se přešlo na **protocol QUIC** (Quick UDP Internet Connections), který vyžívá více multiplexových UDP spojení.
+
+Pro jednoduchost se budeme bavit o HTTP/1.1.
+
+---
+
+# HTTP request
+
+Obecně se skláda z požadavku (metoda, lokace, verze protokolu) a hlaviček:
 
 ```http
 GET / HTTP/1.1
 Host: www.example.com
 ```
 
-Zpráva obsahuje metodu, lokaci, verzi protokolu a hostname na který jdeme.
-
----
-
-# Příklady HTTP requestů
+Další příklady:
 
 ```http
 GET styles.css HTTP/1.1
@@ -129,24 +135,24 @@ Poznámka: méně časté jsou metody CONNECT, TRACE, PATCH.
 403   Forbidden                       přihlášený nemá přístup
 404   Not Found                       stránka neexistuje
 500   Internal Server Error           nějaká chyba u nás
-
 ```
 
 ---
 
 # HTTP2
 
-- binární protokolu
-- šifrovaný pomocí TLS v základu
-- přes jedno spojení jde pushnout více věcí
+Binární protokol, v základu šifrovaný pomocí **TLS**
+(_Transport Layer Security_).
+
+Přes jedno spojení jde protlačit více požadavků.
 
 ---
 
 # Websockets
 
-- obousměrná binární komunikace
-- vhodné pro realtime systémy
-- spojení nemusí být šifrované
+Obousměrná binární komunikace, vhodná pro realtime systémy.
+
+Spojení může a nemusí být šifrované.
 
 ---
 
