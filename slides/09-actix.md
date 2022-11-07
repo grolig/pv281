@@ -198,13 +198,22 @@ Spojení může a nemusí být šifrované.
 
 # Actor Pattern
 
-Jedná se o jeden ze způsobů, jak vytvářet paralelní systémy. Tento vzor se ukázal jako vysoce efektivní (například pohání Halo servery). V rámci systému máme actora, který představuje konkurentní výpočet. Actor má svoji svoji adresu, na které přijímá zprávy. Zpráva představuje volání actora (může to být volání jeho funkce nebo zpráva v message bus systému). Tím se spustí samotné vykonání. Actor si drží svůj vlastní stav, nemůže ovlivnit stav ostatních. Actor může vytvořit další actory, případně zaslat ostatním zprávy (což omezuje potřebu zamykání).
+Jeden ze způsobů, jak vytvářet paralelní systémy. Tento vzor se ukázal jako vysoce efektivní, např. pohání Halo servery.
+
+**Actor** v systému **představuje konkurentní výpočet**. Má svoji svoji adresu, na které přijímá zprávy.
+
+Zpráva představuje volání actora (např. volání jeho funkce nebo zpráva v message bus systému). Tím se spustí samotné vykonání.
+
+Actor si drží svůj vlastní stav, nemůže ovlivnit stav ostatních.
+Actor může vytvořit další actory, případně zaslat ostatním zprávy (což omezuje potřebu zamykání).
 
 ---
 
 # Actix
 
-Jde o extrémně rychlý webový framework (actix-web), dříve postavený na actor patternu (actix). Dnes využívá uvnitř tokio. 
+Jde o extrémně rychlý webový framework (_actix-web_)
+
+Dříve byl postavený na actor patternu (_actix_), dnes uvnitř využívá _tokio_. 
 
 ---
 
@@ -279,9 +288,9 @@ async fn index() -> impl Responder {
 async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new().service(
-            // prefixes pro vsechny potomky
+            // Všichni potomci budou zaregistrování s předponou `/app`...
             web::scope("/app")
-                // handle pro `GET /app/index.html`
+                // ...např. `/app/index.html`
                 .route("/index.html", web::get().to(index)),
         )
     })
@@ -293,82 +302,135 @@ async fn main() -> std::io::Result<()> {
 
 ---
 
-# Použití kompozice se scope
+# Použití kompozice s více scope
 
 ```rust
 #[actix_web::main]
 async fn main() {
-    let scope_products = web::scope("/products").service(show_products);
+    let scope_products = web::scope("/products")
+        .service(show_products);
     let scope_basket = web::scope("/basket")
-                                .service(show_basket)
-                                .service(add_item)
-                                .service(remove_item)
-                                .service(change_quantity);
+        .service(show_basket)
+        .service(add_item)
+        .service(remove_item)
+        .service(change_quantity);
 
     App::new()
-    .service(scope_products);
-    .service(scope_basket);
-}
-```
-
-# Config pro modularizaci
-
-```rust
-mod products;
-
-use actix_web::{web, App, HttpResponse, HttpServer};
-
-pub fn product_config(cfg: &mut web::ServiceConfig) {
-    cfg.service(
-        web::resource("/products")
-            .service(show_products)
-            .route(web::head().to(HttpResponse::MethodNotAllowed)),
-    );
-}
-```
-
-```rust
-mod basket;
-
-use actix_web::{web, App, HttpResponse, HttpServer};
-
-pub fn basket_config(cfg: &mut web::ServiceConfig) {
-    cfg.service(
-        web::resource("/basket")
-            .service(show_basket)
-            .service(add_item)
-            .service(remove_item)
-            .service(change_quantity);
-    );
+        .service(scope_products);
+        .service(scope_basket);
 }
 ```
 
 ---
 
-# Inicializace konfigu
+<!-- _class: split -->
 
-```rust
-// ...use
+### Modularizovaný config
 
-fn config(cfg: &mut web::ServiceConfig) {
+<div class=common-text>
+
+Při větších projektech je přehlednější mít konfiguraci strukturovanou do modulů.
+
+</div>
+
+<div class=left-column>
+
+```rs
+// product.rs
+
+use actix_web::{web, Responder, HttpResponse};
+
+pub fn product_config(cfg: &mut web::ServiceConfig) {
     cfg.service(
-        web::resource("/app")
-            .route(web::get().to(|| async { HttpResponse::Ok().body("app") }))
-            .route(web::head().to(HttpResponse::MethodNotAllowed)),
+        web::resource("/products")
+            .route(web::get().to(show_products))
+            .route(web::head()
+                .to(HttpResponse::MethodNotAllowed)),
     );
 }
 
+// Všimněte si, že zde není atributové makro.
+// Definujeme jen handler, route se definuje v configu ^.
+async fn show_products() -> impl Responder {
+    HttpResponse::Ok().body("Showing products!")
+}
+```
+
+</div>
+<div class=right-column>
+
+```rust
+// basket.rs
+
+use actix_web::{web, Responder, HttpResponse};
+
+pub fn basket_config(cfg: &mut web::ServiceConfig) {
+    cfg.service(web::resource("/basket")
+            .route(web::get().to(show_basket)))
+        .service(web::resource("/basket/add/{id}")
+            .route(web::post().to(add_item)));
+}
+
+async fn show_basket() -> impl Responder {
+    HttpResponse::Ok().body("Showing basket!")
+}
+
+async fn add_item(path: web::Path<(u32,)>) -> impl Responder {
+    HttpResponse::Ok().body(
+        format!(
+            "Added item of id {}!",
+            path.into_inner().0))
+}
+```
+
+</div>
+
+---
+
+<!-- _class: split -->
+
+### Modularizovaný config – main
+
+<div class=left-column>
+
+```rust
+use actix_web::{web, App, HttpResponse, HttpServer, Responder};
+
+mod basket;
+mod product;
+
+fn app_config(cfg: &mut web::ServiceConfig) {
+    cfg.service(
+        web::resource("/app")
+            .route(web::get()
+                .to(|| async { 
+                    HttpResponse::Ok().body("app") 
+                }))
+            .route(web::head()
+                .to(HttpResponse::MethodNotAllowed)),
+    );
+}
+```
+
+</div>
+<div class=right-column>
+
+```rust
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
-            .configure(config)
-            .service(web::scope("/api")
+            // From the left half of this slide:
+            .configure(app_config)
+            // From the previous slide:
+            .service(web::scope("/api") 
                         .configure(basket_config)
                         .configure(product_config))
             .route(
                 "/",
-                web::get().to(|| async { HttpResponse::Ok().body("/") }),
+                web::get().to(|| async {
+                    HttpResponse::Ok().body("/")
+                }),
             )
     })
     .bind(("127.0.0.1", 8080))?
@@ -376,6 +438,8 @@ async fn main() -> std::io::Result<()> {
     .await
 }
 ```
+
+</div>
 
 ---
 
@@ -415,11 +479,10 @@ async fn index(data: web::Data<AppState>) -> String {
 
 ---
 
-# Mutabilní state
+### Mutabilní state
 
 ```rust
-use actix_web::{web, App, HttpServer};
-use std::sync::Mutex;
+use actix_web::{web, App, HttpServer}; use std::sync::Mutex; // <- Aby se kód lépe vešel na slide.
 
 struct AppStateWithCounter {
     counter: Mutex<i32>,
@@ -428,25 +491,21 @@ struct AppStateWithCounter {
 async fn index(data: web::Data<AppStateWithCounter>) -> String {
     let mut counter = data.counter.lock().unwrap();
     *counter += 1;
-
     format!("Request number: {counter}") 
 }
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    // web::Data je mimo closure HttpServer::new
+    // Definice dat je mimo closure v HttpServer::new():
     let counter = web::Data::new(AppStateWithCounter {
-        counter: Mutex::new(0),
+        counter: Mutex::new(0), // Interně už web::Data používá Arc, takže Arc sami vytvářet nemusíme.
     });
 
-    HttpServer::new(move || { // presun counteru do closure
+    HttpServer::new(move || { // Vlastnictví dat přesouváme do closure
         App::new()
             .app_data(counter.clone())
             .route("/", web::get().to(index))
-    })
-    .bind(("127.0.0.1", 8080))?
-    .run()
-    .await
+    }).bind(("127.0.0.1", 8080))?.run().await
 }
 ```
 
