@@ -1023,7 +1023,8 @@ async fn main() -> std::io::Result<()> {
 
 # OpenTelemetry
 
-Otevřený standard pro telemetrii napříč různými systémy - ať už cloud nebo vlastní infrastruktura. Pro OpenTelemetry jsou knihovny ve všech důležitých jazycích.
+Otevřený standard pro telemetrii napříč různými systémy – ať už cloud nebo vlastní infrastruktura.
+Pro OpenTelemetry jsou knihovny ve všech důležitých jazycích.
 
 Můžeme použít:
 Jaeger
@@ -1056,28 +1057,36 @@ fn main() {
 
 ---
 
-# OpenTelemetry pro Datadog
+<!-- _class: split -->
+
+### OpenTelemetry s použitím Datadog
+
+<div class=left-column>
 
 ```rust
-use opentelemetry::global;
-use opentelemetry::global::shutdown_tracer_provider;
-use opentelemetry::{
-    trace::{Span, TraceContextExt, Tracer},
-    Key,
-};
+use opentelemetry::global::{self, shutdown_tracer_provider};
+use opentelemetry::{trace::{Span, TraceContextExt, Tracer}, Key};
 use opentelemetry_datadog::{new_pipeline, ApiVersion};
-use std::thread;
-use std::time::Duration;
+use std::{thread, time::Duration};
 
 fn bar() {
     let tracer = global::tracer("component-bar");
     let mut span = tracer.start("bar");
-    span.set_attribute(Key::new("span.type").string("sql"));
-    span.set_attribute(Key::new("sql.query").string("SELECT * FROM table"));
+    
+    span.set_attribute(
+        Key::new("span.type").string("sql"));
+    span.set_attribute(
+        Key::new("sql.query").string("SELECT * FROM table"));
+    
     thread::sleep(Duration::from_millis(6));
     span.end()
 }
+```
 
+</div>
+<div class=right-column>
+
+```rust
 fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync + 'static>> {
     let tracer = new_pipeline()
         .with_service_name("trace-demo")
@@ -1086,10 +1095,15 @@ fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync + 'static>> {
 
     tracer.in_span("foo", |cx| {
         let span = cx.span();
-        span.set_attribute(Key::new("span.type").string("web"));
-        span.set_attribute(Key::new("http.url").string("http://localhost:8080/foo"));
-        span.set_attribute(Key::new("http.method").string("GET"));
-        span.set_attribute(Key::new("http.status_code").i64(200));
+        
+        span.set_attribute(Key::new("span.type")
+            .string("web"));
+        span.set_attribute(Key::new("http.url")
+            .string("http://localhost:8080/foo"));
+        span.set_attribute(Key::new("http.method")
+            .string("GET"));
+        span.set_attribute(Key::new("http.status_code")
+            .i64(200));
 
         thread::sleep(Duration::from_millis(6));
         bar();
@@ -1097,28 +1111,28 @@ fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync + 'static>> {
     });
 
     shutdown_tracer_provider();
-
     Ok(())
 }
 ```
 
+</div>
+
 ---
 
-# Integrace pro Actix
+<!-- _class: split -->
+
+### Integrace OpenTelemetry pro Actix
+
+<div class=left-column>
 
 ```rust
 use actix_service::Service;
-use actix_web::middleware::Logger;
-use actix_web::{web, App, HttpServer};
-use opentelemetry::trace::TraceError;
-use opentelemetry::{global, sdk::trace as sdktrace};
-use opentelemetry::{
-    trace::{FutureExt, TraceContextExt, Tracer},
-    Key,
-};
+use actix_web::{middleware::Logger, web, App, HttpServer};
+use opentelemetry::{global, sdk::trace as sdktrace, trace::TraceError};
+use opentelemetry::{trace::{FutureExt, TraceContextExt, Tracer}, Key};
 
 fn init_tracer() -> Result<sdktrace::Tracer, TraceError> {
-    opentelemetry_jaeger::new_pipeline() // nahradte libovolnym systemem
+    opentelemetry_jaeger::new_pipeline() // Nahraditelné libovolným systémem.
         .with_collector_endpoint("http://127.0.0.1:14268/api/traces")
         .with_service_name("trace-http-demo")
         .install_batch(opentelemetry::runtime::Tokio)
@@ -1131,7 +1145,12 @@ async fn index() -> &'static str {
         "Index"
     })
 }
+```
 
+</div>
+<div class=right-column>
+
+```rust
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     std::env::set_var("RUST_LOG", "debug");
@@ -1157,6 +1176,8 @@ async fn main() -> std::io::Result<()> {
     .await
 }
 ```
+
+</div>
 
 ---
 
@@ -1195,33 +1216,23 @@ fn main() {
 # Tracing pro Actix
 
 ```rust
-use actix_web::middleware::Logger;
-use actix_web::App;
+use actix_web::{App, middleware::Logger};
 use tracing::{Subscriber, subscriber::set_global_default};
 use tracing_actix_web::TracingLogger;
 use tracing_bunyan_formatter::{BunyanFormattingLayer, JsonStorageLayer};
 use tracing_subscriber::{layer::SubscriberExt, EnvFilter, Registry};
 
 /// Compose multiple layers into a `tracing`'s subscriber.
-pub fn get_subscriber(
-    name: String,
-    env_filter: String
-) -> impl Subscriber + Send + Sync {
-    let env_filter = EnvFilter::try_from_default_env()
-        .unwrap_or(EnvFilter::new(env_filter));
-    let formatting_layer = BunyanFormattingLayer::new(
-        name.into(),
-        std::io::stdout
-    );
+pub fn get_subscriber(name: String, env_filter: String) -> impl Subscriber + Send + Sync {
+    let env_filter = EnvFilter::try_from_default_env().unwrap_or(EnvFilter::new(env_filter));
+    let formatting_layer = BunyanFormattingLayer::new(name.into(), std::io::stdout);
     Registry::default()
         .with(env_filter)
         .with(JsonStorageLayer)
         .with(formatting_layer)
 }
 
-/// Register a subscriber as global default to process span data.
-///
-/// It should only be called once!
+/// Register a subscriber as global default to process span data. It should only be called once!
 pub fn init_subscriber(subscriber: impl Subscriber + Send + Sync) {
     LogTracer::init().expect("Failed to set logger");
     set_global_default(subscriber).expect("Failed to set subscriber");
@@ -1230,12 +1241,12 @@ pub fn init_subscriber(subscriber: impl Subscriber + Send + Sync) {
 fn main() {
     let subscriber = get_subscriber("app".into(), "info".into());
     init_subscriber(subscriber);
-
     let app = App::new().wrap(TracingLogger);
 }
 ```
 
 ---
+
 # SSL/TLS přes rustls
 
 ```rust
