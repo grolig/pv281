@@ -13,17 +13,16 @@ paginate: true
 # Obsah
 
 1. Architektury webových aplikací
-2. Actix
+2. Actor pattern & Actix
 3. Šablony
-4. REST API
-5. Debugging REST API
-6. Logování
-7. CORS
-8. Autentizace
+4. YEW
+5. REST API
+6. CORS & Autentizace
+7. Logování & Tracing
 
 ---
 
-# <!--fit--> Webové aplikace
+# <!--fit--> Architektury webových aplikací
 
 ---
 
@@ -158,6 +157,10 @@ safe-|- HEAD    -|
 ---
 
 ![bg contain](./assets/09-images/9-message-bus.png)
+
+------
+
+# <!--fit--> Actor pattern & Actix
 
 ---
 
@@ -417,7 +420,11 @@ async fn main() -> std::io::Result<()> {
 
 ---
 
-# Šablony přes Askama
+# <!--fit--> Šablony
+
+---
+
+# Šablony pomocí Askamy
 
 Jeden ze šablonovacích enginů. Šablony jsou kompilované s typovou kontrolou.
 
@@ -534,6 +541,10 @@ async fn index(form: web::Form<FormData>) -> HttpResponse {
     )
 }
 ```
+
+---
+
+# <!--fit--> Yew
 
 ---
 
@@ -665,6 +676,11 @@ async fn main() -> std::io::Result<()> {
 
 ---
 
+
+# <!--fit--> REST API
+
+---
+
 # REST API
 
 - základní způsob jak dnes budujeme rozhraní backendové aplikace
@@ -791,6 +807,86 @@ async fn main() -> std::io::Result<()> {
     // as usual
 }
 ```
+
+---
+
+# <!--fit--> CORS & Autentizace
+
+---
+
+# CORS
+
+```rust
+use actix_cors::Cors;
+use actix_web::{http::header, middleware::Logger, App, HttpServer};
+
+#[actix_web::main]
+async fn main() -> std::io::Result<()> {
+    std::env::set_var("RUST_LOG", "actix=info");
+    env_logger::init();
+
+    HttpServer::new(move || {
+        App::new()
+            .wrap(
+                Cors::default()
+                    .allowed_origin("http://localhost:8080")
+                    .allowed_methods(vec!["GET", "POST"])
+                    .allowed_headers(vec![header::AUTHORIZATION, header::ACCEPT])
+                    .allowed_header(header::CONTENT_TYPE)
+                    .supports_credentials()
+                    .max_age(3600),
+            )
+            .wrap(Logger::default())
+            .service(user::info)
+    })
+    .bind(("127.0.0.1", 8000))?
+    .run()
+    .await
+}
+```
+
+---
+
+# Autentizace
+
+```rust
+use actix_web::*;
+use actix_identity::{Identity, CookieIdentityPolicy, IdentityService};
+
+async fn index(id: Identity) -> String {
+    // access request identity
+    if let Some(id) = id.identity() {
+        format!("Welcome! {}", id)
+    } else {
+        "Welcome Anonymous!".to_owned()
+    }
+}
+
+async fn login(id: Identity) -> HttpResponse {
+    id.remember("User1".to_owned()); // <- remember identity
+    HttpResponse::Ok().finish()
+}
+
+async fn logout(id: Identity) -> HttpResponse {
+    id.forget();                      // <- remove identity
+    HttpResponse::Ok().finish()
+}
+
+fn main() {
+    let app = App::new().wrap(IdentityService::new(
+        // <- create identity middleware
+        CookieIdentityPolicy::new(&[0; 32])    // <- create cookie identity policy
+              .name("auth-cookie")
+              .secure(false)))
+        .service(web::resource("/index.html").to(index))
+        .service(web::resource("/login.html").to(login))
+        .service(web::resource("/logout.html").to(logout));
+}
+```
+
+---
+
+# <!--fit--> Logování & Tracing
 
 ---
 
@@ -1090,78 +1186,6 @@ async fn main() -> std::io::Result<()> {
     .bind_rustls("127.0.0.1:8443", config)?
     .run()
     .await
-}
-```
-
----
-
-# CORS
-
-```rust
-use actix_cors::Cors;
-use actix_web::{http::header, middleware::Logger, App, HttpServer};
-
-#[actix_web::main]
-async fn main() -> std::io::Result<()> {
-    std::env::set_var("RUST_LOG", "actix=info");
-    env_logger::init();
-
-    HttpServer::new(move || {
-        App::new()
-            .wrap(
-                Cors::default()
-                    .allowed_origin("http://localhost:8080")
-                    .allowed_methods(vec!["GET", "POST"])
-                    .allowed_headers(vec![header::AUTHORIZATION, header::ACCEPT])
-                    .allowed_header(header::CONTENT_TYPE)
-                    .supports_credentials()
-                    .max_age(3600),
-            )
-            .wrap(Logger::default())
-            .service(user::info)
-    })
-    .bind(("127.0.0.1", 8000))?
-    .run()
-    .await
-}
-```
-
----
-
-# Autentizace
-
-```rust
-use actix_web::*;
-use actix_identity::{Identity, CookieIdentityPolicy, IdentityService};
-
-async fn index(id: Identity) -> String {
-    // access request identity
-    if let Some(id) = id.identity() {
-        format!("Welcome! {}", id)
-    } else {
-        "Welcome Anonymous!".to_owned()
-    }
-}
-
-async fn login(id: Identity) -> HttpResponse {
-    id.remember("User1".to_owned()); // <- remember identity
-    HttpResponse::Ok().finish()
-}
-
-async fn logout(id: Identity) -> HttpResponse {
-    id.forget();                      // <- remove identity
-    HttpResponse::Ok().finish()
-}
-
-fn main() {
-    let app = App::new().wrap(IdentityService::new(
-        // <- create identity middleware
-        CookieIdentityPolicy::new(&[0; 32])    // <- create cookie identity policy
-              .name("auth-cookie")
-              .secure(false)))
-        .service(web::resource("/index.html").to(index))
-        .service(web::resource("/login.html").to(login))
-        .service(web::resource("/logout.html").to(logout));
 }
 ```
 
