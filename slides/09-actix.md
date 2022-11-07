@@ -786,9 +786,11 @@ async fn main() -> std::io::Result<()> {
 
 # REST API
 
-- základní způsob jak dnes budujeme rozhraní backendové aplikace
-- primárně využívá JSON (ale jde použít i XML)
-- rozhraní vychází z domény (puristické) a nebo z požadavků prezentační vrstvy (agregované)
+Základní způsob, jak dnes budujeme rozhraní backendové aplikace.
+
+Primárně využívá JSON (jde ale použít i XML).
+
+Rozhraní vychází z domény (puristické), a nebo z požadavků prezentační vrstvy (agregované).
 
 ---
 
@@ -823,29 +825,30 @@ async fn main() -> std::io::Result<()> {
 
 ---
 
-# Pojmenování endpointů
+### Pojmenování endpointů
 
-## List nebo vytvoření
+#### Výpis nebo vytvoření
 ```
-​/devices
+/devices
 /configurations
 ```
 
-## Operace nad jedním záznamem
+#### Operace nad jedním záznamem
 ```
 /devices/{id}
 /configurations/{id}
 ```
 
-## Vazby
+#### Vazby
 ```
 /devices/{id}/configurations
 /devices/{id}/configurations/{id}
 ```
 ---
 
-# <!--fit--> Pro pojmenování endpointu používáme jen podstatná jména,
-# <!--fit--> nikdy nepoužíváme slovesa!
+# <!--fit--> Pro pojmenování endpointu
+# <!--fit--> používáme jen podstatná jména,
+# <!--fit--> nikdy ne slovesa!
 
 ---
 
@@ -887,7 +890,7 @@ async fn main() -> std::io::Result<()> {
 
 ---
 
-# JSON response
+# JSON v response
 
 ```rust
 use actix_web::{get, web, HttpResponse, Result};
@@ -900,7 +903,7 @@ struct MyObj {
 
 #[get("/a/{name}")]
 async fn index(obj: web::Path<MyObj>) -> Result<HttpResponse> {
-    Ok(HttpResponse::Ok().json(MyObj {
+    Ok(HttpResponse::Ok().json(MyObj { // <- Zde je hlavní změna.
         name: obj.name.to_string(),
     }))
 }
