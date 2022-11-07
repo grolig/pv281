@@ -80,15 +80,41 @@ Connection: close
 
 # HTTP metody
 
-```
-     |- GET     -|
-safe-|- HEAD    -|
-     |- OPTION  -|-idempotentní
-        PUT     -|
-        DELETE  -|
-        POST  -neidempotentní     
+<table>
+    <thead>
+        <tr>
+            <th>Metoda</th>
+            <th>Bezpečnost</th>
+            <th>Idempotence</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>GET</td>
+            <td rowspan=3>Safe</td>
+            <td rowspan=5>Idempotentní</td>
+        </tr>
+        <tr>
+            <td>HEAD</td>
+        </tr>
+        <tr>
+            <td>OPTION</td>
+        </tr>
+        <tr>
+            <td>PUT</td>
+            <td rowspan=3>Unsafe</td>
+        </tr>
+        <tr>
+            <td>DELETE</td>
+        </tr>
+        <tr>
+            <td>POST</td>
+            <td rowspan=1><strong>Ne</strong>idempotentní</td>
+        </tr>
+    </tbody>
+</table>
 
-```
+Poznámka: méně časté jsou metody CONNECT, TRACE, PATCH.
 
 ---
 
