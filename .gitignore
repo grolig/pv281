@@ -5,3 +5,5 @@ node_modules/
 
 # MARP target directory
 **/dist
+
+**/example-reservation-system
