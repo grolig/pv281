@@ -15,7 +15,7 @@ paginate: true
 1. Architektury webových aplikací
 2. Actor pattern & Actix
 3. Šablony
-4. YEW
+4. Yew
 5. REST API
 6. CORS & Autentizace
 7. Logování & Tracing
@@ -32,7 +32,7 @@ Zprostředkovává komunikaci mezi serverem a klientem.
 
 Dříve šlo o textový protokol nad TCP,
 **od verze 2** (2015) se z něj stal **binární protokol**
-a **od verze 3** (2022) se přešlo na **protocol QUIC** (Quick UDP Internet Connections), který vyžívá více multiplexových UDP spojení.
+a **od verze 3** (2022) se přešlo na **protocol QUIC** (Quick UDP Internet Connections), který využívá více multiplexových UDP spojení.
 
 Pro jednoduchost se budeme bavit o HTTP/1.1.
 
@@ -316,7 +316,7 @@ async fn main() {
         .service(change_quantity);
 
     App::new()
-        .service(scope_products);
+        .service(scope_products)
         .service(scope_basket);
 }
 ```
@@ -527,6 +527,8 @@ askama = "0.9"
 [build-dependencies]
 askama = "0.9"
 ```
+
+Alternativou může být např. crate Tera.
 
 ---
 
@@ -923,7 +925,7 @@ async fn main() -> std::io::Result<()> {
 # CORS
 
 ```rust
-use actix_cors::Cors;
+use actix_cors::Cors; // <- A separate crate is needed.
 use actix_web::{http::header, middleware::Logger, App, HttpServer};
 
 #[actix_web::main]
