@@ -225,12 +225,13 @@ Better performance and less CPU intense than JS-based solutions. Slightly higher
 
 # ELM principles
 
-<!-- _class: invert + plantuml -->
+<br>
+
+<div>
 
 @startuml
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
-
 
 Component(store, "Store", "Holds app state")
 Component(view, "View", "Renders the UI of the component")
@@ -243,6 +244,8 @@ Rel_L(update, reducer, "processes")
 Rel(reducer, store, "changes")
 
 @enduml
+
+</div>
 
 ---
 
