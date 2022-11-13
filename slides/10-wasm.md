@@ -12,10 +12,11 @@ paginate: true
 
 # Today lecture's content
 
-1. Introduction to Webassembly
-2. Principles borrowed from ELM
-3. Yew
-4. Discussion - browser API support in WASM
+1. Introduction to WebAssembly
+2. WASM apps using Canvas
+3. WASM apps using DOM
+5. Yew
+6. Demonstration 
 
 ---
 
