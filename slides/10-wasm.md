@@ -13,9 +13,9 @@ paginate: true
 # Today lecture's content
 
 1. Introduction to Webassembly
-2. Yew
-3. Application state
-4. Browser API support in WASM
+2. Principles borrowed from ELM
+3. Yew
+4. Discussion - browser API support in WASM
 
 ---
 
@@ -237,11 +237,11 @@ cargo install trunk
 
 # Before we start - the reality of the framework
 
-- Beta framework (current ver: `0.19`)
+- Beta framework (current ver: `0.19`, bleeding edge ver: `next`)
 - Libraries pretty much non-existent
 - Breaking changes between versions
-- Non-existing tutorials for complex solutions
-- Documentation of advanced features is lacking
+- Non-existing tutorials for complex solutions, only examples
+- Documentation of advanced features is sometimes lacking
 
 ---
 
@@ -251,23 +251,39 @@ Some slides deal with `next` version. These slides will be marked.
 
 ---
 
-# Dependencies
+<!-- _class: split -->
+
+### Dependencies
+
+<div class=common-text>
+
+Note: a lot of required functionality will add other dependencies, such as `wasm-bindgen`, `gloo` or others.
+
+</div>
+
+<div class=left-column>
+
+#### v. `0.19`
 
 ```toml
-# Current version! Some slides deal with "next" version.
 [dependencies]
 yew = "0.19"
-
-# If we want to use the browser's api, we can use web-sys crate.
-# There are also alternatives, we'll talk about them later. 
-[dependencies.web-sys]
-version = "0.3"
-# We need to enable all the web-sys features we want to use!
-features = [
-    "console",
-    # ...
-]
 ```
+
+</div>
+<div class=right-column>
+
+#### v. `next`
+
+```toml
+[dependencies]
+yew = { 
+    git = "https://github.com/yewstack/yew/",
+    features = ["csr"]
+}
+```
+
+</div>
 
 ---
 
@@ -506,40 +522,13 @@ impl Component for ComponentWithState {
 
 ---
 
-# Other methods for components (v. `0.19`)
+# Optional component methods (v. `0.19`)
 
-- `rendered`: Used to perform side effects after the component is rendered.
-- `changed`: Whether the component needs to be re-rendered after its props change. Default implementation re-renders the component.
+- `rendered`: Perform side effects after the component is rendered.
+- `changed`: Whether the component needs to be re-rendered after its props change. Defaults to true.
 - `destroy`: On component unmount, there might be a need to clean up after the component.
 
 By default, only the `create` and `view` method have to be implemented.
-
----
-
-# Callbacks (v. `0.19`, similar in v. `next`)
-
-Allow communication within the component, as well as with agents, services and parent components. This is how to handle interaction between components.
-
-```rust
-use yew::{html, Callback};
-
-html! {
-    <button onclick={Callback::from(|_| ())}> // instead of (), we could send some specific message
-    //      ^^^^^^^ event listener name;
-        { "Click me!" }
-    </button>
-};
-```
-
----
-
-# Important HTML events
-
-- `onclick`
-- `onchange`
-- `onkeypress`
-- `onblur`
-- `ondrag`, `ondragstart`, `ondragover`, `ondragleave`, `ondrop`, ...
 
 ---
 
@@ -585,10 +574,76 @@ fn HelloFI() -> Html {
 
 ---
 
+# Callbacks (both versions)
+
+Allow communication within the component, as well as with agents, services and parent components. This is one of the ways to handle interaction between components.
+
+---
+
+<!-- _class: split -->
+
+### Callbacks
+
+<div class=common-text>
+
+Both versions also implement `emit` method that allows you to call them within the business logic.
+
+</div>
+
+<div class=left-column>
+
+#### v. `0.19`
+
+```rust
+let onclick = ctx
+    .link().callback(move |_| {
+//  ^^^^^^^^^^^^^^^^^^^ creating callback
+    Msg::Clicked
+});
+
+html! {
+    <button {onclick}>{ "Click" }</button>
+    //      ^^^^^^^^ called on DOM event
+}
+```
+
+</div>
+<div class=right-column>
+
+#### v. `next`
+
+```rust
+let onclick: Callback<_, Msg> = 
+    Callback::from(move |_| {
+//  ^^^^^^^^^^^^^^ creating callback
+        Msg::Clicked
+    });
+
+html! {
+    <button {onclick}> { "Emit me" } </button>
+//          ^^^^^^^^^ called on DOM event
+}
+```
+
+</div>
+
+---
+
+# Important HTML events
+
+- `onclick`
+- `onchange`
+- `onkeypress`
+- `onblur`
+- `ondrag`, `ondragstart`, `ondragover`, `ondragleave`, `ondrop`, ...
+
+---
+
 # Using the component (v `0.19`)
 
 ```rust
 use yew::{html, props, Children};
+// container component is defined in a different file
 // create properties with props! macro
 let props = props!(Container::Properties {
     id: "container-2",
@@ -605,6 +660,8 @@ html! {
 ---
 
 # Using the component (v. `next`)
+
+First, let's define the function component `HelloWorld`.
 
 ```rust
 use yew::{Properties, function_component, Html, html};
@@ -626,7 +683,9 @@ fn HelloWorld(props: &Props) -> Html {
 
 ---
 
-# Using the component - properties (v. `next`)
+# Using the component (v. `next`)
+
+Then, use the component somewhere else. Also shows how `properties!` macro can create properties
 
 ```rust
 // we use the HelloWorld component fromt the last slide
@@ -656,450 +715,120 @@ fn App() -> Html {
 
 --- 
 
-# App initialization (v. `0.19`)
+<!-- _class: split -->
+
+### App initialization
+
+<div class=left-column>
+
+#### v. `0.19`
 
 ```rust
-fn main() {
-    yew::start_app::<Model>();
-}
-```
+use yew::prelude::*;
 
----
-
-
-# App initialization
----
-
-# Klienstký routing
-
----
-
-# Router
-
-```rust
-use yew_router::Switch;
-
-#[derive(Clone, Debug, Switch)]
-pub enum AppRoute {
-    #[to = "/posts/{}"]
-    Post(u64),
-    #[to = "/posts/?page={}"]
-    PostListPage(u64),
-    #[to = "/posts/"]
-    PostList,
-    #[to = "/authors/{id}"]
-    Author(u64),
-    #[to = "/authors/"]
-    AuthorList,
-    #[to = "/page-not-found"]
-    PageNotFound(Permissive<String>),
-    #[to = "/!"]
-    Home,
-}
-```
-
----
-
-# Namapování na rendering
-
-```rust
-fn switch(switch: PublicUrlSwitch) -> Html {
-        match switch.route() {
-            AppRoute::Post(id) => {
-                html! { <Post seed=id /> }
-            }
-            AppRoute::PostListPage(page) => {
-                html! { <PostList page=page.max(1) /> }
-            }
-            AppRoute::PostList => {
-                html! { <PostList page=1 /> }
-            }
-            AppRoute::Author(id) => {
-                html! { <Author seed=id /> }
-            }
-            AppRoute::AuthorList => {
-                html! { <AuthorList /> }
-            }
-            AppRoute::Home => {
-                html! { <Home /> }
-            }
-            AppRoute::PageNotFound(Permissive(route)) => {
-                html! { <PageNotFound route=route /> }
-            }
-        }
+// incomplete function components (v0.19)
+#[function_component(App)]
+fn app() -> Html {
+    html! {
+        <h1>{ "Hello World" }</h1>
     }
+}
+
+fn main() {
+    yew::start_app::<App>();
+}
 ```
 
----
+</div>
+<div class=right-column>
 
-# Vykreslení v HTML
+#### v. `next`
 
 ```rust
-<AppRouter
-    render=AppRouter::render(Self::switch)
-    redirect=AppRouter::redirect(|route: Route| {
-        AppRoute::PageNotFound(Permissive(Some(route.route))).into_public()
-    })
-/>
+use yew::prelude::*;
+
+#[function_component(App)]
+fn app() -> Html {
+    html! {
+        <h1>{ "Hello World" }</h1>
+    }
+}
+
+fn main() {
+    yew::Renderer::<App>::new().render();
+    // the changed API    ^^^^^^^^^^^^^^
+}
 ```
 
----
-
-# Odkaz
-
-```rust
-<div class="navbar-start">
-    <AppAnchor classes="navbar-item" route=AppRoute::Home>
-        { "Home" }
-    </AppAnchor>
-    <AppAnchor classes="navbar-item" route=AppRoute::PostList>
-        { "Posts" }
-    </AppAnchor>
-    <div class="navbar-item has-dropdown is-hoverable">
-        <a class="navbar-link">
-            { "More" }
-        </a>
-        <div class="navbar-dropdown">
-            <a class="navbar-item">
-                <AppAnchor classes="navbar-item" route=AppRoute::AuthorList>
-                    { "Meet the authors" }
-                </AppAnchor>
-            </a>
-        </div>    
-    </div>
 </div>
 
-```
+---
+
+# Communication between components (v. `next`)
+
+- Props: `parent → child` - data passed from parent to child, data change (by default) causes re-render.
+- Callbacks: `child → parent` - passing a callback from parent to children allows them to message the parent.
+- Context: `provider → subscribers` - passing data from a provider to subscribers dependent on data. Used with `use_context` hook.
+- Agents: `parent ←→ child` for global store and complex scenarios (we'll talk about them later).
 
 ---
 
-# Sdílený stav (agenti)
+# Shared state - global store (using agents)
 
-Umožňuje komunikaci a sdílení dat napříč komponentami nehledě na to, jak hluboko se musíme zanořit.
+Allows parallel communication between components, no matter how deep they are in the component hierarchy.
 
-Agenti jsou založení na actor modelu. 
+Agents are based on actor pattern and they run in their own web workers.
 
-Agenti běží paralelně. Každý ve svém web workeru.
+More information [here](https://yew.rs/docs/next/concepts/agents).
 
----
-
-# Sdílený stav (agenti)
-
-```rust
-use std::collections::HashMap;
-
-pub type PostId = u32;
-
-#[derive(Debug)]
-pub enum Request {
-    CreatePost(String),
-    UpdatePost(PostId, String),
-    RemovePost(PostId),
-}
-
-#[derive(Debug)]
-pub enum Action {
-    SetPost(Option<PostId>, String),
-    RemovePost(PostId),
-}
-
-pub struct PostStore {
-    pub posts: HashMap<PostId, String>,
-
-    // Stores can have private state too
-    id_counter: PostId,
-}
-```
+Example project [here](https://github.com/yewstack/yew/tree/master/examples/web_worker_fib).
 
 ---
 
-# Sdílený stav (agenti)
+# Which Yew version to choose?
 
-```rust
-use std::collections::HashMap;
-use yew::agent::AgentLink;
-use yewtil::store::{Store, StoreWrapper};
+For a somewhat more predictable behavior, use the `0.19` version. You may find more tutorials for the `0.19` version.
 
-impl Store for PostStore {
-    type Action = Action;
-    type Input = Request;
+For a more "modern" API (using hooks), use the `next` version. The function components implementation is expanded. **Generally prefer the `next` version.**
 
-    fn new() -> Self {
-        let mut posts = HashMap::new();
-
-        posts.insert(0, "Magic first post".to_owned());
-
-        PostStore {
-            posts,
-            id_counter: 1,
-        }
-    }
-
-    fn handle_input(&self, link: AgentLink<StoreWrapper<Self>>, msg: Self::Input) {
-        match msg {
-            Request::CreatePost(text) => {
-                link.send_message(Action::SetPost(None, text));
-            }
-            Request::UpdatePost(id, text) => {
-                link.send_message(Action::SetPost(Some(id), text));
-            }
-            Request::RemovePost(id) => {
-                link.send_message(Action::RemovePost(id));
-            }
-        }
-    }
-
-    fn reduce(&mut self, msg: Self::Action) {
-        match msg {
-            Action::SetPost(id, text) => {
-                let id = id.unwrap_or_else(|| self.next_id());
-                self.posts.insert(id, text);
-            }
-            Action::RemovePost(id) => {
-                self.posts.remove(&id);
-            }
-        }
-    }
-}
-```
+**Both versions have their quirks and bugs, as the framework is not stable yet. Be cautious.**
 
 ---
 
-# Použití store
-
-```rust
-pub enum Msg {
-    UpdateText(String),
-    Delete,
-    PostStoreMsg(ReadOnly<PostStore>),
-}
-
-#[derive(Properties, Clone, PartialEq)]
-pub struct Props {
-    pub id: PostId,
-}
-
-pub struct Post {
-    link: ComponentLink<Self>,
-    id: PostId,
-    text: Option<String>,
-    post_store: Box<dyn Bridge<StoreWrapper<PostStore>>>,
-}
-
-```
+# From now, the discussed version is always `next`
 
 ---
 
-# Použití store
+# Data fetching, using console, local storage and other browser APIs
 
-```rust
-impl Component for Post {
-    type Message = Msg;
-    type Properties = Props;
+We have two options for working with the browser API:
 
-    fn create(props: Self::Properties, link: ComponentLink<Self>) -> Self {
-        let callback = link.callback(Msg::PostStoreMsg);
-        Self {
-            link,
-            id: props.id,
-            text: None,
-            post_store: PostStore::bridge(callback),
-        }
-    }
+- [`wasm-bindgen`](https://github.com/rustwasm/wasm-bindgen) crate: Used to interact with JS code.
+- [`gloo`](https://github.com/rustwasm/gloo) crate: collection of libraries that provide idiomatic wrappers for browser APIs.
 
-    fn update(&mut self, msg: Self::Message) -> ShouldRender {
-        match msg {
-            Msg::UpdateText(text) => {
-                self.post_store.send(Request::UpdatePost(self.id, text));
-                false
-            }
-            Msg::Delete => {
-                self.post_store.send(Request::RemovePost(self.id));
-                false
-            }
-            Msg::PostStoreMsg(state) => {
-                let state = state.borrow();
-
-                // Only update if the post changed.
-                if let Some(text) = state.posts.get(&self.id) {
-                    self.text.neq_assign(Some(text.clone()))
-                } else {
-                    false
-                }
-            }
-        }
-    }
-}
-```
+Prefer using [`gloo`](https://github.com/rustwasm/gloo).
 
 ---
 
-# Navázání události na store
 
-```rust
-impl Component for Post {
-    // ...
+# More advanced concepts
 
-    fn view(&self) -> Html {
-        let text = self.text.as_deref().unwrap_or("<pending>");
-
-        html! {
-            <div>
-                <h2>{ format!("Post #{}", self.id) }</h2>
-                <p>{text}</p>
-
-                <TextInput value=text.to_owned() onsubmit=self.link.callback(Msg::UpdateText) />
-                <button onclick=self.link.callback(|_| Msg::Delete)>
-                    { "Delete" }
-                </button>
-            </div>
-        }
-    }
-}
-```
+- [App routing](https://yew.rs/docs/next/concepts/router) (leveraging browser's History API)
+- [Fetching data](https://yew.rs/docs/next/tutorial#fetching-data-using-external-rest-api) from external REST APIs
+- Advanced ways to [deal with children components](https://yew.rs/docs/next/advanced-topics/children)
+- Using [generic components](https://yew.rs/docs/next/concepts/function-components/generics) with Rust generics
+- Using [suspense](https://yew.rs/docs/next/concepts/suspense): Displaying something while waiting for data
+- Using [server side rendering](https://yew.rs/docs/next/advanced-topics/server-side-rendering) (also discussed to an extent in the last lecture)
 
 ---
 
-# Práce s konzolí (gloo)
+# Demonstration time!
 
-```rust
-use gloo_console::log;
-let object = JsValue::from("any JsValue can be logged");
-log!("text", object)
-```
+We will see how this goes!
 
----
+Task: Create an app that uses function components with **props**, **iterates through a list of items**, and **uses state** for **some kind of interactivity**.
 
-# Local storage (gloo)
-
-```rust
-use gloo_storage::LocalStorage;
-
-let key = "key";
-let value = "value";
-LocalStorage::set(key, value).unwrap();
-
-let obtained_value: String = LocalStorage::get(key).unwrap();
-
-#[derive(Deserialize)]
-struct Data {
-    key1: String,
-    key2: String,
-}
-
-let data: Data = LocalStorage::get_all().unwrap();
-```
-
----
-
-# Časovače (gloo)
-
-```rust
-use gloo_timers::callback::Timeout;
-
-let timeout = Timeout::new(1_000, move || {
-    // Do something after the one second timeout is up!
-});
-
-// Since we don't plan on cancelling the timeout, call `forget`.
-timeout.forget();
-```
-
----
-
-# WebSocket klient (Reqwasm)
-
-```rust
-use reqwasm::websocket::{Message, futures::WebSocket};
-use wasm_bindgen_futures::spawn_local;
-use futures::{SinkExt, StreamExt};
-
-let mut ws = WebSocket::open("wss://echo.websocket.org").unwrap();
-let (mut write, mut read) = ws.split();
-
-spawn_local(async move {
-    write.send(Message::Text(String::from("test"))).await.unwrap();
-    write.send(Message::Text(String::from("test 2"))).await.unwrap();
-});
-
-spawn_local(async move {
-    while let Some(msg) = read.next().await {
-        console_log!(format!("1. {:?}", msg))
-    }
-    console_log!("WebSocket Closed")
-})
-```
-
----
-
-# WebGL
-
-Plusy
-- skvělá rychost
-- neomezené možnosti
-
-Mínusy
-- moc práce na vytvoření aplikace
-- podpora prohlížečů
-
----
-
-# WebGL
-
-```rust
-impl Model {
-    fn render_gl(&mut self, timestamp: f64, link: &Scope<Self>) {
-        let gl = self.gl.as_ref().expect("GL Context not initialized!");
-
-        let vert_code = include_str!("./basic.vert");
-        let frag_code = include_str!("./basic.frag");
-
-        // This list of vertices will draw two triangles to cover the entire canvas.
-        let vertices: Vec<f32> = vec![
-            -1.0, -1.0, 1.0, -1.0, -1.0, 1.0, -1.0, 1.0, 1.0, -1.0, 1.0, 1.0,
-        ];
-        let vertex_buffer = gl.create_buffer().unwrap();
-        let verts = js_sys::Float32Array::from(vertices.as_slice());
-
-        gl.bind_buffer(GL::ARRAY_BUFFER, Some(&vertex_buffer));
-        gl.buffer_data_with_array_buffer_view(GL::ARRAY_BUFFER, &verts, GL::STATIC_DRAW);
-
-        let vert_shader = gl.create_shader(GL::VERTEX_SHADER).unwrap();
-        gl.shader_source(&vert_shader, vert_code);
-        gl.compile_shader(&vert_shader);
-
-        let frag_shader = gl.create_shader(GL::FRAGMENT_SHADER).unwrap();
-        gl.shader_source(&frag_shader, frag_code);
-        gl.compile_shader(&frag_shader);
-
-        let shader_program = gl.create_program().unwrap();
-        gl.attach_shader(&shader_program, &vert_shader);
-        gl.attach_shader(&shader_program, &frag_shader);
-        gl.link_program(&shader_program);
-
-        gl.use_program(Some(&shader_program));
-
-        // Attach the position vector as an attribute for the GL context.
-        let position = gl.get_attrib_location(&shader_program, "a_position") as u32;
-        gl.vertex_attrib_pointer_with_i32(position, 2, GL::FLOAT, false, 0, 0);
-        gl.enable_vertex_attrib_array(position);
-
-        // Attach the time as a uniform for the GL context.
-        let time = gl.get_uniform_location(&shader_program, "u_time");
-        gl.uniform1f(time.as_ref(), timestamp as f32);
-
-        gl.draw_arrays(GL::TRIANGLES, 0, 6);
-
-        let handle = {
-            let link = link.clone();
-            request_animation_frame(move |time| link.send_message(Msg::Render(time)))
-        };
-
-        // A reference to the new handle must be retained for the next render to run.
-        self._render_loop = Some(handle);
-    }
-}
-```
+We will briefly [follow this tutorial](https://yew.rs/docs/next/tutorial).
 
 ---
 
