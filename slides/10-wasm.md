@@ -164,25 +164,31 @@ int factorial(int n) {
 
 ---
 
-# Apps using DOM (HTML, CSS)
-
-
----
-
-# Advantages of DOM-based WASM apps
-
-- Used and tested model of UI design
-- Complete rewrite from JS based project is relatively straight forward
-- Easy debugging
-- Vast ecosystem of libraries and solutions (most involve JS, joining WASM with JS is possible)
+# <!--fit--> WASM Apps using DOM
+# (HTML and CSS)
 
 ---
 
-# Disadvantages of using DOM-based WASM apps
+### Advantages of DOM-based apps
 
-- Potentially slower than canvas-based apps
-- The bundle size is larger (need to ship HTML & CSS & WASM code)
-- Limited options with the design - 2D / 3D apps and games are way harder to implement
+- Used and **tested model of UI design**
+
+- Complete **rewrite of a JS-based project is relatively straight forward**
+
+- **Easy debugging**
+
+- **Vast ecosystem** of libraries and solutions
+- (most involve JS, joining WASM with JS is possible)
+
+---
+
+### Disadvantages of using DOM-based apps
+
+- **Potentially slower** than canvas-based apps
+
+- The **bundle size is larger** (need to ship HTML & CSS & WASM code)
+
+- **Limited options with the design** – 2D / 3D apps and games are way harder to implement
 
 ---
 
