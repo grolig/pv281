@@ -590,9 +590,9 @@ By default, only the `create` and `view` method have to be implemented.
 
 ---
 
-# Function components (v. `next`)
+### Function components (v. `next`)
 
-Check [this page](https://yew.rs/docs/next/concepts/function-components) for more in-depth explanation of preferred version to write Yew components in the `next` version.
+Check [the docs](https://yew.rs/docs/next/concepts/function-components) for more in-depth explanation on Yew components in the `next` version.
 
 ```rust
 use yew::{function_component, html, Html};
@@ -611,9 +611,9 @@ fn App() -> Html {
 
 ---
 
-# Function components (v. `next`)
+### Function components (v. `next`)
 
-Function components can utilize [pre-defined hooks](https://yew.rs/docs/concepts/function-components/pre-defined-hooks) and also [custom hooks](//yew.rs/docs/concepts/function-components/custom-hooks). Usage is very similar to React hooks.
+Function components can utilize [pre-defined hooks](https://yew.rs/docs/concepts/function-components/pre-defined-hooks) and also [custom hooks](https://yew.rs/docs/concepts/function-components/custom-hooks). Usage is very similar to React hooks.
 
 ```rust
 use yew::{function_component, html, Html, use_state};
@@ -634,7 +634,9 @@ fn HelloFI() -> Html {
 
 # Callbacks (both versions)
 
-Allow communication within the component, as well as with agents, services and parent components. This is one of the ways to handle interaction between components.
+Allow communication within the component, as well as with agents, services and parent components.
+
+This is one of the ways to handle interaction between components.
 
 ---
 
@@ -644,7 +646,7 @@ Allow communication within the component, as well as with agents, services and p
 
 <div class=common-note>
 
-Both versions also implement `emit` method that allows you to call them within the business logic.
+Note: Both versions also implement `emit` method that allows you to call them within the business logic.
 
 </div>
 
@@ -702,11 +704,13 @@ html! {
 ```rust
 use yew::{html, props, Children};
 // container component is defined in a different file
+
 // create properties with props! macro
 let props = props!(Container::Properties {
     id: "container-2",
     children: Children::default(),
 });
+
 html! {
     <Container with props> // instead of manually passing props use "with" syntax
         // props.children will be overwritten with this
@@ -746,10 +750,11 @@ fn HelloWorld(props: &Props) -> Html {
 Then, use the component somewhere else. Also shows how `properties!` macro can create properties
 
 ```rust
-// we use the HelloWorld component fromt the last slide
+// We use the HelloWorld component from the last slide.
+
 #[function_component]
 fn App() -> Html {
-    let hello_world_props = props! { // we can create props with props! macro
+    let hello_world_props = props! { // We can create props with props! macro.
         HelloWorld::Properties {
             is_loading: true,
         }
@@ -765,11 +770,13 @@ fn App() -> Html {
 
 ---
 
-# Attributes `key` and `ref`
+# `key` and `ref` attributes
 
-`key` works similarly to keys in React. It helps Yew determine which elements need to be re-rendered by uniquely describing the element (when rendering lists of elements / components). 
+`key` works similarly to keys in React.
+It helps Yew **determine which elements need to be re-rendered** by uniquely describing the element, e.g. when rendering lists of elements / components. 
 
-`ref` is used to manipulate the DOM element directly. This is useful if we want to embed JS library to our WASM project and modify the DOM element from JS and WASM.
+`ref` is **used to manipulate the DOM element directly**.
+This is useful if we want to embed JS library to our WASM project and modify the DOM element from JS and WASM.
 
 --- 
 
@@ -814,7 +821,8 @@ fn app() -> Html {
 
 fn main() {
     yew::Renderer::<App>::new().render();
-    // the changed API    ^^^^^^^^^^^^^^
+    //   ^^^^^^^^         ^^^^^^^^^^^^^^
+    // This API has changed.
 }
 ```
 
@@ -822,24 +830,25 @@ fn main() {
 
 ---
 
-# Communication between components (v. `next`)
+### Component communication (v. `next`)
 
-- Props: `parent → child` - data passed from parent to child, data change (by default) causes re-render.
-- Callbacks: `child → parent` - passing a callback from parent to children allows them to message the parent.
-- Context: `provider → subscribers` - passing data from a provider to subscribers dependent on data. Used with `use_context` hook.
-- Agents: `parent ←→ child` for global store and complex scenarios (we'll talk about them later).
+- **Props**: `parent → child` – data passed from parent to child, data change causes re-render by default.
+
+- **Callbacks**: `child → parent` – passing a callback from parent to children allows them to message the parent.
+
+- **Context**: `provider → subscribers` – passing data from a provider to subscribers dependent on data. Used with `use_context` hook.
+
+- **Agents**: `parent ←→ child` for global store and complex scenarios (we'll talk about them later).
 
 ---
 
-# Shared state - global store (using agents)
+### Agents: shared state & global store
 
-Allows parallel communication between components, no matter how deep they are in the component hierarchy.
+This allows for **parallel communication between components**, no matter how deep they are in the component hierarchy.
 
-Agents are based on actor pattern and they run in their own web workers.
+Agents are based on the _actor pattern_, and they run in their own web workers.
 
-More information [here](https://yew.rs/docs/next/concepts/agents).
-
-Example project [here](https://github.com/yewstack/yew/tree/master/examples/web_worker_fib).
+See [the docs](https://yew.rs/docs/next/concepts/agents) or [an example project](https://github.com/yewstack/yew/tree/master/examples/web_worker_fib) for more information.
 
 ---
 
