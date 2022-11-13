@@ -302,7 +302,7 @@ This will always be denoted somewhere on the slide.
 
 <div class=common-note>
 
-Note: a lot of required functionality will add other dependencies, such as `wasm-bindgen`, `gloo` or others.
+Note: a lot of required functionality is added by other dependencies, such as `wasm-bindgen`, `gloo` or others.
 
 </div>
 
@@ -350,7 +350,7 @@ html! {
 
 ---
 
-# `html!` macro - advanced
+# `html!` macro – advanced
 
 ```rust
 use yew::html;
@@ -391,7 +391,8 @@ html! {
 
 # Components (v. `0.19`)
 
-Components are Rust structs. They resemble class-based components in React. Every component needs to implement trait `Component` from Yew crate:
+Components are Rust structs, resembling React's class-based components.
+Every component has to implement the `Component` trait:
 
 ```rust
 // these imports are used also on the following slides
@@ -433,9 +434,12 @@ impl Component for AmazingYewComponent {
 
 ## Messages and Properties (v. `0.19`)
 
-Some components don't have props / events. Missing types are set to Rust's Unit type - `()`
+Some components don't have props / events.
+Missing types are set to Rust's Unit type – `()`.
 
 ```rust
+// imports ↑
+
 enum HomePageMsg {
     DoSomething,
 }
@@ -453,12 +457,13 @@ impl Component for HomePage {
 
 # `create` method (v. `0.19`)
 
-Every component has a create method. The element also has a context, which has the element's props and and `Scope`.
+Every component has a create method. The element also has a context, which has the element's props and `Scope`.
 
 ```rust
 // imports and message / prop definitions ↑
+
 impl Component for HomePage {
-    // message / prop types here
+    // message / prop types are here
 
     fn create(ctx: &Context<Self>) -> Self {
         HomePage // or you can use "Self" here as well
@@ -471,11 +476,13 @@ impl Component for HomePage {
 
 # `view` method (v. `0.19`)
 
-Every component has a view method. View takes the element's context - its scope and properties and renders the component to html.
+Every component has a view method. View takes the element's context (scope and properties) and renders everything to HTML.
 
 ```rust
+// imports and message / prop definitions ↑
+
 impl Component for AmazingYewComponent {
-    // message / prop types, create method here
+    // message / prop types & the create method are here
 
     fn view(&self, ctx: &Context<Self>) -> Html {
         html! {
@@ -489,10 +496,11 @@ impl Component for AmazingYewComponent {
 
 # `update` method (v. `0.19`)
 
-Consider this more advanced example. First, we have a component with an inner state (note: the imports are omitted):
-
+First, we have a component with an inner state:
 
 ```rust
+// imports ↑
+
 enum ComponentWithStateMsg {
     SetShowText(bool),
 }
@@ -511,7 +519,7 @@ impl Component for ComponentWithState {
         }
     }
 
-    // the rest of the implementation ↓
+    // Continued on the next slide...
 }
 ```
 
@@ -519,15 +527,17 @@ impl Component for ComponentWithState {
 
 # `update` method (v. `0.19`)
 
+We define the update method...
+
 ```rust
 impl Component for ComponentWithState {
-    // the implementation continues:
+    // ...continued from the previous slide.
 
     fn update(&mut self, ctx: &Context <Self>, msg: Self::Message) -> bool {
         match msg {
-            ComponentWithStateMsg::SetShowText(set) => {
-                if self.show_text != set {
-                    self.show_text = set;
+            ComponentWithStateMsg::SetShowText(is_set) => {
+                if self.show_text != is_set {
+                    self.show_text = is_set;
                     true // trigger re-rendering
                 } else {
                     false // nothing should change
@@ -535,6 +545,7 @@ impl Component for ComponentWithState {
             }
         }
     }
+    // Continued on the next slide...
 }
 ```
 
@@ -542,9 +553,11 @@ impl Component for ComponentWithState {
 
 # `update` method (v. `0.19`)
 
+...so that we can render the component based on a condition.
+
 ```rust
 impl Component for ComponentWithState {
-    // types, create and update previously implemented
+    // ...continued from the previous slide.
 
     fn view(&self, ctx: &Context <Self>) -> Html {
         let onclick = ctx.link().callback(|_| ComponentWithStateMsg::SetShowText(!self.show_text));
@@ -567,7 +580,7 @@ impl Component for ComponentWithState {
 
 ---
 
-# Optional component methods (v. `0.19`)
+### Optional component methods (v. `0.19`)
 
 - `rendered`: Perform side effects after the component is rendered.
 - `changed`: Whether the component needs to be re-rendered after its props change. Defaults to true.
