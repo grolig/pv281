@@ -192,17 +192,19 @@ int factorial(int n) {
 
 ---
 
-# Yew
+# <!--fit--> Yew
 
 ---
 
 # Yew
 
-Component-based Rust framework utilizing DOM, based on the principles of ELM. Utilizes Virtual DOM architecture.
+Component-based Rust framework utilizing DOM, based on the principles of ELM (a purely functional programming language).
 
-Better performance and less CPU intense than JS-based solutions. Slightly more RAM usage.
+Utilizes virtual DOM architecture.
 
-Docs are somewhat disappointing, showing slow and steady improvement over the years.
+Better performance and less CPU intense than JS-based solutions. Slightly higher RAM usage.
+
+**Documentation is currently somewhat disappointing**, but is slowly improving over the years.
 
 ---
 
@@ -246,7 +248,7 @@ Rel(reducer, store, "changes")
 
 # Before we start
 
-We need to add the WASM compilation target for Rust
+We need to add the WASM compilation target for Rust:
 
 ```sh
 rustup target add wasm32-unknown-unknown
@@ -256,7 +258,8 @@ rustup target add wasm32-unknown-unknown
 
 # Before we start
 
-We need to install [trunk](https://trunkrs.dev/) - tool for deployment and packaging Yew apps.
+We need to install [trunk](https://trunkrs.dev/),
+a tool for building, bundling and deploying WASM apps:
 
 ```sh
 cargo install trunk
@@ -264,19 +267,29 @@ cargo install trunk
 
 ---
 
-# Before we start - the reality of the framework
+# Before we start
+### The reality of the framework
 
-- Beta framework (current ver: `0.19`, bleeding edge ver: `next`)
-- Libraries pretty much non-existent
-- Breaking changes between versions
-- Non-existing tutorials for complex solutions, only examples
-- Documentation of advanced features is sometimes lacking
+- It's **a beta framework**
+(current version: `0.19`, bleeding edge version: `next`)
+
+- **Libraries** are pretty much **non-existent**
+
+- **Breaking changes** happen between versions
+
+- **Non-existent tutorials** for complex solutions, only examples
+
+- **Documentation** of advanced features **is sometimes lacking**
 
 ---
 
 # Before we start
 
-Some slides deal with `next` version. These slides will be marked.
+Some of the following slides use the `next` version of Yew,
+some the `0.19` version,
+and some target both.
+
+This will always be denoted somewhere on the slide.
 
 ---
 
