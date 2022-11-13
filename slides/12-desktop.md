@@ -20,31 +20,31 @@ paginate: true
 
 # Koncept okna
 
-![w:768 h:512](./assets/11-images/window.png)
+![w:768 h:512](./assets/12-images/window.png)
 
 ---
 
 # Header bar
 
-![w:768 h:256](./assets/11-images/header-bar.png)
+![w:768 h:256](./assets/12-images/header-bar.png)
 
 ---
 
 # Sidebar
 
-![w:768 h:512](./assets/11-images/side-bar.png)
+![w:768 h:512](./assets/12-images/side-bar.png)
 
 ---
 
 # Taby
 
-![w:768 h:256](./assets/11-images/tabs.png)
+![w:768 h:256](./assets/12-images/tabs.png)
 
 ---
 
 # Dialog
 
-![w:768 h:512](./assets/11-images/message-dialog.png)
+![w:768 h:512](./assets/12-images/message-dialog.png)
 
 ---
 
@@ -475,7 +475,7 @@ combobox box arrow {
 
 # Glade
 
-![w:512 h:512](./assets/11-images/glade.png)
+![w:512 h:512](./assets/12-images/glade.png)
 
 ---
 

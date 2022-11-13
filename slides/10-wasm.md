@@ -14,8 +14,8 @@ paginate: true
 
 1. Introduction to Webassembly
 2. Yew
-3. Stav aplikace
-4. Funkce prohlížeče
+3. Application state
+4. Browser API support in WASM
 
 ---
 
@@ -25,13 +25,55 @@ paginate: true
 
 # Webassembly
 
-- Binary instruction format for (virtual) state machine with a stack.
+- Binary instruction format for a (virtual) stack-based state machine.
 - Compliers (for lanuages such as C, C++, Rust) can target this intermediate language.
 - The instructions are then interpreted by the web browser. WASM can run alongside existing JavaScript.
+- Code runs in a sandboxed environment.
+- For more information, see [this github page](https://webassembly.github.io/spec/core/index.html).
 
 ---
 
-<!-- Imagine a nice picture -->
+
+<!-- _class: split -->
+
+### WASM
+
+<div class=left-column>
+
+#### C code
+
+```c
+int factorial(int n) {
+  if (n == 0)
+    return 1;
+  else
+    return n * factorial(n-1);
+}
+```
+
+</div>
+<div class=right-column>
+
+#### WASM text output
+
+```wat
+(func (param i64) (result i64)
+  local.get 0
+  i64.eqz
+  if (result i64)
+      i64.const 1
+  else
+      local.get 0
+      local.get 0
+      i64.const 1
+      i64.sub
+      call 0
+      i64.mul
+  end)
+
+```
+
+</div>
 
 ---
 
@@ -59,19 +101,25 @@ paginate: true
 
 # Existing WASM apps
 
-- Figma
-- CAD @TODO FIND THE CORRECT LINK
-- GAMES @TODO FIND SUCH GAMES
-- egui @TODO MORE INFO
-- A bunch of [hobby projects]() @TODO LINK
+- [Figma](https://www.figma.com/)
+- [AutoCAD Web](https://web.autocad.com/login)
+- [Google Earth](https://earth.google.com/web)
+- Some games and 3D visualizers
+
+---
+
+# Things you should know about
+
+- [Rust WASM book](): Understanding how the Rust code gets to the browser
+- [WebGL](https://www.khronos.org/webgl/): 3D rendering in browser
+- [wasmer](https://wasmer.io/) & [wasmtime](https://wasmtime.dev/): WASM runtimes (like `Node` or `Deno` for JS/TS projects)
+- [trunk](https://trunkrs.dev/): Rust-generated WASM packager for browsers 
+- [wasm-pack](https://rustwasm.github.io/wasm-pack/): Package Rust-generated WASM to run with JS code 
+- [equi](https://github.com/emilk/egui): Uses WebGL & WASM to render in browser
 
 ---
 
 # Apps using Canvas
-
----
-
-<!-- Image of such app -->
 
 ---
 
@@ -95,9 +143,6 @@ paginate: true
 
 # Apps using DOM (HTML, CSS)
 
----
-
-<!-- Image of such apps (yew based) -->
 
 ---
 
@@ -117,46 +162,37 @@ paginate: true
 - Limited options with the design - 2D / 3D apps and games are way harder to implement
 
 ---
-# Aplikace využívající DOM
 
-## Výhody
-- ověřený a známý způsob vývoje
-- lehký debugging
-- dostupné knihovny
-
-## Nevýhody
-- potenciálně horší rychlost
-- větší velikost aplikace
-- omezené možnosti (hry, 2D, 3D aplikace)
-
----
-
-# Aplikace postavená nad canvasem
-
-## Výhody
-- rychlost a responzivita
-- menší velikost aplikace
-- neomezené možnosti funkcí aplikace
-
-## Nevýhody
-- delší doba implementace
-- chybějící ekosystém
-- nutnost implementace základních prvků GUI
-- těžší debugging
+# Yew
 
 ---
 
 # Yew
 
-Rustový WASM framework inspirovaný ELMem. Základem jsou komponenty. 
+Component-based Rust framework utilizing DOM, based on the principles of ELM. Utilizes Virtual DOM architecture.
 
-Má menší spotřebu CPU a paměti oproti klasickým JS aplikacím, ale rychlostí je jen o něco lepší než React.
+Better performance and less CPU intense than JS-based solutions. Slightly more RAM usage.
 
-Dokumentace a množství příkladů ještě není dostatečné. Komunita zatím není příliš velká.
+Docs are somewhat disappointing, showing slow and steady improvement over the years.
 
 ---
 
-# Pricipy z ELMu
+# Performance
+
+![h:550px](./assets/10-images/wasm-benchmark.png)
+
+---
+
+# ELM principles
+
+- Functional paradigm
+- State machines
+- `ui = fn(state)`
+- Pure functions, less mistakes
+
+---
+
+# ELM principles
 
 <!-- _class: invert + plantuml -->
 
@@ -164,36 +200,78 @@ Dokumentace a množství příkladů ještě není dostatečné. Komunita zatím
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
 
-Component(store, "Store", "Drží aplikační stav")
-Component(view, "View", "Zobrazuje UI komponentu")
-Component(update, "Update", "Zpráva obsahující událost")
-Component(reducer, "Reducer", "Stavový automat, který vrací nový stav")
 
-Rel_L(store, view, "vykreslení")
-Rel_L(view, update, "událost/zaslání zprávy")
-Rel_L(update, reducer, "přijímá ke zpracování")
-Rel(reducer, store, "změní")
+Component(store, "Store", "Holds app state")
+Component(view, "View", "Renders the UI of the component")
+Component(update, "Update", "Sends message with the event")
+Component(reducer, "Reducer", "State automata, returns new state")
+
+Rel_L(store, view, "render")
+Rel_L(view, update, "(event) message passing")
+Rel_L(update, reducer, "processes")
+Rel(reducer, store, "changes")
 
 @enduml
 
-
 ---
 
-# Závislosti
+# Before we start
 
-```toml
-[package]
-name = "yew-app"
-version = "0.1.0"
-edition = "2018"
+We need to add the WASM compilation target for Rust
 
-[dependencies]
-yew = "0.18"
+```sh
+rustup target add wasm32-unknown-unknown
 ```
 
 ---
 
-# Zobrazení HTML
+# Before we start
+
+We need to install [trunk](https://trunkrs.dev/) - tool for deployment and packaging Yew apps.
+
+```sh
+cargo install trunk
+```
+
+---
+
+# Before we start - the reality of the framework
+
+- Beta framework (current ver: `0.19`)
+- Libraries pretty much non-existent
+- Breaking changes between versions
+- Non-existing tutorials for complex solutions
+- Documentation of advanced features is lacking
+
+---
+
+# Before we start
+
+Some slides deal with `next` version. These slides will be marked.
+
+---
+
+# Dependencies
+
+```toml
+# Current version! Some slides deal with "next" version.
+[dependencies]
+yew = "0.19"
+
+# If we want to use the browser's api, we can use web-sys crate.
+# There are also alternatives, we'll talk about them later. 
+[dependencies.web-sys]
+version = "0.3"
+# We need to enable all the web-sys features we want to use!
+features = [
+    "console",
+    # ...
+]
+```
+
+---
+
+# `html!` macro
 
 ```rust
 use yew::html;
@@ -202,15 +280,8 @@ html! {
     <div>
         <div data-key="abc"></div>
         <div class="parent">
-            <span class="child" value="anything"></span>
-            <label for="first-name">{ "First Name" }</label>
-            <input type="text" id="first-name" value="placeholder" />
-            <input type="checkbox" checked=true />
+            <span class="child"></span>
             <textarea value="write a story" />
-            <select name="status">
-                <option selected=true disabled=false value="">{ "Selected" }</option>
-                <option selected=false disabled=true value="">{ "Unselected" }</option>
-            </select>
         </div>
     </div>
 }
@@ -218,25 +289,12 @@ html! {
 
 ---
 
-# Fragmenty
+# `html!` macro - advanced
 
 ```rust
 use yew::html;
 
-html! {
-    <>
-        <div></div>
-        <p></p>
-    </>
-}
-```
-
----
-
-# Podmíněné vykreslení
-
-```rust
-use yew::html;
+let show_link = false;
 
 html! {
   <div>
@@ -255,14 +313,219 @@ html! {
 
 ---
 
-# Zpracování událostí
+# Fragments
+
+```rust
+use yew::html;
+
+html! {
+    <>
+        <div></div>
+        <p></p>
+    </>
+}
+```
+
+---
+
+# Components (v. `0.19`)
+
+Components are Rust structs. They resemble class-based components in React. Every component needs to implement trait `Component` from Yew crate:
+
+```rust
+// these imports are used also on the following slides
+use yew::{Component, Context, html, Html, Properties};
+
+pub struct AmazingYewComponent;
+
+impl Component for AmazingYewComponent {
+    // ... implementation goes here
+}
+```
+
+---
+
+
+## Messages and Properties (v. `0.19`)
+
+The component can have messages (events) that can happen within the component.
+
+```rust
+enum Msg {
+    DoSomething,
+}
+
+#[derive(PartialEq, Properties)]
+struct Props {
+    some_property: String, // String is used just as the demo
+}
+
+impl Component for AmazingYewComponent {
+    type Message = Msg;
+    type Properties = Props;
+    // the rest of the implementation ↓
+}
+```
+
+---
+
+
+## Messages and Properties (v. `0.19`)
+
+Some components don't have props / events. Missing types are set to Rust's Unit type - `()`
+
+```rust
+enum HomePageMsg {
+    DoSomething,
+}
+
+impl Component for HomePage {
+    type Message = HomePageMsg;
+    // there are no properties for this component
+    type Properties = ();
+    // the rest of the implementation ↓
+}
+```
+
+---
+
+
+# `create` method (v. `0.19`)
+
+Every component has a create method. The element also has a context, which has the element's props and and `Scope`.
+
+```rust
+// imports and message / prop definitions ↑
+impl Component for HomePage {
+    // message / prop types here
+
+    fn create(ctx: &Context<Self>) -> Self {
+        HomePage // or you can use "Self" here as well
+    }
+}
+```
+
+---
+
+
+# `view` method (v. `0.19`)
+
+Every component has a view method. View takes the element's context - its scope and properties and renders the component to html.
+
+```rust
+impl Component for AmazingYewComponent {
+    // message / prop types, create method here
+
+    fn view(&self, ctx: &Context<Self>) -> Html {
+        html! {
+            <p> { &ctx.props().some_property } </p>
+        }
+    }
+}
+```
+
+---
+
+# `update` method (v. `0.19`)
+
+Consider this more advanced example. First, we have a component with an inner state (note: the imports are omitted):
+
+
+```rust
+enum ComponentWithStateMsg {
+    SetShowText(bool),
+}
+
+pub struct ComponentWithState {
+    show_text: bool;
+}
+
+impl Component for ComponentWithState {
+    type Message = ComponentWithStateMsg;
+    type Properties = ();
+
+    fn create(ctx: &Context<Self>) -> Self {
+        Self {
+            show_text: false;
+        }
+    }
+
+    // the rest of the implementation ↓
+}
+```
+
+---
+
+# `update` method (v. `0.19`)
+
+```rust
+impl Component for ComponentWithState {
+    // the implementation continues:
+
+    fn update(&mut self, ctx: &Context <Self>, msg: Self::Message) -> bool {
+        match msg {
+            ComponentWithStateMsg::SetShowText(set) => {
+                if self.show_text != set {
+                    self.show_text = set;
+                    true // trigger re-rendering
+                } else {
+                    false // nothing should change
+                }
+            }
+        }
+    }
+}
+```
+
+---
+
+# `update` method (v. `0.19`)
+
+```rust
+impl Component for ComponentWithState {
+    // types, create and update previously implemented
+
+    fn view(&self, ctx: &Context <Self>) -> Html {
+        let onclick = ctx.link().callback(|_| ComponentWithStateMsg::SetShowText(!self.show_text));
+
+        if (show_text) {
+            html! {
+                <>
+                    <button {onclick}> { "Hide text" } </button>
+                    <p> { "Never gonna give you up" } </p>
+                </>
+            }
+        } else {
+            html! {
+                <button {onclick}> { "Show text" } </button>
+            }
+        }
+    }
+}
+```
+
+---
+
+# Other methods for components (v. `0.19`)
+
+- `rendered`: Used to perform side effects after the component is rendered.
+- `changed`: Whether the component needs to be re-rendered after its props change. Default implementation re-renders the component.
+- `destroy`: On component unmount, there might be a need to clean up after the component.
+
+By default, only the `create` and `view` method have to be implemented.
+
+---
+
+# Callbacks (v. `0.19`, similar in v. `next`)
+
+Allow communication within the component, as well as with agents, services and parent components. This is how to handle interaction between components.
 
 ```rust
 use yew::{html, Callback};
 
 html! {
-    <button onclick={Callback::from(|_| ())}>
-    //      ^^^^^^^ event listener name
+    <button onclick={Callback::from(|_| ())}> // instead of (), we could send some specific message
+    //      ^^^^^^^ event listener name;
         { "Click me!" }
     </button>
 };
@@ -270,56 +533,69 @@ html! {
 
 ---
 
-# Důležité události
+# Important HTML events
 
-- onclick
-- onchange
-- onkeypress
-- onblur
-- ondrag, ondragstart, ondragover, ondragleave, ondrop
+- `onclick`
+- `onchange`
+- `onkeypress`
+- `onblur`
+- `ondrag`, `ondragstart`, `ondragover`, `ondragleave`, `ondrop`, ...
 
 ---
 
-# Vytvoření komponenty
+# Function components (v. `next`)
+
+Check [this page](https://yew.rs/docs/next/concepts/function-components) for more in-depth explanation of preferred version to write Yew components in the `next` version.
 
 ```rust
-use yew::{html, Children, Component, Html, Properties};
+use yew::{function_component, html, Html};
 
-#[derive(Properties, Clone)]
-pub struct Props {
-    pub id: String,
-    pub children: Children,
+#[function_component]
+fn HelloFI() -> Html {
+    html! { <p> { "42 is a nice number" } </p> }
 }
 
-pub struct Container(Props);
-impl Component for Container {
-    type Properties = Props;
-
-    // ...
-
-    fn view(&self) -> Html {
-       html! {
-           <div id=self.0.id.clone()>
-               { self.0.children.clone() }
-           </div>
-       }
-    }
+// to use it, we can call the component name within the html! macro
+#[function_component]
+fn App() -> Html {
+    html! { <HelloFI /> }
 }
 ```
 
 ---
 
-# Použití komponenty
+# Function components (v. `next`)
+
+Function components can utilize [pre-defined hooks](https://yew.rs/docs/concepts/function-components/pre-defined-hooks) and also [custom hooks](//yew.rs/docs/concepts/function-components/custom-hooks). Usage is very similar to React hooks.
+
+```rust
+use yew::{function_component, html, Html, use_state};
+
+#[function_component]
+fn HelloFI() -> Html {
+    let counter = use_state(|| 42);
+    let onclick = {
+        let counter = counter.clone();
+        Callback::from(move |_| counter.set(*counter + 1))
+    }
+
+    html! { <button {onclick}> { format!("{} is a nice number!", *counter) } </button> }
+}
+```
+
+---
+
+# Using the component (v `0.19`)
 
 ```rust
 use yew::{html, props, Children};
-
-let props = yew::props!(Container::Properties {
+// create properties with props! macro
+let props = props!(Container::Properties {
     id: "container-2",
     children: Children::default(),
 });
 html! {
-    <Container with props>
+    <Container with props> // instead of manually passing props use "with" syntax
         // props.children will be overwritten with this
         <span>{ "I am a child, as you can see" }</span>
     </Container>
@@ -328,103 +604,59 @@ html! {
 
 ---
 
-# Atributy key a ref
-
-Key má podobnou funkcionalitu jako v Reactu. Je to unikátní identifikátor položky v seznamu. Umožňuje efektivnější vykreslení/překreslení.
-
-Ref využíváme pro manipulaci s elementem přímo na úrovni DOM. To se hodí v případech, kdy využíváme existující knihovnu v JS a chceme ovliňovat stejný element jak z WASM tak JS.
-
----
-
-# Callbacky
+# Using the component (v. `next`)
 
 ```rust
-pub enum Msg {
-    Increment,
-    Decrement,
+use yew::{Properties, function_component, Html, html};
+
+#[derive(Properties, PartialEq)]
+pub struct Props {
+    pub is_loading: bool,
 }
 
-pub struct Model {
-    link: ComponentLink<Self>,
-    value: i64,
-}
-
-impl Component for Model {
-    type Message = Msg;
-    type Properties = ();
-
-    fn create(_props: Self::Properties, link: ComponentLink<Self>) -> Self {
-        Self { link, value: 0 }
-    }
-
-    fn update(&mut self, msg: Self::Message) -> ShouldRender {
-        match msg {
-            Msg::Increment => {
-                self.value += 1;
-                ConsoleService::log("plus one");
-                true
-            }
-            Msg::Decrement => {
-                self.value -= 1;
-                ConsoleService::log("minus one");
-                true
-            }
-        }
+#[function_component]
+fn HelloWorld(props: &Props) -> Html {
+    if props.is_loading {
+        html! { "Loading" }
+    } else {
+        html! { "Hello world" }
     }
 }
 ```
 
 ---
 
-# Callbacky
+# Using the component - properties (v. `next`)
 
 ```rust
-pub enum Msg {
-    Increment,
-    Decrement,
-}
-
-pub struct Model {
-    link: ComponentLink<Self>,
-    value: i64,
-}
-
-impl Component for Model {
-    fn change(&mut self, _props: Self::Properties) -> ShouldRender {
-        false
-    }
-
-    fn view(&self) -> Html {
-        html! {
-            <div>
-                <nav class="menu">
-                    <button onclick=self.link.callback(|_| Msg::Increment)>
-                        { "Increment" }
-                    </button>
-                    <button onclick=self.link.callback(|_| Msg::Decrement)>
-                        { "Decrement" }
-                    </button>
-                    <button onclick=self.link.batch_callback(|_| vec![Msg::Increment, Msg::Increment])>
-                        { "Increment Twice" }
-                    </button>
-                </nav>
-                <p>
-                    <b>{ "Current value: " }</b>
-                    { self.value }
-                </p>
-                <p>
-                    <b>{ "Rendered at: " }</b>
-                    { String::from(Date::new_0().to_string()) }
-                </p>
-            </div>
+// we use the HelloWorld component fromt the last slide
+#[function_component]
+fn App() -> Html {
+    let hello_world_props = props! { // we can create props with props! macro
+        HelloWorld::Properties {
+            is_loading: true,
         }
+    };
+
+    html! {
+        <HelloWorld ..hello_world_props>
+            <p> { "Hello, I am a child of this component." } </p>
+        </HelloWorld>
     }
 }
 ```
+
+---
+
+# Attributes `key` and `ref`
+
+`key` works similarly to keys in React. It helps Yew determine which elements need to be re-rendered by uniquely describing the element (when rendering lists of elements / components). 
+
+`ref` is used to manipulate the DOM element directly. This is useful if we want to embed JS library to our WASM project and modify the DOM element from JS and WASM.
 
 --- 
 
-# Inicializace aplikace
+# App initialization (v. `0.19`)
 
 ```rust
 fn main() {
@@ -432,6 +664,10 @@ fn main() {
 }
 ```
 
+---
+
+
+# App initialization
 ---
 
 # Klienstký routing

@@ -18,7 +18,7 @@
   - `ui = fn(state)`
 - Yew framework
   - Reality (!) of Yew framework
-  - [Benchmarks](krausest.github.io)
+  - [Benchmarks](https://krausest.github.io/js-framework-benchmark/current.html)
   - Why should we care? Compared to typed React
 - Code
   - basics
@@ -35,3 +35,7 @@
   - Why trunk
 - Other web stuff
   - from the lecture last year
+
+See as well:
+
+- batch callbacks
