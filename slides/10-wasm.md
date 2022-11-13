@@ -862,16 +862,18 @@ For a more "modern" API (using hooks), use the `next` version. The function comp
 
 ---
 
-# From now, the discussed version is always `next`
+# From now on,
+# the version is always `next`
 
 ---
 
-# Data fetching, using console, local storage and other browser APIs
+# Using browser APIs
 
-We have two options for working with the browser API:
+When we want to use data fetching, the console or local storage,
+we have two main crate options for working with the browser API:
 
-- [`wasm-bindgen`](https://github.com/rustwasm/wasm-bindgen) crate: Used to interact with JS code.
-- [`gloo`](https://github.com/rustwasm/gloo) crate: collection of libraries that provide idiomatic wrappers for browser APIs.
+- [wasm-bindgen](https://github.com/rustwasm/wasm-bindgen): Used to **interact with JS code**.
+- [gloo](https://github.com/rustwasm/gloo): collection of libraries that provide idiomatic **wrappers for browser APIs**.
 
 Prefer using [`gloo`](https://github.com/rustwasm/gloo).
 
@@ -893,7 +895,8 @@ Prefer using [`gloo`](https://github.com/rustwasm/gloo).
 
 We will see how this goes!
 
-Task: Create an app that uses function components with **props**, **iterates through a list of items**, and **uses state** for **some kind of interactivity**.
+The task is:
+Create an app that uses function components with **props**, **iterates through a list of items**, and **uses state** for **some kind of interactivity**.
 
 We will briefly [follow this tutorial](https://yew.rs/docs/next/tutorial).
 
