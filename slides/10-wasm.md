@@ -300,7 +300,7 @@ This will always be denoted somewhere on the slide.
 
 ### Dependencies
 
-<div class=common-text>
+<div class=common-note>
 
 Note: a lot of required functionality will add other dependencies, such as `wasm-bindgen`, `gloo` or others.
 
@@ -629,7 +629,7 @@ Allow communication within the component, as well as with agents, services and p
 
 ### Callbacks
 
-<div class=common-text>
+<div class=common-note>
 
 Both versions also implement `emit` method that allows you to call them within the business logic.
 
