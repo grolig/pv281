@@ -20,17 +20,17 @@ paginate: true
 
 ---
 
-# <!--fit--> Introduction to Webassembly
+# <!--fit--> Introduction to WebAssembly
 
 ---
 
-# Webassembly
+# WebAssembly
 
-- Binary instruction format for a (virtual) stack-based state machine.
-- Compliers (for lanuages such as C, C++, Rust) can target this intermediate language.
-- The instructions are then interpreted by the web browser. WASM can run alongside existing JavaScript.
-- Code runs in a sandboxed environment.
-- For more information, see [this github page](https://webassembly.github.io/spec/core/index.html).
+It's a **binary instruction format** for a (virtual) stack-based state machine. Compilers (for languages such as C, C++ or Rust) can target this intermediate language.
+
+The **instructions are then interpreted** by the web browser. WASM can run alongside existing JavaScript. WASM code runs in a sandboxed environment.
+
+For more information, see [the WebAssembly specification](https://webassembly.github.io/spec/core/index.html).
 
 ---
 
@@ -80,23 +80,36 @@ int factorial(int n) {
 
 # WASM advantages
 
-- Speed (only executing instructions rather than interpreting them)
-- Smaller memory usage footprint\* than JS
-- Paralelism (we can write multithreaded code in the browser)
-- Memory Safety (only when )
-- Debugging
+- **Speed**
+(only executing instructions rather than interpreting them)
 
-\*only when used with non-GC languages
+- **Smaller memory usage footprint\* than JS**
+
+- **Parallelism**
+(we can write multithreaded code in the browser)
+
+- **Memory Safety**
+(when utilizing RAII)
+
+- **Debugging**
+
+\*when using non-GC languages, depends on the framework
 
 ---
 
-# WASM Disadvantages
+# WASM disadvantages
 
-- VM-based machines have to bundle the VM along with the app
-- The resulting WASM binary file can grow very large (impacts network performance)
-- Still cannot do everything JS can, in some cases the reliance on JS code will be inevitable
-- The immature ecosystem
-- Development time & cost (compilation, using a more strict language, also directly ties to previous point)
+- VM-based machines **have to bundle the VM** along with the app
+
+- The resulting **WASM binary file can grow very large**
+(which impacts network performance)
+
+- Still **cannot do everything JS can**, reliance on JS code may be inevitable
+
+- An **immature ecosystem**
+
+- **Development time & cost**
+(compilation, language strictness & ties to the previous point)
 
 ---
 
@@ -111,9 +124,10 @@ int factorial(int n) {
 
 # Things you should know about
 
-- [Rust WASM book](): Understanding how the Rust code gets to the browser
+- [Rust WASM book](https://rustwasm.github.io/docs/book/): Understanding how the Rust code gets to the browser
 - [WebGL](https://www.khronos.org/webgl/): 3D rendering in browser
-- [wasmer](https://wasmer.io/) & [wasmtime](https://wasmtime.dev/): WASM runtimes (like `Node` or `Deno` for JS/TS projects)
+- [wasmer](https://wasmer.io/) & [wasmtime](https://wasmtime.dev/): WASM runtimes
+(like `Node` or `Deno` for JS/TS projects)
 - [trunk](https://trunkrs.dev/): Rust-generated WASM packager for browsers 
 - [wasm-pack](https://rustwasm.github.io/wasm-pack/): Package Rust-generated WASM to run with JS code 
 - [equi](https://github.com/emilk/egui): Uses WebGL & WASM to render in browser
