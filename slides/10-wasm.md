@@ -862,11 +862,6 @@ For a more "modern" API (using hooks), use the `next` version. The function comp
 
 ---
 
-# From now on,
-# the version is always `next`
-
----
-
 # Using browser APIs
 
 When we want to use data fetching, the console or local storage,
