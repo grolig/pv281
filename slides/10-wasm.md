@@ -134,25 +134,33 @@ int factorial(int n) {
 
 ---
 
-# Apps using Canvas
+# <!--fit--> WASM apps using Canvas
 
 ---
 
-# Advantages of canvas-based apps
+### Advantages of canvas-based apps
 
-- Complete control over the look and feel of components
-- Smooth user experience (when done right) and absolute control over responsivity
-- Smaller app size
-- Unlimited control over what is rendered - allows easy development of 2D / 3D apps
+- Complete **control over the look and feel** of components
+
+- **Smooth user experience** (when done right)
+
+- Absolute **control over responsiveness**
+
+- Smaller **app size**
+
+- Unlimited **control over what is rendered** – allows easy development of 2D / 3D apps
 
 ---
 
-# Disadvantages of canvas-based WASM apps
+### Disadvantages of canvas-based apps
 
-- Often implementation from scratch
-- When using a library, it's very hard to modify elements
-- The ecosystem is small
-- The debugging is hard
+- Often **implementation from scratch**
+
+- When using a library, it's very **hard to modify elements**
+
+- **Small ecosystem**
+
+- **Difficult debugging**
 
 ---
 
