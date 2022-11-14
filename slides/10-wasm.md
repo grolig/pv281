@@ -28,7 +28,7 @@ paginate: true
 
 It's a **binary instruction format** for a (virtual) stack-based state machine. Compilers (for languages such as C, C++ or Rust) can target this intermediate language.
 
-The **instructions are then interpreted** by the web browser. WASM can run alongside existing JavaScript. WASM code runs in a sandboxed environment.
+The **instructions are then executed** by the web browser. WASM can run alongside existing JavaScript. WASM code runs in a sandboxed environment.
 
 For more information, see [the WebAssembly specification](https://webassembly.github.io/spec/core/index.html).
 
@@ -88,12 +88,12 @@ int factorial(int n) {
 - **Parallelism**
 (we can write multithreaded code in the browser)
 
-- **Memory Safety**
-(when utilizing RAII)
+- **Memory Safety & smaller overhead**
+(when utilizing RAII and non-GC languages)
 
 - **Debugging**
 
-\*when using non-GC languages, depends on the framework
+\*when using non-GC languages, also depends on the framework
 
 ---
 
@@ -747,17 +747,14 @@ fn HelloWorld(props: &Props) -> Html {
 
 # Using the component (v. `next`)
 
-Then, use the component somewhere else. Also shows how `properties!` macro can create properties
+Then, use the component somewhere else. Also shows how `properties!` macro can create properties.
 
 ```rust
 // We use the HelloWorld component from the last slide.
-
 #[function_component]
 fn App() -> Html {
     let hello_world_props = props! { // We can create props with props! macro.
-        HelloWorld::Properties {
-            is_loading: true,
-        }
+        HelloWorld::Properties{ is_loading: true }
     };
 
     html! {
@@ -864,13 +861,13 @@ For a more "modern" API (using hooks), use the `next` version. The function comp
 
 # Using browser APIs
 
-When we want to use data fetching, the console or local storage,
-we have two main crate options for working with the browser API:
+When we want to use data fetching, the console, or local storage,
+we have two main `crate` options for working with the browser APIs:
 
 - [wasm-bindgen](https://github.com/rustwasm/wasm-bindgen): Used to **interact with JS code**.
 - [gloo](https://github.com/rustwasm/gloo): collection of libraries that provide idiomatic **wrappers for browser APIs**.
 
-Prefer using [`gloo`](https://github.com/rustwasm/gloo).
+Prefer using [`gloo`](https://github.com/rustwasm/gloo) whenever you can.
 
 ---
 
