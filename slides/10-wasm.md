@@ -322,13 +322,17 @@ yew = "0.19"
 
 ```toml
 [dependencies]
-# note: this needs to be one line that starts
-# with "{" and ends with "}" when you put this
-# in Cargo.toml
 yew = { 
     git = "https://github.com/yewstack/yew/",
     features = ["csr"]
 }
+
+# Note the expanded `{ ... }` syntax has to be one line,
+# as per TOML specification. Alternatively, you can use:
+
+[dependencies.yew]
+git = "https://github.com/yewstack/yew/"
+features = ["csr"]
 ```
 
 </div>
