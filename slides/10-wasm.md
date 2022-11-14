@@ -198,9 +198,9 @@ int factorial(int n) {
 
 # Yew
 
-Component-based Rust framework utilizing DOM, based on the principles of ELM (a purely functional programming language).
+**Component-based Rust framework** utilizing DOM, based on the principles of ELM (a purely functional programming language).
 
-Utilizes virtual DOM architecture.
+Utilizes **virtual DOM** architecture.
 
 Better performance and less CPU intense than JS-based solutions. Slightly higher RAM usage.
 
