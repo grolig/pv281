@@ -3,7 +3,12 @@ node_modules/
 # IDE files
 .idea
 
-# MARP target directory
+# MARP / Trunk target directory
 **/dist
+
+# Rust code target
+**/target
+# Cargo lock
+Cargo.lock
 
 **/example-reservation-system
