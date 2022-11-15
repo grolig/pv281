@@ -377,12 +377,13 @@ section.split {
   padding-top: 0;
   display: grid;
   grid-template-columns: 45% 45%;
-  grid-template-rows: 3em min-content min-content auto;
+  grid-template-rows: 3em min-content min-content auto min-content;
   grid-template-areas:
         "slideheading slideheading"
         "commontext commontext"
         "columnheading columnheading"
-        "leftpanel rightpanel";
+        "leftpanel rightpanel"
+        "commonnote commonnote";
   column-gap: 1em;
   align-items: center;
 }
@@ -405,6 +406,9 @@ section.split .left-column {
 section.split .right-column {
   grid-area: rightpanel;
 }
+section.split .common-note {
+   grid-area: commonnote;
+ }
 
 /* For debugging purposes only */
 section.split .left-column,

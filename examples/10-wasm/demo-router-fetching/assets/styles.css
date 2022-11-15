@@ -1,0 +1,121 @@
+:root {
+    --bg: #111111;
+    --font: #EFF5F5;
+    --header-bg: #EB6440;
+    --header-font: var(--font);
+    --container-color: #497174;
+    --card-color: #D6E4E5;
+    --card-font: var(--bg);
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+    font-family: 'Roboto', sans-serif;
+}
+
+.heading {
+    padding: 0;
+    margin: 0;
+}
+
+.image {
+    width: 100%;
+}
+
+.main-window {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgb(17,17,17);
+    background: linear-gradient(60deg, rgba(17,17,17,1) 9%, rgba(73,113,116,1) 100%);
+    color: var(--font);
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    padding: 2rem;
+    font-size: 3rem;
+    background: var(--header-bg);
+    color: var(--header-font);
+    width: 100%;
+}
+
+.header__logo-container {
+    width: 5rem;
+}
+
+.container {
+    width: inherit;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden auto;
+}
+
+.card-container {
+    max-width: min(100%, 60rem);
+    padding: 2rem 4rem;
+    background-color: var(--container-color);
+    display: flex;
+    gap: 2rem;
+    flex-direction: column;
+    align-items: center;
+    flex-grow: 1;
+}
+
+.card {
+    align-items: center;
+    border-radius: 2rem;
+    background-color: var(--card-color);
+    padding: 2rem;
+    width: 30rem;
+    color: var(--card-font);
+    display: grid;
+    gap: 0rem 1rem;
+    grid-template: 
+        [row1-start] "card-image card-content" [row1-end]
+        / 10rem auto;
+}
+
+.card__image-container {
+    grid-area: card-image;
+    width: 10rem;
+}
+
+.card__content {
+    display: flex;
+    flex-direction: column;
+    grid-area: card-content;
+    justify-content: center;
+}
+
+.card__title {
+    font-weight: 900;
+    font-size: 2rem;
+}
+
+.card__description {
+    font-weight: 100;
+    font-size: 1rem;
+}
+
+.card__button {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    background-color: var(--bg);
+    color: var(--font);
+    font-weight: 400;
+    width: fit-content;
+}
+
+.clickable:hover {
+    cursor: pointer;
+}

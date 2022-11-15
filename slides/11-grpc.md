@@ -29,19 +29,19 @@ Zprávy jsou předávány v binární serializované podobě. Kontrakt (struktur
 
 # System architecture
 
-![w:512 h:512](./assets/10-images/grpc.svg)
+![w:512 h:512](./assets/11-images/grpc.svg)
 
 ---
 
 # Why gRPC vs REST?
 
-![w:1024 h:512](./assets/10-images/grpc-vs-rest.png)
+![w:1024 h:512](./assets/11-images/grpc-vs-rest.png)
 
 ---
 
 # Why Rust for gRPC?
 
-![w:1024 h:512](./assets/10-images/grpc-fw-benchmark.png)
+![w:1024 h:512](./assets/11-images/grpc-fw-benchmark.png)
 
 ---
 

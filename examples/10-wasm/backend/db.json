@@ -1,0 +1,22 @@
+{
+  "cards": [
+    {
+      "id": 0,
+      "description": "Sample description from server",
+      "image_url": "https://cdn.thenewstack.io/media/2021/07/bde17530-wasm.png",
+      "title": "The WASM card from the server"
+    },
+    {
+      "id": 1,
+      "description": "He do be wildin'.",
+      "image_url": "https://media.tenor.com/ednxg8HDD0YAAAAd/habibi-wildin.gif",
+      "title": "Habibi wildin' on the server"
+    },
+    {
+      "id": 2,
+      "description": "Forever incel",
+      "image_url": "https://i.kym-cdn.com/photos/images/original/001/519/511/9c8.jpg",
+      "title": "When she ghosts you after you show her your RAM stick"
+    }
+  ]
+}
