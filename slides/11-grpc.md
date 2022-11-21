@@ -45,6 +45,16 @@ Zprávy jsou předávány v binární serializované podobě. Kontrakt (struktur
 
 ---
 
+# Scénáře použití
+
+- Synchronní komunikace mezi backendovými službami, kdy je pro vyžadována okamžitá odezva.
+- Polyglotní prostředí, které musí podporovat různé programovací jazyky.
+- Komunikace s nízkou latencí a vysokou propustností, kde je výkon kritický.
+- Komunikace point-to-point v reálném čase - gRPC dokáže předávat zprávy v reálném čase bez dotazování a má podporu obousměrného streamování.
+- Prostředí se pomalou sítí - binární zprávy gRPC jsou vždy menší než ekvivalentní textové zprávy JSON.
+
+---
+
 # Message
 
 Data jsou předávána jako message. Položkám říkáme field.
@@ -234,21 +244,31 @@ const (
 
 # Závislosti
 
+Nejprve nainstalovat překladač protobuf souborů:
+Windows: `https://github.com/protocolbuffers/protobuf/releases/tag/v21.9`
+MacOs: `brew install protobuf`
+Linux: `sudo apt install -y protobuf-compiler libprotobuf-dev`
+
+---
+
+# Závislosti
+
 ```rust
 [dependencies]
-tonic = "0.4"
-prost = "0.7"
+tonic = "0.8"
+prost = "0.11"
 futures-core = "0.3"
 futures-util = "0.3"
 tokio = { version = "1.0", features = ["rt-multi-thread", "macros", "sync", "time"] }
+tokio-stream = "0.1"
 
-async-stream = "0.2"
+async-stream = "0.3"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 rand = "0.7"
 
 [build-dependencies]
-tonic-build = "0.4"
+tonic-build = "0.8"
 ```
 
 ---
@@ -261,6 +281,15 @@ fn main() {
         .unwrap_or_else(|e| panic!("Failed to compile protos {:?}", e));
 }
 ```
+
+---
+
+# Build script
+
+Pozn. pro rust-analyzer i Jetbrains uživatele: je nutné zadat parametry, aby pracovali s vygenerovaným kódem.
+
+rust-analyzer: `"rust-analyzer.cargo.buildScripts.enable": true`
+jetbrains: `org.rust.cargo.evaluate.build.scripts`
 
 ---
 
@@ -353,6 +382,338 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("RESPONSE={:?}", response);
 
     Ok(())
+}
+```
+
+---
+
+# Healthcheck
+
+`tonic_health = "0.7"`
+
+---
+
+# Healthcheck implementace
+
+```rust
+
+use tonic::{transport::Server, Request, Response, Status};
+use tonic_health::server::HealthReporter;
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let (mut health_reporter, health_service) = tonic_health::server::health_reporter();
+    health_reporter
+        .set_serving::<GreeterServer<MyGreeter>>()
+        .await;
+
+    tokio::spawn(twiddle_service_status(health_reporter.clone())); // twiddle status kvuli jen pro testovani
+
+    let addr = "[::1]:50051".parse().unwrap();
+    let greeter = MyGreeter::default();
+
+    println!("HealthServer listening on {}", addr);
+
+    Server::builder()
+        .add_service(health_service)
+        .add_service(GreeterServer::new(greeter)) add your service
+        .serve(addr)
+        .await?;
+
+    Ok(())
+}
+
+```
+
+---
+
+# Healthcheck
+
+```rust
+/// This function (somewhat improbably) flips the status of a service every second, in order
+/// that the effect of `tonic_health::HealthReporter::watch` can be easily observed.
+async fn twiddle_service_status(mut reporter: HealthReporter) {
+    let mut iter = 0u64;
+    loop {
+        iter += 1;
+        tokio::time::sleep(Duration::from_secs(1)).await;
+
+        if iter % 2 == 0 {
+            reporter.set_serving::<GreeterServer<MyGreeter>>().await;
+        } else {
+            reporter.set_not_serving::<GreeterServer<MyGreeter>>().await;
+        };
+    }
+}
+```
+
+---
+
+# Streaming
+
+```proto
+ syntax = "proto3";
+
+ package grpc.examples.echo;
+
+ // EchoRequest is the request for echo.
+ message EchoRequest {
+   string message = 1;
+ }
+
+ // EchoResponse is the response for echo.
+ message EchoResponse {
+   string message = 1;
+ }
+
+ // Echo is the echo service.
+ service Echo {
+   rpc UnaryEcho(EchoRequest) returns (EchoResponse) {}
+   rpc ServerStreamingEcho(EchoRequest) returns (stream EchoResponse) {}
+   rpc ClientStreamingEcho(stream EchoRequest) returns (EchoResponse) {}
+   rpc BidirectionalStreamingEcho(stream EchoRequest) returns (stream EchoResponse) {}
+ }
+```
+
+---
+
+# build.rs
+
+```rust
+use std::{env, path::PathBuf};
+
+fn main() {
+    tonic_build::compile_protos("proto/echo/echo.proto").unwrap();
+
+    tonic_build::configure()
+        .server_mod_attribute("attrs", "#[cfg(feature = \"server\")]")
+        .server_attribute("Echo", "#[derive(PartialEq)]")
+        .client_mod_attribute("attrs", "#[cfg(feature = \"client\")]")
+        .client_attribute("Echo", "#[derive(PartialEq)]")
+        .compile(&["proto/attrs/attrs.proto"], &["proto"])
+        .unwrap();
+}
+```
+
+---
+
+# streaming klient main.rs
+
+```rust
+pub mod pb {
+    tonic::include_proto!("grpc.examples.echo");
+}
+
+use futures::stream::Stream;
+use std::time::Duration;
+use tokio_stream::StreamExt;
+use tonic::transport::Channel;
+
+use pb::{echo_client::EchoClient, EchoRequest};
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let mut client = EchoClient::connect("http://[::1]:50051").await.unwrap();
+
+    println!("Streaming echo:");
+    streaming_echo(&mut client, 5).await;
+
+    Ok(())
+}
+```
+
+---
+
+# streaming klient main.rs
+
+```rust
+async fn streaming_echo(client: &mut EchoClient<Channel>, num: usize) {
+    let stream = client
+        .server_streaming_echo(EchoRequest {
+            message: "foo".into(),
+        })
+        .await
+        .unwrap()
+        .into_inner();
+
+    // stream is infinite - take just 5 elements and then disconnect
+    let mut stream = stream.take(num);
+    while let Some(item) = stream.next().await {
+        println!("\treceived: {}", item.unwrap().message);
+    }
+    // stream is droped here and the disconnect info is send to server
+}
+```
+
+---
+
+# streaming server main.rs
+
+```rust
+
+pub mod pb {
+    tonic::include_proto!("grpc.examples.echo");
+}
+
+use futures::Stream;
+use std::{error::Error, io::ErrorKind, net::ToSocketAddrs, pin::Pin, time::Duration};
+use tokio::sync::mpsc;
+use tokio_stream::{wrappers::ReceiverStream, StreamExt};
+use tonic::{transport::Server, Request, Response, Status, Streaming};
+
+use pb::{EchoRequest, EchoResponse};
+
+type EchoResult<T> = Result<Response<T>, Status>;
+type ResponseStream = Pin<Box<dyn Stream<Item = Result<EchoResponse, Status>> + Send>>;
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let server = EchoServer {};
+    Server::builder()
+        .add_service(pb::echo_server::EchoServer::new(server))
+        .serve("[::1]:50051".to_socket_addrs().unwrap().next().unwrap())
+        .await
+        .unwrap();
+
+    Ok(())
+}
+```
+
+---
+
+# streaming server - server streaming
+
+```rust
+#[derive(Debug)]
+pub struct EchoServer {}
+
+#[tonic::async_trait]
+impl pb::echo_server::Echo for EchoServer {
+    type ServerStreamingEchoStream = ResponseStream;
+
+    async fn server_streaming_echo(
+        &self,
+        req: Request<EchoRequest>,
+    ) -> EchoResult<Self::ServerStreamingEchoStream> {
+        println!("EchoServer::server_streaming_echo");
+        println!("\tclient connected from: {:?}", req.remote_addr());
+
+        // creating infinite stream with requested message
+        let repeat = std::iter::repeat(EchoResponse {
+            message: req.into_inner().message,
+        });
+        let mut stream = Box::pin(tokio_stream::iter(repeat).throttle(Duration::from_millis(200)));
+
+        // spawn and channel are required if you want handle "disconnect" functionality
+        // the `out_stream` will not be polled after client disconnect
+        let (tx, rx) = mpsc::channel(128);
+        tokio::spawn(async move {
+            while let Some(item) = stream.next().await {
+                match tx.send(Result::<_, Status>::Ok(item)).await {
+                    Ok(_) => {
+                        // item (server response) was queued to be send to client
+                    }
+                    Err(_item) => {
+                        // output_stream was build from rx and both are dropped
+                        break;
+                    }
+                }
+            }
+            println!("\tclient disconnected");
+        });
+
+        let output_stream = ReceiverStream::new(rx);
+        Ok(Response::new(
+            Box::pin(output_stream) as Self::ServerStreamingEchoStream
+        ))
+    }
+}
+```
+
+---
+
+# streaming server - client streaming
+
+```rust
+#[derive(Debug)]
+pub struct EchoServer {}
+
+#[tonic::async_trait]
+impl pb::echo_server::Echo for EchoServer {
+    type ServerStreamingEchoStream = ResponseStream;
+
+    async fn client_streaming_echo(
+        &self,
+        req: Request<Streaming<EchoRequest>>,
+    ) -> EchoResult<EchoResponse> {
+
+        let mut in_stream = req.into_inner();
+
+        // this spawn here is required if you want to handle connection error.
+        tokio::spawn(async move {
+            while let Some(result) = in_stream.next().await {
+                // ...
+            }
+        }
+    }
+}
+```
+
+---
+
+# streaming server - bidirectional streaming
+
+```rust
+#[tonic::async_trait]
+impl pb::echo_server::Echo for EchoServer {
+    type ServerStreamingEchoStream = ResponseStream;
+
+    async fn bidirectional_streaming_echo(
+        &self,
+        req: Request<Streaming<EchoRequest>>,
+    ) -> EchoResult<Self::BidirectionalStreamingEchoStream> {
+        println!("EchoServer::bidirectional_streaming_echo");
+
+        let mut in_stream = req.into_inner();
+        let (tx, rx) = mpsc::channel(128);
+
+        // If we just map `in_stream` and write it back as `out_stream` the `out_stream`
+        // will be drooped when connection error occurs and error will never be propagated
+        // to mapped version of `in_stream`.
+        tokio::spawn(async move {
+            while let Some(result) = in_stream.next().await {
+                match result {
+                    Ok(v) => tx
+                        .send(Ok(EchoResponse { message: v.message }))
+                        .await
+                        .expect("working rx"),
+                    Err(err) => {
+                        if let Some(io_err) = match_for_io_error(&err) {
+                            if io_err.kind() == ErrorKind::BrokenPipe {
+                                // here you can handle special case when client
+                                // disconnected in unexpected way
+                                eprintln!("\tclient disconnected: broken pipe");
+                                break;
+                            }
+                        }
+
+                        match tx.send(Err(err)).await {
+                            Ok(_) => (),
+                            Err(_err) => break, // response was droped
+                        }
+                    }
+                }
+            }
+            println!("\tstream ended");
+        });
+
+        // echo just write the same data that was received
+        let out_stream = ReceiverStream::new(rx);
+
+        Ok(Response::new(
+            Box::pin(out_stream) as Self::BidirectionalStreamingEchoStream
+        ))
+    }
 }
 ```
 
@@ -484,6 +845,16 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 ---
 
 # REST gateway před GRPC
+
+![w:1024 h:512](./assets/11-images/grpc-implementation.png)
+
+---
+
+# Performance optimalizace
+
+- pro udržení spojení použijte keepalive ping
+- pro větší flow využijte streaming
+
 
 ---
 
