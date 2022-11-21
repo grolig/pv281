@@ -12,3 +12,4 @@ node_modules/
 Cargo.lock
 
 **/example-reservation-system
+**/.DS_Store
