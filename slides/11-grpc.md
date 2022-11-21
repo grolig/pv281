@@ -468,17 +468,17 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 $ cargo run --bin server
 
 Got a request: Request {
-metadata: MetadataMap {
-headers: {
-"te": "trailers",
-"content-type": "application/grpc",
-"user-agent": "tonic/0.8.2"
-}
-},
-message: HelloRequest {
-name: "Tonic"
-},
-extensions: Extensions
+    metadata: MetadataMap {
+        headers: {
+            "te": "trailers",
+            "content-type": "application/grpc",
+            "user-agent": "tonic/0.8.2"
+        }
+    },
+    message: HelloRequest {
+        name: "Tonic"
+    },
+    extensions: Extensions
 }
 
 ```
@@ -492,17 +492,17 @@ extensions: Extensions
 $ cargo run --bin client
 
 Got a response: Response {
-metadata: MetadataMap {
-headers: {
-"content-type": "application/grpc",
-"date": "Mon, 21 Nov 2022 18:08:58 GMT",
-"grpc-status": "0"
-}
-},
-message: HelloReply {
-message: "Hello Tonic!"
-},
-extensions: Extensions
+    metadata: MetadataMap {
+        headers: {
+            "content-type": "application/grpc",
+            "date": "Mon, 21 Nov 2022 18:08:58 GMT",
+            "grpc-status": "0"
+        }
+    },
+    message: HelloReply {
+        message: "Hello Tonic!"
+    },
+    extensions: Extensions
 }
 
 Process finished with exit code 0
