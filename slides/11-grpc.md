@@ -512,7 +512,7 @@ Process finished with exit code 0
 
 ---
 
-# <!--fit--> Tokio: Healthcheck
+# <!--fit--> Tonic: Healthcheck
 
 `tonic_health = "0.7"`
 
@@ -570,7 +570,7 @@ async fn twiddle_service_status(mut reporter: HealthReporter) {
 
 ---
 
-# <!--fit--> Tokio: Streaming
+# <!--fit--> Tonic: Streaming
 
 ---
 
