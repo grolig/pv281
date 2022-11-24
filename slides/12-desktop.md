@@ -20,31 +20,31 @@ paginate: true
 
 # Koncept okna
 
-![w:768 h:512](./assets/12-images/window.png)
+![h:512](./assets/12-images/window.png)
 
 ---
 
 # Header bar
 
-![w:768 h:256](./assets/12-images/header-bar.png)
+![h:200](./assets/12-images/header-bar.png)
 
 ---
 
 # Sidebar
 
-![w:768 h:512](./assets/12-images/side-bar.png)
+![h:512](./assets/12-images/side-bar.png)
 
 ---
 
 # Taby
 
-![w:768 h:256](./assets/12-images/tabs.png)
+![h:256](./assets/12-images/tabs.png)
 
 ---
 
 # Dialog
 
-![w:768 h:512](./assets/12-images/message-dialog.png)
+![h:256](./assets/12-images/message-dialog.png)
 
 ---
 
@@ -54,7 +54,9 @@ paginate: true
 
 # GTK 4
 
-GTK je multiplatformní knihovna pro tvorbu UI. Je psaná v C, takže se vyžívá bindingů pro Rust.
+GTK je multiplatformní knihovna pro tvorbu UI.
+
+Je psaná v C, takže se vyžívá bindingů pro Rust.
 
 ---
 
