@@ -63,7 +63,7 @@ Je psaná v C, takže se vyžívá bindingů pro Rust.
 # Závislosti
 
 ```toml
-gtk = { version = "0.3.1", package = "gtk4" }
+gtk = { version = "0.5.2", package = "gtk4" }
 ```
 
 ---
@@ -505,12 +505,30 @@ Kromě Node musíte nainstalovat webview2 pokud už není v systému předinstal
 # Vytvoření projektu
 
 ```sh
-npm x create-tauri-app
+corepack enable
 
-cargo tauri init # alternativne `npm run tauri init`
+pnpm create tauri-app
+
+# cargo install tauri-cli
+cargo tauri init # alternativne `pnpm tauri init`
 
 cargo tauri dev
 ```
+
+---
+
+# Struktura projektu
+
+src-tauri
+/ Cargo.toml
+/ tauri.conf.json
+/ src/main.rs
+
+---
+
+# Spuštění aplikace
+
+```pnpm tauri dev```
 
 ---
 
@@ -535,13 +553,29 @@ fn main() {
 
 # Zavolání z JS aplikace
 
+### `tauri.conf.json`
+```json
+{
+  "build": {
+    "beforeBuildCommand": "",
+    "beforeDevCommand": "",
+    "devPath": "../ui",
+    "distDir": "../ui",
+    "withGlobalTauri": true
+  },
+```
+
+---
+
+# Zavolání z JS aplikace
+
 ```javascript
 import { invoke } from '@tauri-apps/api/tauri'
 // With the Tauri global script, enabled when `tauri.conf.json > build > withGlobalTauri` is set to true:
 const invoke = window.__TAURI__.invoke
 
 // Invoke the command
-invoke('my_custom_command')
+invoke('my_custom_command').then((response) => console.log(response))
 ```
 
 ---
@@ -725,6 +759,208 @@ fn main() {
     .expect("failed to run app");
 }
 ```
+
+---
+
+# Vytvoření menu
+
+```rust
+use tauri::{CustomMenuItem, Menu, MenuItem, Submenu};
+
+let quit = CustomMenuItem::new("quit".to_string(), "Quit");
+let close = CustomMenuItem::new("close".to_string(), "Close");
+let submenu = Submenu::new("File", Menu::new().add_item(quit).add_item(close));
+let menu = Menu::new()
+  .add_native_item(MenuItem::Copy)
+  .add_item(CustomMenuItem::new("hide", "Hide"))
+  .add_submenu(submenu);
+
+fn main() {
+  let menu = Menu::new(); // configure the menu
+  tauri::Builder::default()
+    .menu(menu)
+    .run(tauri::generate_context!())
+    .expect("error while running tauri application");
+}
+```
+
+---
+
+# Události z menu
+
+```rust
+use tauri::{CustomMenuItem, Menu, MenuItem};
+
+fn main() {
+  let menu = Menu::new(); // configure the menu
+  tauri::Builder::default()
+    .menu(menu)
+    .on_menu_event(|event| {
+      match event.menu_item_id() {
+        "quit" => {
+          std::process::exit(0);
+        }
+        "close" => {
+          event.window().close().unwrap();
+        }
+        _ => {}
+      }
+    })
+    .run(tauri::generate_context!())
+    .expect("error while running tauri application");
+}
+```
+
+---
+
+# System tray
+
+úprava v configu
+
+```json
+{
+  "tauri": {
+    "systemTray": {
+      "iconPath": "icons/icon.png",
+      "iconAsTemplate": true // template image pro macOs
+    }
+  }
+}
+```
+
+---
+
+# Vytvoření system tray
+
+```rust
+use tauri::{CustomMenuItem, SystemTray, SystemTrayMenu};
+
+fn main() {
+  let quit = CustomMenuItem::new("quit".to_string(), "Quit");
+  let hide = CustomMenuItem::new("hide".to_string(), "Hide");
+
+  let tray_menu = SystemTrayMenu::new()
+    .add_item(quit)
+    .add_native_item(SystemTrayMenuItem::Separator)
+    .add_item(hide);
+
+  let system_tray = SystemTray::new()
+    .with_menu(tray_menu);
+
+  tauri::Builder::default()
+    .system_tray(system_tray)
+    .run(tauri::generate_context!())
+    .expect("error while running tauri application");
+}
+```
+
+---
+
+# Události ze system tray
+
+```rust
+use tauri::{CustomMenuItem, SystemTray, SystemTrayMenu, SystemTrayEvent};
+use tauri::Manager;
+
+fn main() {
+  let tray_menu = SystemTrayMenu::new(); // insert the menu items here
+  tauri::Builder::default()
+    .system_tray(SystemTray::new().with_menu(tray_menu))
+    .on_system_tray_event(|app, event| match event {
+      SystemTrayEvent::MenuItemClick { id, .. } => {
+        match id.as_str() {
+          "quit" => {
+            std::process::exit(0);
+          }
+          "hide" => {
+            let window = app.get_window("main").unwrap();
+            window.hide().unwrap();
+          }
+          _ => {}
+        }
+      }
+      _ => {}
+    })
+    .run(tauri::generate_context!())
+    .expect("error while running tauri application");
+}
+```
+
+---
+
+# Splashscreen
+
+vytovříme `splashscreen.html` v `distDir` a přidáme záznam do configu.
+
+```rust
+"windows": [
+  {
+    "title": "Tauri App",
+    "width": 800,
+    "height": 600,
+    "resizable": true,
+    "fullscreen": false,
+    "visible": false // Hide the main window by default
+  },
+  // Splashscreen
+  {
+    "width": 400,
+    "height": 200,
+    "decorations": false,
+    "url": "splashscreen.html",
+    "label": "splashscreen"
+  }
+]
+```
+
+---
+
+# Splashscreen při čekání na Rust
+
+```rust
+use tauri::Manager;
+fn main() {
+  tauri::Builder::default()
+    .setup(|app| {
+      let splashscreen_window = app.get_window("splashscreen").unwrap();
+      let main_window = app.get_window("main").unwrap();
+      // we perform the initialization code on a new task so the app doesn't freeze
+      tauri::async_runtime::spawn(async move {
+        // initialize your app here instead of sleeping :)
+        println!("Initializing...");
+        std::thread::sleep(std::time::Duration::from_secs(2));
+        println!("Done initializing.");
+
+        // After it's done, close the splashscreen and display the main window
+        splashscreen_window.close().unwrap();
+        main_window.show().unwrap();
+      });
+      Ok(())
+    })
+    .run(tauri::generate_context!())
+    .expect("failed to run app");
+}
+```
+
+---
+
+# Debugging přes devtools
+
+```rust
+use tauri::Manager;
+tauri::Builder::default()
+  .setup(|app| {
+    #[cfg(debug_assertions)] // only include this code on debug builds
+    {
+      let window = app.get_window("main").unwrap();
+      window.open_devtools();
+      window.close_devtools();
+    }
+    Ok(())
+  });
+```
+
+spuštění přes `pnpm tauri build --debug`
 
 ---
 
