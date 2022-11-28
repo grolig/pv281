@@ -307,6 +307,10 @@ section table tbody > tr:nth-child(even) th {
   background: var(--dracula-current-line);
 }
 
+section table tbody > tr:nth-child(even) code {
+  background-color: var(--dracula-background);
+}
+
 .dark-background,
 td[rowspan] {
   background-color: var(--dracula-background) !important;
