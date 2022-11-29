@@ -5,6 +5,7 @@ description: Programming in Rust Desktop Development
 theme: rust
 paginate: true
 ---
+
 ![w:512 h:512](./assets/rust-logo-1.png)
 # <!--fit--> PV281: Programování v Rustu
 
@@ -15,6 +16,10 @@ paginate: true
 1. Přístupy k vývoji desktopových aplikací
 2. GTK 4
 3. Tauri
+
+---
+
+# <!--fit--> Přístupy k vývoji desktopových aplikací
 
 ---
 
@@ -60,11 +65,27 @@ Je psaná v C, takže se vyžívá bindingů pro Rust.
 
 ---
 
+<style scoped>
+td, th {
+    font-size: large;
+}
+</style>
+
 # Závislosti
 
 ```toml
 gtk = { version = "0.5.2", package = "gtk4" }
+
+# Notice that we are renaming the package from `gtk4` to just `gtk`.
 ```
+
+Kromě toho je potřeba nainstalovat knihovny pro vývoj [dle dokumentace](https://www.gtk.org/docs/installations/), např. pro UN*X:
+
+| Distribution  | Binary package | Development package | Additional packages |
+|---------------|----------------|---------------------|---------------------|
+| Arch          | `gtk4`         | -                   | -                   |
+| Debian/Ubuntu | `libgtk-4-1`   | `libgtk-4-dev`      | `gtk-4-examples`    |
+| Fedora        | `gtk4 `        | `gtk4-devel`        | -                   |
 
 ---
 
@@ -75,13 +96,11 @@ use gtk::prelude::*;
 use gtk::Application;
 
 fn main() {
-    // Create a new application
-    let app = Application::builder()
+    let app = Application::builder()          // Create a new application
         .application_id("org.gtk-rs.example")
         .build();
 
-    // Run the application
-    app.run();
+    app.run();                                // Run the application
 }
 ```
 
@@ -90,31 +109,25 @@ fn main() {
 # Vytvoření okna
 
 ```rust
-use gtk::prelude::*;
-use gtk::{Application, ApplicationWindow};
+use gtk::{Application, ApplicationWindow, prelude::*};
 
 fn main() {
-    // Create a new application
-    let app = Application::builder()
+    let app = Application::builder()          // Create a new application
         .application_id("org.gtk-rs.example")
         .build();
 
-    // Connect to "activate" signal of `app`
-    app.connect_activate(build_ui);
+    app.connect_activate(build_ui);           // Connect to "activate" signal of `app`
 
-    // Run the application
-    app.run();
+    app.run();                                // Run the application
 }
 
 fn build_ui(app: &Application) {
-    // Create a window and set the title
-    let window = ApplicationWindow::builder()
+    let window = ApplicationWindow::builder() // Create a window and set the title
         .application(app)
         .title("My GTK App")
         .build();
 
-    // Present window to the user
-    window.present();
+    window.present();                         // Present window to the user
 }
 ```
 
@@ -124,14 +137,12 @@ fn build_ui(app: &Application) {
 
 ```rust
 fn build_ui(app: &Application) {
-    // Create a window and set the title
-    let window = ApplicationWindow::builder()
+    let window = ApplicationWindow::builder() // Create a window and set the title
         .application(app)
         .title("My GTK App")
         .build();
 
-    // Create a button with label and margins
-    let button = Button::builder()
+    let button = Button::builder()            // Create a button with label and margins
         .label("Press me!")
         .margin_top(12)
         .margin_bottom(12)
@@ -139,17 +150,13 @@ fn build_ui(app: &Application) {
         .margin_end(12)
         .build();
 
-    // Connect to "clicked" signal of `button`
-    button.connect_clicked(move |button| {
-        // Set the label to "Hello World!" after the button has been clicked on
-        button.set_label("Hello World!");
+    button.connect_clicked(move |button| {    // Connect to "clicked" signal of `button`
+        button.set_label("Hello World!");     // Set the label to "Hello World!" after the button has been clicked on
     });
 
-    // Add button
-    window.set_child(Some(&button));
+    window.set_child(Some(&button));          // Add button
 
-    // Present window to the user
-    window.present();
+    window.present();                         // Present window to the user
 }
 ```
 
@@ -158,27 +165,32 @@ fn build_ui(app: &Application) {
 # Události (signály)
 
 ```rust
-    // Connect callback
-    button.connect_local("clicked", false, move |args| {
-        // Get the button from the arguments
-        let button = args[0]
+    // ...
+    
+    button.connect_local("clicked", false, move |args| { // Connect callback
+        let button = args[0]                             // Get the button from the arguments
             .get::<Button>()
-            .expect("The value needs to be of type `Button`.");
-        // Set the label to "Hello World!" after the button has been clicked on
-        button.set_label("Hello World!");
+            .expect("Expected type `Button`");
+            
+        button.set_label("Hello World!");                // Set the label after the button has been clicked
+        
         None
     });
+    
+    // ...
 ```
 
 ---
 
-# Zobrazení dialogu
+
+<!-- _class: split -->
+
+### Zobrazení dialogu
+
+<div class=left-column>
 
 ```rust
-use gtk::glib::clone;
-use gtk::glib::signal::Inhibit;
-use gtk::prelude::*;
-
+use gtk::{glib::clone, prelude::*};
 use std::rc::Rc;
 
 fn main() {
@@ -191,38 +203,22 @@ fn main() {
 }
 
 fn build_ui(application: &gtk::Application) {
-    let button = gtk::Button::builder()
-        .label("Open Dialog")
-        .halign(gtk::Align::Center)
-        .valign(gtk::Align::Center)
-        .build();
-
-    let window = Rc::new(
-        gtk::ApplicationWindow::builder()
-            .application(application)
-            .title("Dialog Example")
-            .default_width(350)
-            .default_height(70)
-            .child(&button)
-            .visible(true)
-            .build(),
-    );
+    // ...created button and window using builder patterns
 
     button.connect_clicked(clone!(@strong window =>
         move |_| {
-            gtk::glib::MainContext::default().spawn_local(dialog(Rc::clone(&window)));
+            gtk::glib::MainContext::default()
+                .spawn_local(my_dialog(Rc::clone(&window)));
         }
     ));
-
-    window.connect_close_request(move |window| {
-        if let Some(application) = window.application() {
-            application.remove_window(window);
-        }
-        Inhibit(false)
-    });
 }
+```
 
-async fn dialog<W: IsA<gtk::Window>>(window: Rc<W>) {
+</div>
+<div class=right-column>
+
+```rust
+async fn my_dialog<W: IsA<gtk::Window>>(window: Rc<W>) {
     let question_dialog = gtk::MessageDialog::builder()
         .transient_for(&*window)
         .modal(true)
@@ -245,6 +241,8 @@ async fn dialog<W: IsA<gtk::Window>>(window: Rc<W>) {
     info_dialog.close();
 }
 ```
+
+</div>
 
 ---
 
@@ -274,28 +272,23 @@ async fn dialog<W: IsA<gtk::Window>>(window: Rc<W>) {
 
 ```rust
 fn build_ui(app: &Application) {
-    // Init `gtk::Builder` from file
-    let builder = gtk::Builder::from_string(include_str!("window.ui"));
+    let builder = gtk::Builder::from_string(include_str!("window.ui")); // Init builder from file
 
-    // Get window and button from `gtk::Builder`
-    let window: ApplicationWindow = builder
+    let window: ApplicationWindow = builder                             // Get object of id="window" from the builder
         .object("window")
         .expect("Could not get object `window` from builder.");
-    let button: Button = builder
+   
+    let button: Button = builder                                        // Get object of id="button" from the builder
         .object("button")
         .expect("Could not get object `button` from builder.");
 
-    // Set application
-    window.set_application(Some(app));
+    window.set_application(Some(app));                                  // Set application
 
-    // Connect to "clicked" signal
-    button.connect_clicked(move |button| {
-        // Set the label to "Hello World!" after the button has been clicked on
-        button.set_label("Hello World!");
+    button.connect_clicked(move |button| {                              // Connect to "clicked" signal
+        button.set_label("Hello World!");                               // Set the label after the button has been clicked
     });
 
-    // Add button
-    window.set_child(Some(&button));
+    window.set_child(Some(&button));                                    // Add button
     window.present();
 }
 ```
@@ -304,7 +297,8 @@ fn build_ui(app: &Application) {
 
 # Vytvoření menu
 
-```rust
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <menu id="menu">
     <section>
@@ -376,44 +370,52 @@ impl Window {
 
 ---
 
-# Stylování přes CSS
+<!-- _class: split -->
+
+### Stylování přes CSS
+
+
+<div class=left-column>
 
 ```rust
-use gtk::prelude::*;
-
-use gtk::gdk::Display;
 use gtk::{
-    Application, ApplicationWindow, Box as Box_, Button, ComboBoxText, CssProvider, Entry,
-    Orientation, StyleContext, STYLE_PROVIDER_PRIORITY_APPLICATION,
+    Application, ApplicationWindow, Box as Box_, Button, ComboBoxText,
+    CssProvider,Entry, gdk::Display,  prelude::*, Orientation,
+    StyleContext, STYLE_PROVIDER_PRIORITY_APPLICATION
 };
 
 fn main() {
-    let application = Application::new(Some("com.github.css"), Default::default());
+    let application = Application::new(
+        Some("com.github.css"), Default::default()
+    );
+    
+    // The CSS "magic" happens here.
     application.connect_startup(|app| {
-        // The CSS "magic" happens here.
         let provider = CssProvider::new();
         provider.load_from_data(include_bytes!("style.css"));
-        // We give the CssProvided to the default screen so the CSS rules we added
-        // can be applied to our window.
+        
+        // Give the provider to the screen so the CSS rules are applied.
         StyleContext::add_provider_for_display(
             &Display::default().expect("Error initializing gtk css provider."),
-            &provider,
+            &provider,                                                                
             STYLE_PROVIDER_PRIORITY_APPLICATION,
         );
-
+        
         // We build the application UI.
         build_ui(app);
     });
+    
     application.run();
 }
+```
 
+</div>
+<div class=right-column>
+
+```rust
 fn build_ui(application: &Application) {
     let window = ApplicationWindow::new(application);
-
     window.set_title(Some("CSS"));
-
-    // The container container.
-    let vbox = Box_::new(Orientation::Vertical, 0);
 
     let button = Button::with_label("hover me!");
     button.add_css_class("button1");
@@ -428,23 +430,27 @@ fn build_ui(application: &Application) {
     combo.append_text("option 3");
     combo.set_active(Some(0));
 
+    let vbox = Box_::new(Orientation::Vertical, 0);
     vbox.append(&button);
     vbox.append(&entry);
     vbox.append(&combo);
-    // Then we add the container inside our window.
-    window.set_child(Some(&vbox));
-
+   
+    window.set_child(Some(&vbox));                                                   
     application.connect_activate(move |_| {
         window.show();
     });
 }
 ```
 
+</div>
+
 ---
 
 # Stylování přes CSS
 
 ```css
+/* style.css */
+
 entry.entry1 {
     background: linear-gradient(to right, #f00, #0f0);
     color: blue;
@@ -477,7 +483,7 @@ combobox box arrow {
 
 # Glade
 
-![w:512 h:512](./assets/12-images/glade.png)
+![h:512](./assets/12-images/glade.png)
 
 ---
 
@@ -496,9 +502,12 @@ combobox box arrow {
 
 # Instalace
 
-Je nutné mít nainstalovaný Node. Doporučujeme instalovat přes NVM.
+Je nutné mít nainstalovaný Node.
+Doporučujeme instalovat přes NVM.
 
-Kromě Node musíte nainstalovat webview2 pokud už není v systému předinstalováno.
+Kromě Node musíte nainstalovat [webview2](https://developer.microsoft.com/en-us/microsoft-edge/webview2/#download-section).
+
+Pro vývoj na UN*Xu jsou také potřeba [další knihovny](https://tauri.app/v1/guides/getting-started/prerequisites/#setting-up-linux).
 
 ---
 
@@ -508,7 +517,9 @@ Kromě Node musíte nainstalovat webview2 pokud už není v systému předinstal
 corepack enable
 
 pnpm create tauri-app
+```
 
+```sh
 # cargo install tauri-cli
 cargo tauri init # alternativne `pnpm tauri init`
 
@@ -517,18 +528,23 @@ cargo tauri dev
 
 ---
 
-# Struktura projektu
+# Výchozí struktura projektu
 
+```
 src-tauri
-/ Cargo.toml
-/ tauri.conf.json
-/ src/main.rs
+├── Cargo.toml
+├── tauri.conf.json
+└── src
+    └── main.rs
+```
 
 ---
 
 # Spuštění aplikace
 
 ```pnpm tauri dev```
+
+```cargo tauri dev```
 
 ---
 
@@ -542,8 +558,7 @@ fn my_custom_command() {
 
 fn main() {
   tauri::Builder::default()
-    // This is where you pass in your commands
-    .invoke_handler(tauri::generate_handler![my_custom_command])
+    .invoke_handler(tauri::generate_handler![my_custom_command]) // <- This is new.
     .run(tauri::generate_context!())
     .expect("failed to run app");
 }
