@@ -24,16 +24,15 @@ Během přednášky projdeme teorii a základní příklady.
 
 ![w:512 h:128](./assets/dropbox-logo.png)
 
-Jsou nahrávané a dostupné v IS a na:
-https://www.dropbox.com/sh/57ztrbuxow1ygae/AABovgOIXfIMceOAmnxq3HZra?dl=0
+Jsou nahrávané a dostupné v IS.
 
-Dostupnost záznamů bude zhruba 14 dní po přednášce.
+Dostupnost záznamů bude 14 dní po přednášce.
 
 ---
 
 ![w:512 h:256](./assets/twitch-logo.png)
 
-V tomto roce jsme zrušili streamy přednášek. 
+Stream na p
 
 ---
 # <!--fit--> CVIČENÍ
@@ -55,7 +54,7 @@ Katka Pitoňáková za přípravu prvního běhu předmětu.
 
 Organizační informace, diskuze k Rustu, pomoc s projekty, hledání parťáka
 
-https://discord.gg/cketrr9MNn
+https://discord.gg/fJZxQMNgKf
 
 ---
 # HODNOCENÍ
@@ -66,40 +65,32 @@ Minimum pro úspěšné zakončení předmětu: **75**
 ---
 # HODNOCENÍ: Cvičení
 
-* Bonusové body
-* Neřešíme absenci, musíte ale mít zapsanou skupinu
+* Nepovinné
+* Možnost získat bonusové body a druhý pokus na odevzdání iterace
 
 ---
 # HODNOCENÍ: Iterace
 
-* 6 iterací
-* Každá za 3 body
+* 10 iterací
+* Každá za 5 bodů
 * Každá z nich vás seznámí s konktrétní funkcionalitou Rustu
 * Automaticky testované, opravující jen kontroluje kvalitu kódu
-
----
-# HODNOCENÍ: Velké domácí úkoly
-
-* 4 Velké domácí úkoly
-* Každý za 8 bodů
-* Volnější zadání
-* Opravující kontroluje celý úkol
 
 ---
 # HODNOCENÍ: Projekt
 
 * **50 bodů** za týmový projekt zakončený obhajobou
-* **3-4 členné týmy** - a ne více. V případě menšího týmu bude snížena náročnost zadání.
-* Týmy lze tvořit mezi skupinami
+* **3-4 členné týmy** - ne méně a ne více.
+* Týmy lze tvořit mezi skupinami.
+* Složení týmu lze změnit do 10. týdne semestru.
 * Zadání jsou volná. Očekáváme kreativitu týmu při vlastním dodefinování zadání.
-* Zadání zveřejníme v **5. týdnu** semestru
+* Zadání zveřejníme v **3. týdnu** semestru
 
 ---
 # BONUSOVÉ BODY
-* Možné získat na cvičeních za aktivity
-* Při zpracování úkolů/projektu za špičkové zpracování a výrazné překročení rozsahu
 * Na přednášce za aktivitu
-* Seznámení ostatních na přednášce s vlastním zajímavým projektem
+* Na cvičeních za aktivitu
+* Za špičkové zpracování úkolů/projektu a výrazné překročení rozsahu
 
 ---
 
@@ -118,9 +109,8 @@ Rust for Rustaceans: Idiomatic Programming for Experienced Developers
 ---
 # PROBÍRANÁ LÁTKA
 * Intro - trocha historie, hlavní výhody a nevýhody
-* Syntaxe jazyka
+* Zapožení projektu, CLI aplikace, syntaxe jazyka
 * Obsluha chybových stavů
-* CLI aplikace
 * Asynchronní programování
 * Paralelní programování
 * Práce se soubory
@@ -128,12 +118,14 @@ Rust for Rustaceans: Idiomatic Programming for Experienced Developers
 ---
 # PROBÍRANÁ LÁTKA
 * Práce s databází
-* Server side webové aplikace a REST
-* GRPC protokol
+* RESTové služby v Actix
+* Server-side aplikace v Actix a HTMX
 * Desktopové aplikace v Tauri
+* GRPC protokol
 * Unsafe Rust, makra a foreign function interface
 
 ---
+
 # PROBÍRANÁ LÁTKA MIMO RUST
 * Budeme hodně pracovat s GITem a Gitlabem
 * Budeme psát čisté SQL
@@ -160,7 +152,7 @@ https://msrc-blog.microsoft.com/2019/07/16/a-proactive-approach-to-more-secure-c
 
 ---
 # Rust Foundation
-Mozilla ale dál nezvládala sama rozvíjet Rust. To vedle ke vzniku Rust Foundation v roce 2020.
+Mozilla  ale dál nezvládala sama rozvíjet Rust. To vedlo ke vzniku Rust Foundation v roce 2020.
 
 Zakládajícími členy se stali:
 
@@ -235,17 +227,25 @@ Při paralelním programování často dochází k všemožným problémům. Př
 ---
 # Nevýhody
 * Pomalý překlad
-* Stále ještě není tolik knihoven, abychom všechno rychle zvládli.
+* Velké množství knihoven v ekosystému stojí na jedincích
 * Často více psaní než v jiných jazycích
 
 ---
 # Jak se rozhodovat při výběru jazyka?
-Potřebuju to jen rychle **naprasit -> Python**
+Potřebuju jednoúčeloový rychle **naprasený tool -> Python**
 Bude to běžet v prohlížeči a nebo je to **UI -> Javascript/Typescript**
 Můžu použít **managovaný jazyk -> Golang** > C#, Kotlin > Java
 Jinak vyberu Rust
 
 Pro Rust může jinak rozhodnout i lepší udržovatelnost codebase, potřeba rychlosti, a nebo nižší chybovost kódu.
+
+---
+
+# K čemu se dnes Rust primárně používá?
+* tooly - CLI nebo integrované
+* webové aplikace a služby
+* knihovny pro jiné jazyky
+* nízkoúrovňové aplikace - ovladače, jádro OS, firmware
 
 ---
 # Příběh Discordu
@@ -289,6 +289,10 @@ Dnes už to neplatí a použití nightly verze se snažíme vyhnout.
 Je vhodné zmínit, že Rust se rychle vyvíjí. Je proto nutné hlídat, které vlastnosti jsou deprekovány, a naopak nově přidány.
 
 ---
+
+# Nové verze jazyka jsou testovány na dostupných crates!
+
+---
 # Instalace Rustu
 
 Instalaci a aktualizaci Rustu doporučujeme vždy provádět přes rustup.
@@ -320,9 +324,10 @@ pokud máte homebrew, tak ```brew install rustup```.
 ---
 # IDE
 
-V našem předmětu budeme používat VS Code s pluginem rust-analyzer. Neinstalujte plugin jménem "Rust". Jedná se o starý a deprekovaný plugin, který nahradil právě "rust-analyzer".
+## VS Code 
+s pluginem rust-analyzer. Neinstalujte plugin jménem "Rust" (starý, deprekovaný, nahrazený)
 
-Alternativou je CLion s vlastním Rust pluginem.
+# Jetbrains RustRover nebo CLion
 
 ---
 # Založení nového projektu
@@ -417,6 +422,52 @@ fn main() {
 
 * Všimněte si, že main nevrací hodnotu. Později zjistíte, že může vracet `Result`. Pro explicitní návratový kód také existuje `std::process::exit(code: i32)`.
 * `println!()` je makro. Poznáme ho podle vykřičníku.
+
+---
+
+# Crate `clap` pro CLI aplikace
+
+Instalace přes `cargo add clap`
+
+```rust
+use std::path::PathBuf;
+use clap::{arg, command, value_parser, ArgAction, Command};
+
+fn main() {
+    let matches = command!() // requires `cargo` feature
+        .arg(arg!([name] "Optional name to operate on"))
+        .arg(arg!(
+            -d --debug ... "Turn debugging information on"
+        ))
+        .get_matches();
+    
+    // zkraceno
+}
+```
+
+---
+
+# Kontrola argumentů
+
+```rust
+fn main() {
+    // zkraceno
+
+    if let Some(name) = matches.get_one::<String>("name") {
+        println!("Value for name: {name}");
+    }
+
+    match matches
+        .get_one::<u8>("debug")
+        .expect("Count's are defaulted")
+    {
+        0 => println!("Debug mode is off"),
+        1 => println!("Debug mode is kind of on"),
+        2 => println!("Debug mode is on"),
+        _ => println!("Don't be crazy"),
+    }
+}
+```
 
 ---
 # <!--fit--> Datové typy
