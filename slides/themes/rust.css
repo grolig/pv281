@@ -433,3 +433,21 @@ section.split .common-text,
 section.split h3 {
   /*border: 1.5pt dashed dimgray;*/
 }
+
+.named-fence-block{
+  position: relative;
+}
+
+.named-fence-filename{
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.3em;
+
+  font-size: 0.5em;
+  font-weight: bold;
+
+  background-color: var(--dracula-secondary-line);
+  color: var(--dracula-foreground);
+  opacity: 0.5;
+}
