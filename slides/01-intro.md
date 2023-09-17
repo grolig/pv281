@@ -5,26 +5,49 @@ description: Programming in Rust Intro Session
 theme: rust
 paginate: true
 ---
+
 ![w:512 h:512](./assets/rust-logo-1.png)
+
 # <!--fit--> PV281: Programování v Rustu
 
 ---
-# <!--fit--> ORGANIZAČNÍ INFORMACE
+
+# Obsah
+
+- Organizační informace
+- Hodnocení předmětu
+- Co za semestr probereme?
+- O Rustu a jeho historii
+- Úvod do Rustu a jeho syntaxe
+- Základní typy a řízení toku programu
 
 ---
 
-# <!--fit--> PŘEDNÁŠKY
-**2h** týdně
+# <!--fit--> Organizační
+# <!--fit--> informace
 
-Přednášející: **Lukáš Grolig**
+---
+
+# Interaktivní osnova
+
+Primárním zdrojem informací během semestru je předmětová [Interaktivní osnova](https://is.muni.cz/auth/el/fi/podzim2023/PV281/index.qwarp).
+
+---
+
+# Přednášky
+
+**2h týdně**, vždy v pondělí v 18–20 hod.
+
+Přednášející:
+**Lukáš Grolig**, Ondřej Hrdlička, Ondřej Holub, Stanislav Zeman
 
 Během přednášky projdeme teorii a základní příklady.
 
 ---
 
-![w:512 h:128](./assets/dropbox-logo.png)
+![w:128 h:128](./assets/is-logo.png)
 
-Jsou nahrávané a dostupné v IS.
+Přednášky jsou nahrávané a dostupné v ISu.
 
 Dostupnost záznamů bude 14 dní po přednášce.
 
@@ -32,114 +55,151 @@ Dostupnost záznamů bude 14 dní po přednášce.
 
 ![w:512 h:256](./assets/twitch-logo.png)
 
-Stream na p
+Stream přednášek na [Twitchi](https://www.twitch.tv/vexfalard).
 
 ---
-# <!--fit--> CVIČENÍ
-**2h** týdně, 12 cvičení
 
-Cvičící: **Adamove, Hirš, Holub, Hrdlička, Vrbka**
+# Cvičení
 
-Na cvičení si zopakujete probranou látku a budete vypracovávat příklady s pomocí cvičích.
+**2h** týdně, celkem 12 cvičení
 
----
-# <!--fit--> PODĚKOVÁNÍ
+Cvičící: **Vrbka, Holub, Hrdlička, Chudíček & Mišík, Zeman, Adamove, Šlézar & Wehrenberg**
 
-Tomáš Sedláček za pomoc s organizací předmětu.
-
-Katka Pitoňáková za přípravu prvního běhu předmětu.
+Na cvičení si zopakujete probranou látku a budete vypracovávat příklady s pomocí cvičících.
 
 ---
+
+# Poděkování
+
+Tomášovi Sedláčkovi a Ondrovi Hrdličkovi za pomoc s organizací předmětu.
+
+Katce Pitoňákové za přípravu prvního běhu předmětu.
+
+---
+
 ![w:512 h:256](./assets/discord-logo.png)
 
-Organizační informace, diskuze k Rustu, pomoc s projekty, hledání parťáka
+Organizační informace, diskuze k Rustu, pomoc s úkoly či projekty, hledání týmu, ...
 
 https://discord.gg/fJZxQMNgKf
 
 ---
-# HODNOCENÍ
+
+# <!--fit--> Hodnocení
+
+---
+
+# Hodnocení předmětu
 
 Maximum bodů: **100**
 Minimum pro úspěšné zakončení předmětu: **75**
 
 ---
-# HODNOCENÍ: Cvičení
 
-* Nepovinné
-* Možnost získat bonusové body a druhý pokus na odevzdání iterace
+### Hodnocení
+###### Cvičení
+
+* Možnost získat bonusové body
+* Účast není povinná, ALE 
+za aktivní účast získáte možnost opravit si odevzdání iterace
 
 ---
-# HODNOCENÍ: Iterace
 
-* 10 iterací
-* Každá za 5 bodů
+### Hodnocení
+###### Iterace
+
+* Celkem **10 iterací**
+* Každá za **maximálně 5 bodů**
 * Každá z nich vás seznámí s konktrétní funkcionalitou Rustu
-* Automaticky testované, opravující jen kontroluje kvalitu kódu
+* Automaticky testované, opravující kontroluje kvalitu kódu
+<br>
+* Po code review můžete, ale nemusíte využít možnost opravy získanou na základě aktivní účasti na cvičení
 
 ---
-# HODNOCENÍ: Projekt
 
-* **50 bodů** za týmový projekt zakončený obhajobou
-* **3-4 členné týmy** - ne méně a ne více.
-* Týmy lze tvořit mezi skupinami.
-* Složení týmu lze změnit do 10. týdne semestru.
-* Zadání jsou volná. Očekáváme kreativitu týmu při vlastním dodefinování zadání.
-* Zadání zveřejníme v **3. týdnu** semestru
+### Hodnocení
+###### Týmový projekt
+
+* **50 bodů** za týmový projekt zakončený obhajobou ve zkouškovém
+<br>
+* **4členné**, výjimečně 3členné **týmy** – nikdy ne méně ani ne více
+* Týmy lze vytvářet **napříč seminárními skupinami**.
+* Složení týmu lze měnit do 10. týdne semestru (včetně).
+<br>
+* Zadání projektu jsou volná, očekáváme kreativitu týmu při vlastním dodefinování zadání.
+* Zadání plánujeme zveřejnit ve **3. týdnu** semestru.
 
 ---
-# BONUSOVÉ BODY
+
+### Hodnocení
+###### Bonusové body
+
 * Na přednášce za aktivitu
 * Na cvičeních za aktivitu
+* Za dobrovolné, bonusové podčásti iterací
 * Za špičkové zpracování úkolů/projektu a výrazné překročení rozsahu
+
+---
+
+# <!--fit--> Co za semestr probereme?
+
+---
+
+# Probíraná látka
+
+* Úvod - historie, hlavní (ne)výhody Rustu, založení projektu
+* Syntaxe jazyka a jeho specifika
+* CLI aplikace a práce se soubory, obsluha chybových stavů
+* Iterátory a datové struktury
+* Paralelní programování, strukturování projektu
+* Asynchronní programování
+
+---
+
+# Probíraná látka
+
+* Práce s databází
+* RESTové služby v Actix
+* Server-side aplikace v Actix a HTMX
+* Desktopové aplikace v Tauri
+* gRPC protokol
+* Unsafe Rust, makra a foreign function interface
+
+---
+
+# Probíraná látka mimo Rust
+
+* Budeme hodně pracovat s Gitem a GitLabem
+* Budeme psát čisté SQL
 
 ---
 
 # Studijní materiály
 
-Web
+###### Web
 [The Rust Programming Language](https://doc.rust-lang.org/book/)
 [Rust By Example](https://doc.rust-lang.org/stable/rust-by-example/)
 
-Literatura
+###### Literatura
 Programming Rust: Fast, Safe Systems Development, 2nd Edition
 
-Pokročilá literatura
+###### Pokročilá literatura
 Rust for Rustaceans: Idiomatic Programming for Experienced Developers
 
 ---
-# PROBÍRANÁ LÁTKA
-* Intro - trocha historie, hlavní výhody a nevýhody
-* Zapožení projektu, CLI aplikace, syntaxe jazyka
-* Obsluha chybových stavů
-* Asynchronní programování
-* Paralelní programování
-* Práce se soubory
 
----
-# PROBÍRANÁ LÁTKA
-* Práce s databází
-* RESTové služby v Actix
-* Server-side aplikace v Actix a HTMX
-* Desktopové aplikace v Tauri
-* GRPC protokol
-* Unsafe Rust, makra a foreign function interface
+# <!--fit--> O Rustu a jeho historii
 
 ---
 
-# PROBÍRANÁ LÁTKA MIMO RUST
-* Budeme hodně pracovat s GITem a Gitlabem
-* Budeme psát čisté SQL
-
----
-# <!--fit-->Nyní už o Rustu
-
----
 ![w:512 h:256](./assets/01-images/rustacean-flat-noshadow.svg)
 Seznamte se: 
 **Krab Ferris**
 
 ---
+
 # Historie
+
 * Rust vznikl v Mozille
 * Cílem bylo vytvořit jazyk bez garbage kolekce s bezpečnou prací s pamětí
 
@@ -151,7 +211,9 @@ Seznamte se:
 https://msrc-blog.microsoft.com/2019/07/16/a-proactive-approach-to-more-secure-code/
 
 ---
+
 # Rust Foundation
+
 Mozilla  ale dál nezvládala sama rozvíjet Rust. To vedlo ke vzniku Rust Foundation v roce 2020.
 
 Zakládajícími členy se stali:
@@ -160,17 +222,21 @@ Zakládajícími členy se stali:
 ![w:200 h:128](./assets/microsoft-logo.png) ![w:200 h:128](./assets/mozilla-logo.png)
 
 ---
+
 # Další známé firmy využívající Rust
+
 Tento seznam se už hodně natáhl, ale můžeme jmenovat:
 **1Password, Apple, Canonical, Cloudflare, Discord, Dropbox, Figma, Facebook, System76, OVH**
 
 ---
-# <!--fit--> Hlavní výhodu Rustu
 
----
-# Bezpečnost
+# Hlavní výhody Rustu
 
-V jazycích typu C vznikají problémy s manuální správou pamětí jako dangling pointer, dvojité uvolnění aj. V moderním C++ je spousta věcí řešena technikami jako je RAII nebo smartpointy. Rozdílem je, že Rustu toto nemusí nehlídat člověk, ale řeší překladač.
+#### Bezpečnost
+
+V jazycích typu C vznikají problémy s manuální správou pamětí jako dangling pointer, dvojité uvolnění aj.
+V moderním C++ je spousta věcí řešena technikami jako je RAII nebo smartpointy.
+Rozdílem je, že Rustu toto nemusí nehlídat člověk, ale řeší překladač.
 
 Cenou za to je doba překladu.
 
@@ -178,19 +244,34 @@ Cenou za to je doba překladu.
 ![bg fit](./assets/01-images/compiling.png)
 
 ---
-# Rychlost
 
-Prakticky všechny dnešní jazyky jsou pomalejší než C a C++. Je to kvůli abstrakcím, garbage kolekci aj. Výsledný program běžící v Rustu je na stejné úrovni v rychlosti běhu jako C/C++.
+# Hlavní výhody Rustu
+
+#### Rychlost
+
+Prakticky všechny dnešní jazyky jsou pomalejší než C a C++.
+Je to kvůli abstrakcím, garbage kolekci aj.
+Výsledný program běžící v Rustu je na stejné úrovni v rychlosti běhu jako C/C++.
 
 To máme díky:
 * **zero cost abstrakci**
 * **správě paměti během kompilace**
 
 ---
-![bg fit](./assets/01-images/computerlanguagebenchmarkgame.svg)
+
+<style scoped>
+
+section {
+  background-color: white;
+}
+
+</style>
+
+![bg fit](./assets/01-images/computerlanguagebenchmarkgame2023.svg)
 
 ---
-# <!--fit--> Pohled oproti C
+
+# <!--fit--> Srovnání s C
 
 ---
 ![](./assets/01-images/rust-c-1.png)
@@ -202,84 +283,121 @@ To máme díky:
 # <!--fit--> Porovnání frameworků ve Fortunes
 
 ---
-![bg fit](./assets/01-images/techempowered-fortunes.png)
+![bg fit](./assets/01-images/techempowered-fortunes-top-2022.png)
 
 ---
-![bg fit](./assets/01-images/techempowered-fortunes-2.png)
+![bg fit](./assets/01-images/techempowered-fortunes-spring-2022.png)
 
 ---
+
 # Konkurence
 
-Při paralelním programování často dochází k všemožným problémům. Při překladu, díky síle překladače (rozumějte statickým kontrolám), pravidlům a konvencím v jazyce, poskytuje podstatně větší jistotu.
+Při paralelním programování často dochází k všemožným problémům. Díky síle překladače (rozumějte statickým kontrolám), pravidlům a konvencím v jazyce Rust poskytuje podstatně větší jistotu.
 
 ---
+
 # Další výhody
+
 * jazyk nemá dědičnost, místo toho vyžaduje kompozici
+* neexistuje `null`
 * moderní a pokrokový tooling
   + správce závislostí
-  + neexistující null
   + dokumentování kódu
   + testování
 
 ---
-# <!--fit--> POVÍDÁNÍ O SILNÉM TYPOVÁNÍ A STATICKY TYPOVANÉM JAZYCE
 
----
-# Nevýhody
+# Nevýhody Rustu
+
 * Pomalý překlad
 * Velké množství knihoven v ekosystému stojí na jedincích
 * Často více psaní než v jiných jazycích
 
 ---
-# Jak se rozhodovat při výběru jazyka?
-Potřebuju jednoúčeloový rychle **naprasený tool -> Python**
-Bude to běžet v prohlížeči a nebo je to **UI -> Javascript/Typescript**
-Můžu použít **managovaný jazyk -> Golang** > C#, Kotlin > Java
-Jinak vyberu Rust
 
-Pro Rust může jinak rozhodnout i lepší udržovatelnost codebase, potřeba rychlosti, a nebo nižší chybovost kódu.
+## Jak se rozhodovat při výběru jazyka?
+
+Potřebuju jednoúčeloový rychle **naprasený tool**? Python.
+Bude to běžet v prohlížeči nebo je to **UI**? JS nebo TS.
+Můžu použít **managovaný jazyk**? Golang > C#, Kotlin > Java.
+
+Jinak vyberu **Rust**!
+
+Rustu nahrává i lepší udržovatelnost codebase, rychlost nebo nižší chybovost kódu.
 
 ---
 
-# K čemu se dnes Rust primárně používá?
+## K čemu se dnes Rust primárně používá?
+
 * tooly - CLI nebo integrované
 * webové aplikace a služby
 * knihovny pro jiné jazyky
 * nízkoúrovňové aplikace - ovladače, jádro OS, firmware
 
 ---
+
 # Příběh Discordu
-As usual with a garbage collected language the problem was CPU stalls due to garbage collection spikes. But it non-GC languages you have to worry about memory fragmentation, especially for long lived processes. When you get that sev 1 bug that happens after two months of flawless execution it will often be a memory allocation failure due to memory fragmentation. So you end up creating your own memory allocator anyway.
 
 ---
+
 # Příběh Discordu
-When we started load testing, we were instantly pleased with the results. The latency of the Rust version was just as good as Go’s and had no latency spikes! Remarkably, we had only put very basic thought into optimization as the Rust version was written. Even with just basic optimization, Rust was able to outperform the hyper hand-tuned Go version. 
+
+> As usual with a garbage collected language the problem was CPU stalls due to garbage collection spikes.
+> But in non-GC languages you have to worry about memory fragmentation, especially for long-lived processes.
+> When you get that sev 1 bug that happens after two months of flawless execution it will often be a memory allocation failure due to memory fragmentation.
+> 
+> So you end up creating your own memory allocator anyway.
 
 ---
+
 # Příběh Discordu
-After a bit of profiling and performance optimizations, we were able to beat Go on every single performance metric. Latency, CPU, and memory were all better in the Rust version.
+
+> When we started load testing, we were instantly pleased with the results. The latency of the Rust version was just as good as Go’s and had no latency spikes!
+> 
+> Remarkably, we had only put very basic thought into optimization as the Rust version was written.
+> Even with just basic optimization, Rust was able to outperform the hyper hand-tuned Go version. 
 
 ---
+
 # Příběh Discordu
-Along with performance, Rust has many advantages for an engineering team. For example, its type safety and borrow checker make it very easy to refactor code as product requirements change or new learnings about the language are discovered. Also, the ecosystem and tooling are excellent and have a significant amount of momentum behind them.
-Also, Our business case for using Go - it's all about saving money.
+
+> After a bit of profiling and performance optimizations, we were able to beat Go on every single performance metric. Latency, CPU, and memory were all better in the Rust version.
 
 ---
+
+# Příběh Discordu
+
+> Along with performance, Rust has many advantages for an engineering team. For example, its type safety and borrow checker make it very easy to refactor code as product requirements change or new learnings about the language are discovered. Also, the ecosystem and tooling are excellent and have a significant amount of momentum behind them.
+> 
+> Also, our business case for using Go - it's all about saving money.
+
+---
+
+# Příběh Discordu
+
 http://highscalability.com/blog/2020/2/7/stuff-the-internet-says-on-scalability-for-february-7th-2020.html
 
 https://blog.discord.com/why-discord-is-switching-from-go-to-rust-a190bbca2b1f
 
 ---
+
+# <!--- fit --> Úvod do Rustu
+# <!--- fit --> a jeho syntaxe
+
+---
+
 # Verzování Rustu
-```
+
+```txt
 nightly: vydáváno každodenně
 
 beta: vydávána jednou za 6 týdnů
 
-stable:  vydávána jednou za 6 týdnů (následujících po betě)
+stable: vydávána jednou za 6 týdnů (následujících po betě)
 ```
 
 ---
+
 # Problémy verzování
 
 Dříve nebyly všechny features dostupné ve stabilní verzi. Tvůrci frameworků proto sahali po nightly, a ta musela být používaná i v projektu. 
@@ -293,50 +411,60 @@ Je vhodné zmínit, že Rust se rychle vyvíjí. Je proto nutné hlídat, které
 # Nové verze jazyka jsou testovány na dostupných crates!
 
 ---
-# Instalace Rustu
 
-Instalaci a aktualizaci Rustu doporučujeme vždy provádět přes rustup.
+### Instalace Rustu
 
----
+Instalaci a aktualizaci Rustu doporučujeme provádět přes `rustup`.
 
-**Na Unixu obecně**
+###### UN*X
+
 ```shell
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
 
-**Na Windows**
-stáhnout [rustup-init.exe](https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-msvc/rustup-init.exe) a postupovat dle pokynů instalátoru.
+###### Windows
+Stáhnout [rustup-init.exe](https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-msvc/rustup-init.exe) a řídit se pokyny instalátoru.
 
-**Na MacOS*
-pokud máte homebrew, tak ```brew install rustup```.
+###### MacOS
+Pokud máte homebrew, tak `brew install rustup`.
 
 ---
+
 # Základní nástroje
 
-**rustup** spravuje verze Rustu
+`rustup` – spravuje verze Rustu
 
-**rustc**  překladač
+`rustc` – překladač
 
-**cargo**  balíčkovací systém, spráce projektu a závislostí
+`cargo` – balíčkovací systém, spráce projektu a závislostí
 
-**clippy** linter
+`clippy` – linter
 
 ---
+
 # IDE
 
-## VS Code 
-s pluginem rust-analyzer. Neinstalujte plugin jménem "Rust" (starý, deprekovaný, nahrazený)
+###### VS Code 
+s pluginem `rust-analyzer` - neinstalujte plugin jménem "Rust" (starý, deprekovaný, nahrazený)
 
-# Jetbrains RustRover nebo CLion
+###### Jetbrains CLion
+s pluginem `Intellij Rust`
+
+###### Jetbrains RustRover
+vyšel _Early Access_ od minulého týdne (09/2023)
 
 ---
+
 # Založení nového projektu
+
+Příkazem
 
 ```shell
 cargo new nazev_projektu
 ```
 
-tím se vytvoří
+se vytvoří nový projekt:
+
 ```
 nazev_projektu
 +-- Cargo.toml
@@ -345,6 +473,7 @@ nazev_projektu
 ```
 
 ---
+
 # Překlad a spuštění
 
 ```shell
@@ -353,7 +482,9 @@ cargo run
 ```
 
 ---
+
 # Cargo.toml
+
 ```toml
 [package]
 name = "hello_world"
@@ -365,7 +496,9 @@ rand = { git = "https://github.com/rust-lang-nursery/rand.git" }
 ```
 
 ---
+
 # Cargo.lock
+
 ```toml
 [[package]]
 name = "hello_world"
@@ -381,8 +514,10 @@ source = "git+https://github.com/rust-lang-nursery/rand.git#9f35b8e439eeedd60b94
 ```
 
 ---
-# Složitější struktura
-``` 
+
+### Složitější struktura
+
+```
 +-- Cargo.lock
 +-- Cargo.toml
 +-- src/
@@ -412,7 +547,8 @@ source = "git+https://github.com/rust-lang-nursery/rand.git#9f35b8e439eeedd60b94
 ```
 
 ---
-# Ukázka kódu z main.rs
+
+# Ukázka kódu z main\.rs
 
 ```rust
 fn main() {
@@ -420,28 +556,29 @@ fn main() {
 }
 ```
 
-* Všimněte si, že main nevrací hodnotu. Později zjistíte, že může vracet `Result`. Pro explicitní návratový kód také existuje `std::process::exit(code: i32)`.
+* Všimněte si, že `main` nevrací hodnotu. Později zjistíte, že může vracet `Result`.
+  Pro explicitní návratový kód také existuje funkce `std::process::exit(code: i32)`.
 * `println!()` je makro. Poznáme ho podle vykřičníku.
 
 ---
 
-# Crate `clap` pro CLI aplikace
+# Přidání crate pro CLI aplikace
 
-Instalace přes `cargo add clap`
+Závislost na crate `clap` přidáme příkazem `cargo add clap`.
 
 ```rust
 use std::path::PathBuf;
 use clap::{arg, command, value_parser, ArgAction, Command};
 
 fn main() {
-    let matches = command!() // requires `cargo` feature
+    let matches = command!()
         .arg(arg!([name] "Optional name to operate on"))
         .arg(arg!(
             -d --debug ... "Turn debugging information on"
         ))
         .get_matches();
     
-    // zkraceno
+    // Continued on the next slide...
 }
 ```
 
@@ -451,7 +588,7 @@ fn main() {
 
 ```rust
 fn main() {
-    // zkraceno
+    // ...continued from the previous slide.
 
     if let Some(name) = matches.get_one::<String>("name") {
         println!("Value for name: {name}");
@@ -470,9 +607,12 @@ fn main() {
 ```
 
 ---
-# <!--fit--> Datové typy
+
+# <!--fit--> Základní typy
+# <!--fit--> a řízení toku programu
 
 ---
+
 # Celočíselné typy
 
 | Velikost         | Znaménkový | Neznaménkový |
@@ -485,6 +625,7 @@ fn main() {
 | dle architektury | isize      | usize        |
 
 ---
+
 # Zápisy literálů
 
 | Velikost     | Příklad     |
@@ -496,7 +637,9 @@ fn main() {
 | bajtové      | b'A'        |
 
 ---
+
 # S plovoucí řádovou čárkou (IEEE-754)
+
 | Velikost | Typ |
 |----------|-----|
 | 32 bitů  | f32 |
@@ -513,11 +656,12 @@ let number = 42;
 let number: i16 = 42i16;
 
 let mut fp_number: f64 = 3.14f64;
-
 ```
 
 ---
+
 # Boolovské typy
+
 ```rust
 fn main() {
     let t = true;
@@ -527,6 +671,7 @@ fn main() {
 ```
 
 ---
+
 # Znakové typy (UTF-8)
 
 ```rust
@@ -536,19 +681,28 @@ fn main() {
     let heart_eyed_cat = '😻';
 }
 ```
----
-# <!--fit--> Složené typy
 
 ---
-# Touple (n-tice)
+
+# Složené typy
+
+---
+
+# Tuple (n-tice)
+
 ```rust
 fn main() {
     let tup: (i32, f64, u8) = (500, 6.4, 1);
+    
+    // lze použít destructuring:
+    let (first, second) = (1, 2.0);
 }
 ```
 
 ---
+
 # Pole
+
 ```rust
 fn main() {
     let a: [i32; 5] = [1, 2, 3, 4, 5];
@@ -561,9 +715,11 @@ fn main() {
 ```
 
 ---
-# <!--fit--> Ovládání toku programu
+
+# Ovládání toku programu
 
 ---
+
 # Klasický if
 
 ```rust
@@ -581,7 +737,8 @@ fn main() {
 ```
 
 ---
-# Výraz s if
+
+# If jako výraz
 
 ```rust
 fn main() {
@@ -593,11 +750,13 @@ fn main() {
 ```
 
 ---
+
 # Match
 
 ```rust
 fn main() {
     let some_u8_value = 0u8;
+    
     match some_u8_value {
         1 => println!("one"),
         3 => println!("three"),
@@ -607,7 +766,9 @@ fn main() {
     }
 }
 ```
+
 ---
+
 # Nekonečná smyčka
 
 ```rust
@@ -653,4 +814,14 @@ fn main() {
 ```
 
 ---
-# <!--fit-->To je pro dnešek vše.
+
+# To je pro dnešek vše.
+
+<br>
+
+# Dotazy?
+
+---
+
+# <!--fit--> Děkuji za pozornost
+
