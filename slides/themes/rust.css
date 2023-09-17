@@ -7,7 +7,7 @@
  * @auto-scaling true
  * @size 16:9 1280px 720px
  */
- 
+
 @import url("https://fonts.googleapis.com/css?family=Lato:400,900|IBM+Plex+Sans:400,700");
 @import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Fira+Sans&display=swap');
@@ -17,6 +17,7 @@
 :root {
   --dracula-background: #282a36;
   --dracula-current-line: #44475a;
+  --dracula-secondary-line: #6a6f8d;
   --dracula-foreground: #f8f8f2;
   --dracula-comment: #8AA1E6;
   --dracula-cyan: #8be9fd;
@@ -42,14 +43,14 @@
 .hljs-typing,
 .hljs-variable,
 .hljs-template-variable {
-    color: var(--dracula-foreground);
+  color: var(--dracula-foreground);
 }
 
 /* Dracula Comment */
 .hljs-comment,
 .hljs-quote,
 .hljs-deletion {
-    color: var(--dracula-comment);
+  color: var(--dracula-comment);
 }
 
 /* Dracula Cyan */
@@ -57,37 +58,38 @@
 .hljs-doctag,
 .hljs-built_in,
 .hljs-selector-tag,
+.hljs-selector-class,
+.hljs-selector-id,
 .hljs-section,
 .hljs-link,
 .hljs-class {
-    color: var(--dracula-cyan);
+  color: var(--dracula-cyan);
 }
-
 
 /* Dracula Green */
 .hljs-title {
-    color: var(--dracula-green);
+  color: var(--dracula-green);
 }
 
 /* Dracula Orange */
 .hljs-params {
-    color: var(--dracula-orange);
+  color: var(--dracula-orange);
 }
 
 /* Dracula Pink */
 .hljs-keyword {
-    color: var(--dracula-pink);
+  color: var(--dracula-pink);
 }
 
 /* Dracula Purple */
 .hljs-literal,
 .hljs-number {
-    color: var(--dracula-purple);
+  color: var(--dracula-purple);
 }
 
 /* Dracula Red */
 .hljs-regexp {
-    color: var(--dracula-red);
+  color: var(--dracula-red);
 }
 
 /* Dracula Yellow */
@@ -95,11 +97,13 @@
 .hljs-name,
 .hljs-type,
 .hljs-attr,
+.hljs-attribute,
+.hljs-selector-pseudo,
 .hljs-symbol,
 .hljs-bullet,
 .hljs-addition,
 .hljs-template-tag {
-    color: var(--dracula-yellow);
+  color: var(--dracula-yellow);
 }
 
 .hljs-keyword,
@@ -116,7 +120,7 @@
 
 .hljs-params,
 .hljs-emphasis {
- font-style: italic;
+  font-style: italic;
 }
 
 svg[data-marp-fitting=svg] {
@@ -260,7 +264,7 @@ section {
   color: var(--dracula-foreground);
   background-color: var(--dracula-background);
   justify-content: center;
-    /* align-items: center; */
+  /* align-items: center; */
   display: flex;
   flex-direction: column;
 }
@@ -349,17 +353,17 @@ section::after {
 }
 
 h1,h2,h3 {
-    font-family: "Alfa Slab One", serif;
+  font-family: "Alfa Slab One", serif;
 }
 
 section {
-    font-family: 'Fira Sans', sans-serif;
-    text-align: center;
+  font-family: 'Fira Sans', sans-serif;
+  text-align: center;
 }
 
 code, pre {
-    font-family: 'Fira Mono', monospace;
-    text-align: left;
+  font-family: 'Fira Mono', monospace;
+  text-align: left;
 }
 
 pre code svg[data-marp-fitting=svg] {
@@ -371,8 +375,11 @@ section.plantuml {
 }
 
 section.plantuml > img {
-  /* Reason: valid outside Firefox */ /* noinspection CssInvalidPropertyValue */
+  /* Reason: valid outside Firefox */
+  /* noinspection CssInvalidPropertyValue */
   width: -webkit-fill-available;
+  /* Reason: valid inside Firefox */
+  /* noinspection CssInvalidPropertyValue */
   width: -moz-available;
 }
 
@@ -401,6 +408,11 @@ section.split h4 {
   font-size: 1.3em;
   margin: auto;
 }
+section.split h6 {
+  grid-area: columnheading;
+  font-size: 1em;
+  margin: auto;
+}
 section.split .common-text {
   grid-area: commontext;
 }
@@ -411,8 +423,8 @@ section.split .right-column {
   grid-area: rightpanel;
 }
 section.split .common-note {
-   grid-area: commonnote;
- }
+  grid-area: commonnote;
+}
 
 /* For debugging purposes only */
 section.split .left-column,
