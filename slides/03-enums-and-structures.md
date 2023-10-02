@@ -1184,6 +1184,12 @@ fn main() {
 
 ---
 
+<style scoped>
+section {
+    padding-top: 0;
+}
+</style>
+
 ### Propagace chyb
 
 Operátor `?` použijeme za hodnotou typu `Result`.
@@ -1217,15 +1223,22 @@ fn main() -> Result<(), io::Error> {
 
 ---
 
+<!-- _class: split -->
+
 ### Extrémní propagace chyb
 
-![h:512](/assets/03-images/%3F%3F%3F%3F.png)
+<div class=left-column>
 
-<small>
+
+![h:625](/assets/03-images/%3F%3F%3F%3F.png)
+
+
+</div>
+<div class=right-column>
 
 [Source](https://fosstodon.org/@antonok/111134824451525448)
 
-</small>
+</div>
 
 ---
 
