@@ -5,19 +5,96 @@ description: Programming in Rust Enums and Structures
 theme: rust
 paginate: true
 ---
+
 ![w:512 h:512](./assets/rust-logo-1.png)
+
 # <!--fit--> PV281: Programování v Rustu
 
 ---
 
 # Obsah
 
-1. Enumy
-2. Pattern Matching
-3. Struktury
-4. Traity
-5. Ošetření chyb
-6. CLI aplikace
+1. Týmové projekty
+2. Enumy
+3. Pattern Matching
+4. Struktury
+5. Lifetimes
+6. Traity
+7. Ošetření chyb
+8. CLI aplikace
+9. Práce se soubory a stdin
+
+---
+
+# <!--fit--> Týmové projekty
+
+---
+
+# Zveřejnění projektů
+
+**Dnes** 2. 10. 2023 v 20:00.
+Naleznete je v ISu v Rozpisu `Týmové projekty`.
+
+---
+
+# Spuštění přihlašování
+
+**Od pondělí 9. 10.** 2023 v 20:00 se může přihlásit 1 člen za tým.
+
+Od středy 11. 10. 2023 v 20:00 se můžou přihlásit i ostatní členové týmu.
+
+---
+
+# Změny v přihlášení na projekt
+
+**Do 20. 11.** 2023 máte možnost bezproblémově měnit sestavy týmů.
+
+V případě problémů s týmem (během této doby i po ní) můžete kontaktovat koordinátora projektů Petra Wehrenberga.
+
+---
+
+# Vlastní zadání projektu
+
+**Do 20. 11.** 2023 také můžete navrhovat vlastní zadání projektu.
+
+* Vaše zadání musí být explicitně schváleno vaším cvičícím.
+* Vaše zadání musí odpovídat náročností ostatním projektům. 
+  Pokud nebude, vrátíme vám ho se zpětnou vazbou a můžete ho vylepšit. 
+
+---
+
+# Obhajoby
+
+Nejpozději do konce roku zveřejníme termíny obhajob,
+které pak **budou probíhat po celé zkouškové** období.
+
+Obhajoba je asi 20minutový online call, kde:
+- v rychlosti představíte projekt,
+- ukážete demo vaší aplikace
+- zodpovíte otázky k demu i kódu vaší aplikace
+
+---
+
+# Novinka
+#### Odevzdání projektu
+
+Projekt odevzdáváte 3 dny před obhajobou.
+
+1. přidáte cvičících do repozitáře s projektem
+2. vytvoříte větev `project-submission` a už do ní nepřispíváte
+
+---
+
+# Novinka
+#### Frontend jen v Rustu
+
+**Zakazujeme používat frameworky/knihovny z JavaScript/TypeScript** ekosystému pro tvorbu frontendu.
+
+Místo toho použijte crates dostupné v Rustu.
+
+---
+
+# Dotazy k projektům?
 
 ---
 
@@ -40,7 +117,7 @@ fn main() {
 
 ---
 
-# C varianta
+# Enumy jako v C
 
 ```rust 
 // hodnota defaultně začíná nulou
@@ -78,7 +155,8 @@ enum Delivery {
 }
 
 fn main() {
-    let delivery = Delivery::Parcel(String::from("Ceska 0, 60200 Brno"));
+    let pickup_delivery = Delivery::Pickup;
+    let parcel_delivery = Delivery::Parcel(String::from("Ceska 0, 60200 Brno"));
 }
 ```
 
@@ -90,6 +168,7 @@ fn main() {
   (stejně jako např. `union` v C).
 * Kromě toho je zde ještě skrytá položka - diskriminant.
 * Velikost diskriminantu je závislá na počtu variant enumu.
+* Hodnota diskriminantu určuje aktuální variantu enumu.
 
 ---
 
@@ -99,8 +178,8 @@ fn main() {
 fn main() {
     let some_u8_value = Option::Some(0u8);
     
-    if let Some(3) = some_u8_value {
-        println!("three");
+    if let Some(num) = some_u8_value {
+        println!("It was Some! It's inner value was {}!", num);
     }
 }
 ```
@@ -116,15 +195,80 @@ enum Option<T> {
 
 ---
 
-# <!--fit--> Pattern Matching
+<!-- _class: split -->
+
+### Co nedělat
+
+<div class=left-column>
+
+###### `if let` > `if`
+
+```rust
+fn main() {
+    let maybe_value = Some('k');
+    
+    if maybe_value.is_some() {
+        let value = maybe_value.unwrap();
+    }
+}
+```
+
+Když chci rozbalit 1 variantu enumu, radši použiju `if let`.
+
+</div>
+<div class=right-column>
+
+###### `match` > `if let`
+
+```rust
+enum Delivery {
+    Pickup,
+    Parcel(String),
+    Special{ box_id: u128 }
+}
+
+fn main() {
+    let variable = Delivery::Pickup;
+
+    if let Delivery::Pickup = variable {
+        println!("Vyzvednete to u nás v obchodě!");
+    } else if let Delivery::Parcel(address) = variable {
+        println!("Zboží bude doručeno na adresu: {}!", address);
+    } else if let Delivery::Special {box_id} = variable {
+        println!("Zboží bude doručeno na do boxu č.: {}!", box_id);
+    } else {
+        println!("Zatím neimplementovaný způsob doručení!");
+    }
+}
+```
+
+Když chci rozbalit hodně variant enumu, radši použiju `match`.
+
+</div>
+
+
+---
+
+# <!--fit--> Pattern
+# <!--fit--> matching
 
 ---
 
 # Výhody pattern matchingu
 
+<div data-marpit-fragment="3">
+
 1. Kontrola všech variant větvení
-   To pomáhá i při refaktoringu – nikdy nezpomenete změnit další místa v kódu
+
+To pomáhá i při refaktoringu – nikdy nezpomenete změnit další místa v kódu.
+</div>
+
+<div data-marpit-fragment="3">
+
 2. Lepší čitelnost
+
+</div>
+
 
 ---
 
@@ -148,7 +292,31 @@ fn deliver(delivery: Delivery) {
 
 ---
 
-# Porovnání s jinou proměnnou
+### Match různých tvarů enumu
+
+```rust
+enum Message {
+    Quit,
+    Move { x: i32, y: i32 },
+    Write(String),
+    ChangeColor(i32, i32, i32),
+}
+
+fn main() {
+    let msg = Message::ChangeColor(0, 160, 255);
+
+    match msg {
+        Message::Quit                 => println!("The Quit variant has no data to destructure.");
+        Message::Move { x, y }        => println!("Move in the x direction {} and in the y direction {}", x, y);
+        Message::Write(text)          => println!("Text message: {}", text),
+        Message::ChangeColor(r, g, b) => println!("Change the color to red {}, green {}, and blue {}", r, g, b),
+    }
+}
+```
+
+---
+
+# Match & shadowing
 
 ```rust 
 fn main() {
@@ -167,35 +335,27 @@ fn main() {
 
 ---
 
-### S využitím tuple nebo struktury
+# Match guards
 
-```rust
-enum Message {
-    Quit,
-    Move { x: i32, y: i32 },
-    Write(String),
-    ChangeColor(i32, i32, i32),
-}
-
+```rust 
 fn main() {
-    let msg = Message::ChangeColor(0, 160, 255);
+    let x = Some(5);
+    let y = 10;
 
-    match msg {
-        Message::Quit => {
-            println!("The Quit variant has no data to destructure.");
-        }
-        Message::Move { x, y } => {
-            println!("Move in the x direction {} and in the y direction {}", x, y);
-        }
-        Message::Write(text) => println!("Text message: {}", text),
-        Message::ChangeColor(r, g, b) => println!("Change the color to red {}, green {}, and blue {}", r, g, b),
+    match x {
+        Some(50) => println!("Got 50"),
+        Some(a) if a == y => println!("Got y as a = {:?}", y),
+        Some(y) => println!("Matched, y = {:?}", y),
+        _ => println!("Default case, x = {:?}", x),
     }
+
+    println!("at the end: x = {:?}, y = {:?}", x, y);
 }
 ```
 
 ---
 
-# Match několika explicitně zadaných variant
+# Match několika variant
 
 ```rust
 fn main() {
@@ -228,20 +388,44 @@ fn main() {
 
 ---
 
+# @ binding
+
+```rust
+fn main() {
+    let x = 'c';
+
+    // ..= znamená včetně posledního prvku
+    match x {
+        early @ 'a'..='j' => println!("early ASCII letter: {}", early),
+        late @ 'k'..='z' => println!("late ASCII letter: {}", late),
+        _ => println!("something else"),
+    }
+}
+```
+
+---
+
 # Match nad tuple
 
 ```rust
 fn main() {
     let numbers = (2, 4, 8, 16, 32);
 
-    match numbers {
+    let (a, b) = match numbers {
         (first, .., last) => {
             println!("Some numbers: {}, {}", first, last);
+            (first, last)
         }
+    };
+    
+    match (a, b) {
+        (4, 2) => println!("Everything."),
+        (9, _) => println!("Nine."),
+        (6, 9) => println!("Nice!"),
+        _ => {},
     }
 }
 ```
-
 
 ---
 
@@ -249,10 +433,9 @@ fn main() {
 
 ---
 
-# Definice struktury dle C
+# Definice struktury
 
 ```rust
-#[repr(C)]
 struct Foo {
   tiny: bool,
   normal: u32,
@@ -264,55 +447,77 @@ struct Foo {
 
 ---
 
-### Zarovnání v paměti dle C
 
-* Překladač objeví `tiny`, který má logickou velikost 1 bit – dostane 1 bajt.
-* Následně vidí `normal`, který má 4 bajty.
-* Pokud by `tiny` měl pouze 1 bajt, byly by problémy se zarovnáním proti `normal`. Proto je za `tiny` vložené **zarovnání** o velikosti 3 bajty.
+<!-- _class: split -->
+
+### Zarovnání v paměti
+
+<div class=left-column>
+
+#### Dle C
+
+```text
+|tiny|PADDING|normal|small|PADDING|long|short|PADDING|
+| 1B |  3B   |  4B  | 1B  |   7B  | 8B | 2B  |  6B   |
+
+# Total of 32 bytes.
+```
+
+Položky jsou v deterministickém pořadí, figuruje zarovnání.
+
+```rust
+#[repr(C)]
+struct MyStruct {}
+```
+
+</div>
+<div class=right-column data-marpit-fragment="3">
+
+#### V Rustu
+
+Není deterministické řazení položek, může figurovat zarovnání.
+
+```rust
+#[repr(Rust)]
+struct MyStruct {}
+```
+
+```rust
+struct MyStruct {}
+```
+
+</div>
 
 ---
 
-### Zarovnání v paměti dle C
+<style scoped>
+    li {
+        font-size: 80%;
+    }
+</style>
 
-* Následuje `small` – má velikost 1 byte.
-  Aktuální zarovnání je 1 + 3 + 4 = 8.
-  Je zarovnáno, takže `small` může být vloženo na konec.
-* S `long` máme zase stejný problém se zarovnáním.
-  Abychom zarovnali, musíme za `small` vložit 7 bajtů.
-* Položku `short` vložíme přímo. 
-* Zarovnáme strukturu podle největší položky – za `short` přídáme 6 bajtů.
+### Alternativní modely
 
----
+###### `#[repr(packed)]`
 
-# Změny v Rustu
-
-* C reprezentace vyžaduje, aby položky byly za sebou dle definice.
-* Výchozí (`#[repr(Rust)]`) toto omezení odstraňuje.
-* V Rustu není ani deterministické řazení položek.
-* Předchozí struktura po přeskládání položek bude mít pouze 16 bajtů, nepotřebujeme zarovnání.
-
----
-
-# Alternativní modely
-
-`#[repr(packed)]`
 * Nepoužívá zarovnání.
-* Používá se při scénářích s málo pamětí nebo pro pomalé síťové spojení.
+* Vhodné v prostředí s málo pamětí nebo s pomalým síťovým spojením.
 * Může velmi zpomalit vykonávání a může dojít k pádu, pokud CPU podporuje pouze zarovnané argumenty.
 
----
+<div data-marpit-fragment="3">
 
-# Alternativní modely
+###### `#[repr(align(n))]`
 
-`#[repr(align(n))]` 
 * Umožňuje větší zarovnání, než by bylo nutné.
 * Pro scénáře, kdy potřebujeme zařidít, aby položky byly v různých _cache lines_.
-  Vyhneme se problému nazvanému __false sharing__.
+  Vyhneme se problému zvanému __false sharing__.
 * K false sharingu dochází, když různá CPU sdíli cache line. Oba se ji mohou pokusit změnit současně.
+
+</div>
 
 ---
 
-# Další ukázka struktury
+# Práce se strukturou
 
 ```rust 
 struct User {
@@ -333,7 +538,7 @@ fn main() {
 
 ```rust 
 struct User { 
-    //... 
+    // ... 
 }
 
 fn main() {
@@ -345,21 +550,6 @@ fn main() {
     };
 
     user1.email = String::from("anotheremail@example.com");
-}
-```
-
----
-
-# Funkce pro vytvoření struktury
-
-```rust 
-fn build_user(email: String, username: String) -> User {
-    User {
-        email,
-        username,
-        active: true,
-        sign_in_count: 1,
-    }
 }
 ```
 
@@ -386,6 +576,37 @@ fn main() {
 
 ---
 
+# Metody struktury
+
+```rust
+impl User {
+    fn new(email: String, username: String) -> Self {
+        User {
+            email,
+            username,
+            active: true,
+            sign_in_count: 1,
+        }
+    }
+    
+    fn is_active(&self) -> bool {
+        self.is_active
+    }
+    
+    fn change_email(&mut self, new_email: String) {
+        self.email = new_email;
+    }
+}
+
+fn main() {
+    let mut user = User::new("someone@example.com".to_string(), "someuser123".to_string());
+    user.change_email("someone.else@provider.com".to_string());
+    println!("{}", user.is_active()); // equivalent to User::is_active(&user)
+}
+```
+
+---
+
 ### Makro Debug
 
 ```rust 
@@ -396,20 +617,22 @@ struct Rectangle {
 }
 
 fn main() {
-    let rect1 = Rectangle {
+    let rectangle = Rectangle {
         width: 30,
         height: 50,
     };
 
-    println!("The area of the rectangle is {} square pixels.", area(&rect1));
-    
-    println!("rect1 is {:?}", rect1);
-}
-
-fn area(rectangle: &Rectangle) -> u32 {
-    rectangle.width * rectangle.height
+    println!("rectangle is '{:?}'", rectangle);
 }
 ```
+
+```text
+rectangle is 'Rectangle { width: 30, height: 50 }'
+```
+
+---
+
+# <!--fit--> Lifetimes
 
 ---
 
@@ -418,9 +641,9 @@ fn area(rectangle: &Rectangle) -> u32 {
 Pokud má struktura obsahovat referenci, tak musíme definovat **lifetime**.
 
 ```rust
-struct Extrema<'elt> {
-    greatest: &'elt i32,
-    least: &'elt i32
+struct Extrema<'a> {
+    greatest: &'a i32,
+    least: &'a i32
 }
 ```
 
@@ -445,92 +668,94 @@ fn find_extrema<'s>(slice: &'s [i32]) -> Extrema<'s> {
 
 # Lifetime
 
-Je konstrukce překladače, která udává dobu platnosti reference. Dříve bylo nutností ji explicitně definovat, dneska už není moc často třeba. Kód by  měl většinou jít napsat i bez specifikace lifetimu.
+Je konstrukce překladače, která udává dobu platnosti reference.
+
+Dříve bylo nutností ji explicitně definovat, dneska už není moc často třeba. Běžný kód by  měl většinou jít napsat i bez specifikace lifetimu.
 
 ---
 
 # Lifetime
+
 ```rust 
 fn main() {
-    let i = 3; // Lifetime pro `i` začíná. ────────────────┐
-    //                                                     │
-    { //                                                   │
-        let borrow1 = &i; // `borrow1` lifetime začíná. ──┐│
-        //                                                ││
-        println!("borrow1: {}", borrow1); //              ││
-    } // `borrow1 koncí. ─────────────────────────────────┘│
-    //                                                     │
-    //                                                     │
-    { //                                                   │
-        let borrow2 = &i; // `borrow2` lifetime začíná. ──┐│
-        //                                                ││
-        println!("borrow2: {}", borrow2); //              ││
-    } // `borrow2` končí. ────────────────────────────────┘│
-    //                                                     │
-}   // Lifetime končí. ────────────────────────────────────┘
+    let i = 3; // Lifetime pro `i` začíná. ─────────────────┐
+    //                                                      │
+    { //                                                    │
+        let borrow1 = &i; // `borrow1` lifetime začíná. ──┐ │
+        //                                                │ │
+        println!("borrow1: {}", borrow1); //              │ │
+    } // `borrow1 koncí. ─────────────────────────────────┘ │
+    //                                                      │
+    //                                                      │
+    { //                                                    │
+        let borrow2 = &i; // `borrow2` lifetime začíná. ──┐ │
+        //                                                │ │
+        println!("borrow2: {}", borrow2); //              │ │
+    } // `borrow2` končí. ────────────────────────────────┘ │
+    //                                                      │
+}   // Lifetime pro `i` končí. ─────────────────────────────┘
 
 ```
 
 ---
 
-# Explicitní anotace lifetimu
+### Explicitní anotace lifetimu
+
 ```rust
-// `print_refs` bere dvě reference na `i32`,
-// které mají lifetime `'a` a `'b`.
-// Obě reference musí žít minimálně stejně dlouho jako funkce `print_refs`.
-fn print_refs<'a, 'b>(x: &'a i32, y: &'b mut i32) {
-    println!("x is {} and y is {}", x, y);
-}
+&i32        // a reference
+&'a i32     // a reference with an explicit lifetime
+&'a mut i32 // a mutable reference with an explicit lifetime
 ```
 
----
-
-Pokud v předchozím příkladu nepoužijeme lifetime, tak příklad nejde přeložit.
-Překladač netuší, jestli bude návratová hodnota mít lifetime x nebo y. 
-
----
-
-# Coercion
 ```rust
-// Here, Rust infers a lifetime that is as short as possible.
-// The two references are then coerced to that lifetime.
-fn multiply<'a>(first: &'a i32, second: &'a i32) -> i32 {
-    first * second
-}
-
-// `<'a: 'b, 'b>` reads as lifetime `'a` is at least as long as `'b`.
-// Here, we take in an `&'a i32` and return a `&'b i32` as a result of coercion.
-fn choose_first<'a: 'b, 'b>(first: &'a i32, _: &'b i32) -> &'b i32 {
-    first
-}
-
-fn main() {
-    let first = 2; // Longer lifetime
-    
-    {
-        let second = 3; // Shorter lifetime
-        
-        println!("The product is {}", multiply(&first, &second));
-        println!("{} is the first", choose_first(&first, &second));
-    };
+fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
+    if x.len() > y.len() {
+        x
+    } else {
+        y
+    }
 }
 ```
+
+Pokud nepoužijeme lifetime, kód nejde přeložit - překladač netuší, jak dlouho má žít návratová hodnota. 
+
+---
+
+### Co nebude fungovat
+
+```rust
+fn longest<'a>(x: &str, y: &str) -> &'a str {
+    let result = String::from("really long string");
+    result.as_str()
+}
+```
+
+<div data-marpit-fragment="3">
+
+```
+error[E0515]: cannot return reference to local variable `result`
+   |
+11 |     result.as_str()
+   |     ^^^^^^^^^^^^^^^ returns a reference to data owned by the current function
+```
+
+</div>
 
 ---
 
 # Lifetime s generikou
+
 ```rust
 use std::fmt::Display;
 
-fn longest_with_an_announcement<'a, T>(
+fn longest_with_announcement<'a, T: Display>(
     x: &'a str,
     y: &'a str,
     ann: T,
 ) -> &'a str
-where
-    T: Display,
 {
     println!("Announcement! {}", ann);
+    
     if x.len() > y.len() {
         x
     } else {
@@ -541,11 +766,12 @@ where
 
 ---
 
-# Lifetime u struktur
+### Lifetime u struktur
+
+Pokud máme ve struktuře referenci, **vždy musíme definovat lifetime**.
+
 ```rust
-// Typ `Borrowed` obsahuje referenci na `i32`.
-// Reference `i32` musí přežít `Borrowed`.
-// Pokud máme ve struktuře referenci, tak musíme lifetime definovat vždy.
+// Typ `Borrowed` obsahuje referenci na `i32`, reference `i32` musí přežít `Borrowed`.
 #[derive(Debug)]
 struct Borrowed<'a>(&'a i32);
 
@@ -572,56 +798,32 @@ fn main() {
 
 ---
 
-# Elision
+### Lifetime elision
 
-Pro běžné příklady určuje lifetime sám překladač, a to podle následujících pravidel:
-- `Pravidlo pro životnost vstupních parametrů`
-   Každý vstupní parametr dostává vlastní lifetime. 
-- `Pravidlo pro životnost výstupních parametrů`
-   Pokud má funkce jeden vstupní parametr, tak všechny výstupy mají stejný lifetime.
-- `Pravidlo pro metody s parametrem self`
-   Pokud má metoda vstupní parametr referenci na self, všechny výstupní parametry mají stejný lifetime.
+Pro běžné příklady určuje lifetime sám překladač dle následujících pravidel:
+
+###### Pravidlo pro životnost vstupních parametrů
+Každý vstupní parametr dostává vlastní lifetime. 
+
+###### Pravidlo pro životnost výstupních parametrů
+Pokud má funkce jeden vstupní parametr, všechny výstupy mají stejný lifetime.
+
+###### Pravidlo pro metody s parametrem self
+Pokud má metoda vstupní parametr `&self`, všechny výstupní parametry mají stejný lifetime.
 
 ---
 
 # 'static
 
-Snažte se mu vyhnout. Dává životnost po celý běh programu. Hodí se například pro chybové hlášky.
+Dává životnost po celý běh programu, hodnota je uložena přímo v binárce programu, a je tedy vždy přístupná. 
+
+Hodí se například pro texty chybových hlášek.
+
+Jinak se mu snažíme vyhnout.
 
 ---
 
-# Metody nad strukturou
-
-```rust
-pub struct Queue {
-    older: Vec<char>,   // older elements, eldest last.
-    younger: Vec<char>  // younger elements, youngest last.
-}
-
-impl Queue {
-    /// Push a character onto the back of a queue.
-    pub fn push(&mut self, c: char) {
-        self.younger.push(c);
-    }
-
-    /// Pop a character off the front of a queue. Return `Some(c)` if there was a character to pop, or `None` if the queue was empty.
-    pub fn pop(&mut self) -> Option<char> {
-        if self.older.is_empty() {
-            if self.younger.is_empty() {
-                return None;
-            }
-
-            // Bring the elements in younger over to older, and put them in the promised order.
-            use std::mem::swap;
-            swap(&mut self.older, &mut self.younger);
-            self.older.reverse();
-        }
-
-        // Now older is guaranteed to have something. Vec's pop method already returns an Option, so we're set.
-        self.older.pop()
-    }
-}
-```
+# <!--fit--> Traity
 
 ---
 
@@ -642,15 +844,14 @@ trait Summary {
 
 struct NewsArticle {
     headline: String,
-    pub location: String,
-    pub author: String,
-    pub content: String,
+    location: String,
+    author: String,
+    content: String,
 }
 
 impl Summary for NewsArticle {
     fn summarize(&self) -> String {
-        format!("{}, by {} ({})", self.headline, 
-        self.author, self.location)
+        format!("{}, by {} ({})", self.headline, self.author, self.location)
     }
 }
 ```
@@ -692,7 +893,7 @@ trait Summary {
 
 ---
 
-# Využití jiných metod ve výchozí implementaci
+### Využití jiných metod ve výchozí implementaci
 
 ```rust
 trait Summary {
@@ -706,7 +907,7 @@ trait Summary {
 
 ---
 
-# Trait jako parametr
+### Trait jako parametr / návratová hodnota
 
 ```rust
 fn notify(item: &impl Summary) {
@@ -714,12 +915,24 @@ fn notify(item: &impl Summary) {
 }
 ```
 
+```rust
+fn returns_summarizable() -> impl Summary {
+    Tweet {
+        username: String::from("horse_ebooks"),
+        content: String::from("of course, as you probably already know, people..."),
+        reply: false,
+        retweet: false,
+    }
+}
+```
+
 
 ---
 
-# Trait Bound
+### Trait Bound
 
-Syntax `impl Trait` u parametru je syntaktický cukr pro delší zápis, kterému se říká **trait bound**. Následující bloky kódu jsou ekvivalentní, jen je zápis pomocí trait bound delší a hůře čitelný. Proto doporučujeme používat `impl Trait`.
+Syntax `impl Trait` u parametru je syntaktický cukr pro delší zápis, kterému se říká **trait bound**.
+Následující bloky kódu jsou ekvivalentní, jen je zápis pomocí trait bound delší a hůře čitelný. Proto v základu doporučujeme používat `impl Trait`.
 
 ```rust
 fn notify(item: &impl Summary) {
@@ -745,7 +958,7 @@ pub fn notify(item: &(impl Summary + Display)) {
 
 ---
 
-# Zápis pomocí where
+# Zápis více traitů pomocí `where`
 
 Použijeme pro situace, kde máme více parametrů s různými kombinacemi traitů.
 
@@ -777,7 +990,6 @@ fn say_hello(out: &mut dyn Write) -> std::io::Result<()> {
 
 * `dyn Write` představuje jednu variantu polymorfismu, které říkáme **trait object**.
 * Slouží k provedení volání přes virtuální tabulku (_vtable_).
-* C++ používá _vptr_ jako součást struktury, Rust oproti tomu má tzv. _fat pointer_. Nic se do struktury nepřidává.
 * Trait object nemůže být použit jako typ proměnné, reference na něj ale ano.
 * Trait object není známý v době překladu, proto obsahuje další informace o typu referenta.
 * Rust umožní konverzi `Box<File>` na `Box<dyn Write>`.
@@ -786,21 +998,24 @@ fn say_hello(out: &mut dyn Write) -> std::io::Result<()> {
 
 # Reference na trait object
 
-V jazyce Java je proměnná typu `OutputStream` (analogické k `std::io::Write` v Rustu) referencí na libovolný objekt, který implementuje `OutputStream`.
+V jazyce Java je proměnná typu `OutputStream` referencí na libovolný objekt, který implementuje `OutputStream`.
 Skutečnost, že se jedná o referenci, je samozřejmá. 
 
----
+<div data-marpit-fragment="3">
 
-# Reference na trait object
+Obdobně v Rustu je proměnná typu `&dyn Write` referencí na hodnotu, která musí implementovat trait `Write`.
 
 ```rust
 let mut buf: Vec<u8> = vec![];
 let writer: &mut dyn Write = &mut buf;
 ```
 
+</div>
+
 ---
 
 # Lifetime traitu
+
 ```rust
 // A struct with annotation of lifetimes.
 #[derive(Debug)]
@@ -825,7 +1040,7 @@ fn main() {
 
 ---
 
-# Subtrait
+### Subtrait
 
 * Můžeme vytvořit subtrait, který vyžaduje i implementaci nadřazeného traitu.
 * Řekneme, že `Creature` je **extension** `Visible`:
@@ -836,22 +1051,11 @@ fn main() {
       // ...
   }
   ```
-
----
-
-# Subtrait
-
-Na pořadí implementace nezáleží:
-
-```rust
-impl Visible for Broom {
-    // ...
-}
-
-impl Creature for Broom {
-    // ...
-}
-```
+* Na pořadí implementace nezáleží:
+  ```rust
+  impl Creature for Broom { /* ... */ }
+  impl Visible for Broom { /* ... */ }
+  ```
 
 ---
 
@@ -874,12 +1078,16 @@ fn main() {
 }
 ```
 
+<div data-marpit-fragment="3">
+
+<br><br>
 Poznámka: v Rustu při panice program sám projde stack a uklidí po sobě veškerá data. Je to za cenu větší binárky. Pokud chcete snížit velikost binárky a nechat úklid na operačním systému, tak můžete udělat následující konfiguraci v `Cargo.toml`:
 
 ```toml
 [profile.release]
 panic = 'abort'
 ```
+</div>
 
 ---
 
@@ -905,9 +1113,9 @@ Ošetřit ji můžeme následně:
 use std::fs::File;
 
 fn main() {
-    let file = File::open("hello.txt");
+    let file: Result<File, io::Error> = File::open("hello.txt");
 
-    let file = match file {
+    let file: File = match file {
         Ok(value) => value,
         Err(error) => panic!("Problem opening the 'hello.txt' file: {:?}", error),
     };
@@ -930,10 +1138,10 @@ fn main() {
         Err(error) => match error.kind() {
             ErrorKind::NotFound => match File::create("hello.txt") {
                 Ok(created_file) => created_file,
-                Err(e) => panic!("Problem creating the file: {:?}", e),
+                Err(e) => panic!("Cannot open nor create the file: {:?}", e),
             },
             other_error => {
-                panic!("Problem opening the file: {:?}", other_error)
+                panic!("Cannot open the file: {:?}", other_error)
             }
         },
     };
@@ -949,10 +1157,10 @@ use std::error::Error;
 use std::io::{Write, stderr};
 
 fn print_error(mut err: &dyn Error) {
-    let _ = writeln!(stderr(), "error: {}", err);
+    let _ = eprintln!("error: {}", err);
     
     while let Some(source) = err.source() {
-        let _ = writeln!(stderr(), "caused by: {}", source);
+        let _ = eprintln!("caused by: {}", source);
         err = source;
     }
 }
@@ -984,8 +1192,7 @@ Pokud je hodnota `Err(error)`, funkce skončí s `Err(error)`.
 
 ```rust
 use std::fs::File;
-use std::io;
-use std::io::Read;
+use std::io::{self, Read};
 
 fn read_username_from_file() -> Result<String, io::Error> {    
     let mut s = String::new();
@@ -993,7 +1200,32 @@ fn read_username_from_file() -> Result<String, io::Error> {
 
     Ok(s)
 }
+
+fn main() -> Result<(), io::Error> {
+    match read_username_from_file() {
+        Ok(name) => {
+            println!("Found name {name}.");
+            Ok(())
+        },
+        Err(e) => {
+            eprintln!("Could not read name!");
+            Err(e)
+        }
+    }
+}
 ```
+
+---
+
+### Extrémní propagace chyb
+
+![h:512](/assets/03-images/%3F%3F%3F%3F.png)
+
+<small>
+
+[Source](https://fosstodon.org/@antonok/111134824451525448)
+
+</small>
 
 ---
 
@@ -1008,8 +1240,9 @@ type GenericResult<T> = Result<T, GenericError>;
 
 # `anyhow` crate
 
-Nejpopulárnější knihovna pro zjednodušení práce s chybami. Je doporučená pro aplikace, pro knihovny doporučujeme se podívat na `thiserror`.
+Nejpopulárnější knihovna pro zjednodušení práce s chybami.
 
+Je doporučená pro aplikace, pro knihovny doporučujeme se podívat na `thiserror`.
 
 ```toml
 [dependencies]
@@ -1018,17 +1251,35 @@ anyhow = "1"
 
 ---
 
-# Práce s chybami pomocí anyhow
+<style scoped>
+section {
+    padding-top: 0;
+}
+</style>
 
+### Práce s chybami pomocí anyhow
+
+###### Návratový typ
 ```rust
-use anyhow::Result;
-
-fn get_cluster_info() -> Result<ClusterMap> {
+fn get_cluster_info() -> anyhow::Result<ClusterMap> {
     let config = std::fs::read_to_string("cluster.json")?;
     let map: ClusterMap = serde_json::from_str(&config)?;
     Ok(map)
 }
 ```
+
+###### One-of errors
+
+```rust
+return Err(anyhow!("Missing attribute: {}", missing));
+```
+
+###### Context
+
+```rust
+std::fs::read(path).with_context(|| format!("Failed to read from {}", path))?;
+```
+
 
 ---
 
@@ -1069,19 +1320,20 @@ fn main() {
 # `clap` crate
 
 Nejpopulárnější knihovna na zpracování argumentů z CLI.
+
 Závislost se liší podle toho, jestli budeme používat
 `derive` pattern:
 
 ```toml
 [dependencies]
-clap = { version = "4.0.0-rc.2", features = ["derive"] }
+clap = { version = "4.4.6", features = ["derive"] }
 ```
 
 nebo `builder` pattern:
 
 ```toml
 [dependencies]
-clap = "4.0.0-rc.2"
+clap = "4.4.6"
 ```
 
 ---
@@ -1095,7 +1347,7 @@ use clap::{ArgAction, Parser};
 /// The same applies for all doc strings on struct fields.
 #[derive(Parser)]
 #[clap(version = "1.0", author = "John Smith")]
-struct Opts {
+struct Args {
     /// Sets a custom config file. Could have been an Option<T> with no default too
     #[clap(short = 'c', long = "config", default_value = "default.conf")]
     config: String,
@@ -1103,10 +1355,12 @@ struct Opts {
     /// Some input. Because this isn't an Option<T> it is required to be used
     input: String,
     
-    /// A level of verbosity, and can be used multiple times
+    /// A level of verbosity, can be used multiple times
     #[clap(short = 'v', long = "verbose", action = ArgAction::Count)]
     verbose: u8,
 }
+
+// Continued on the next slide...
 ```
 
 ---
@@ -1114,16 +1368,17 @@ struct Opts {
 # Jednodušší zpracování přes clap
 
 ```rust
-fn main() {
-    let opts: Opts = Opts::parse();
+// ...continued from the previous slide.
 
-    // Gets a value for config if supplied by user, or defaults to "default.conf"
-    println!("Value for config: {}", opts.config);
-    println!("Using input file: {}", opts.input);
+fn main() {
+    let args: Args = Args::parse();
+
+    println!("Value for config: {}", args.config);
+    println!("Using input file: {}", args.input);
 
     // Vary the output based on how many times the user used the "verbose" flag
     // (i.e. 'myprog -v -v -v' or 'myprog -vvv' vs 'myprog -v')
-    match opts.verbose {
+    match args.verbose {
         0 => println!("No verbose info"),
         1 => println!("Some verbose info"),
         2 => println!("Tons of verbose info"),
@@ -1144,7 +1399,7 @@ fn main() {
         .version("1.0")
         .author("John Smith")
         .about("Does awesome things")
-        .arg(arg!(-c --config [FILE] "Sets an optional custom config file"))
+        .arg(arg!(-c --config [FILE] "Sets an optional custom config file").default_value("default.conf"))
         .arg(arg!(<INPUT>            "Sets the required input file to use"))
         .arg(Arg::new("verbosity").short('v').long("verbose").action(ArgAction::Count))
         .get_matches();
@@ -1201,7 +1456,7 @@ fn main() {
 
 ---
 
-# <!--fit--> Práce se soubory
+# <!--fit--> Práce se soubory a stdin
 
 ---
 
@@ -1209,7 +1464,7 @@ fn main() {
 
 ```rust
 use std::fs::File;
-use std::io::prelude::*; // vlozi vezne pouzivane traity
+use std::io::prelude::*; // Importuje běžně používané traity
 
 fn main() -> std::io::Result<()> {
     let mut file = File::create("foo.txt")?;
@@ -1337,7 +1592,26 @@ fn main() {
 Poznámka: dočasný adresář by bylo lepší zjistit nezávisle na platformě pomocí `env::temp_dir()`.
 
 ---
-# <!--fit--> Dotazy?
+
+<style scoped>
+li {
+    font-size: 85%;
+}
+</style>
+
+### Shrnutí
+
+1. Týmové projekty
+2. Enumy
+3. Pattern Matching
+4. Struktury
+5. Lifetimes
+6. Traity
+7. Ošetření chyb
+8. CLI aplikace
+9. Práce se soubory a stdin
+
+### Dotazy?
 
 ---
 
