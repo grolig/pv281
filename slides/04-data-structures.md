@@ -743,6 +743,54 @@ trait FromIterator<A>: Sized {
 
 ---
 
+# Pro rozšíření možností iterátorů
+
+využijte crate [itertools](https://docs.rs/itertools/latest/itertools/index.html).
+
+---
+
+# Příklady metod v itertools
+
+`interleave()` - střídavě poskytuje prvky ze dvou iterátorů
+`intersperse()` - mezi každý prvek iterátoru vloží hodnotu
+`group_by()` - seskupuje po sobě jdoucí prvky se společným klíčem
+`merge()` - spojí dva iterátory sléváním
+`sorted()` - seřadí iterátor bez potřeby vytvoření vektoru (interně iterátor zkonzumuje, seřadí a vytvoří nový)
+`unfold()` - generuje iterátor na základě výchozího stavu a builder funkce
+
+---
+
+# Pro jednoduchou paralelizaci na úrovni iterátoru
+
+využijte crate [Rayon](https://docs.rs/rayon/latest/rayon/index.html).
+
+---
+
+# Instalace Rayon
+
+Do `Cargo.toml` přidáme závislost:
+```toml
+[dependencies]
+rayon = "1.5"
+```
+
+---
+
+# Použití Rayon
+
+Metodu `iter()` nahradíme za metodu `par_iter()`.
+```rust
+use rayon::prelude::*;
+
+fn sum_of_squares(input: &[i32]) -> i32 {
+    input.par_iter() // <-- just change that!
+         .map(|&i| i * i)
+         .sum()
+}
+```
+
+---
+
 # <!--fit--> Datové struktury
 
 ---
@@ -1042,54 +1090,6 @@ fn main() {
 
     // The heap should now be empty.
     assert!(heap.is_empty())
-}
-```
-
----
-
-# Pro rozšíření možností iterátorů
-
-využijte crate [itertools](https://docs.rs/itertools/latest/itertools/index.html)
-
----
-
-# Příklady metod v itertools
-
-`interleave()` - střídavě poskytuje prvky ze dvou iterátorů
-`intersperse()` - mezi každý prvek iterátoru vloží hodnotu
-`group_by()` - seskupuje po sobě jdoucí prvky se společným klíčem 
-`merge()` - spojí dva iterátory sléváním
-`sorted()` - seřadí iterátor bez potřeby vytvoření vektoru (interně iterátor zkonzumuje, seřadí a vytvoří nový)
-`unfold()` - generuje iterátor na základě výchozího stavu a builder funkce
-
----
-
-# Pro jednoduchou paralelizaci na úrovni iterátoru
-
-využijte crate [Rayon](https://docs.rs/rayon/latest/rayon/index.html)
-
----
-
-# Instalace Rayon
-
-Do `Cargo.toml` přidáme závislost: 
-```toml
-[dependencies]
-rayon = "1.5"
-```
-
----
-
-# Použití Rayon
-
-Metodu `iter()` nahradíme za metodu `par_iter()`.
-```rust
-use rayon::prelude::*;
-
-fn sum_of_squares(input: &[i32]) -> i32 {
-    input.par_iter() // <-- just change that!
-         .map(|&i| i * i)
-         .sum()
 }
 ```
 
