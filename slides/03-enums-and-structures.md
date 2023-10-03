@@ -1434,6 +1434,10 @@ fn main() {
 
 ---
 
+# <!--fit--> Práce se soubory a stdin
+
+---
+
 # Standardní vstup
 
 ```rust
@@ -1469,10 +1473,6 @@ fn main() {
 ```
 
 Poznámka: `.lock()` vytvoří nad `stdin` *mutex*, kterým se budeme věnovat více v šesté přednášce.
-
----
-
-# <!--fit--> Práce se soubory a stdin
 
 ---
 
