@@ -263,7 +263,7 @@ trait Clone: Sized {
 
 # Copy
 
-Umožní implicitní duplikaci hodnoty, a to zkopírováním bitů paměti. Toto chování nelze přetížit.
+Umožní implicitní duplikaci hodnoty, a to zkopírováním bitů paměti. Toto chování nelze změnit.
 
 Vyžaduje součaně implementovat `Clone`: `#[derive(Copy, Clone)]`.
 
@@ -274,6 +274,36 @@ trait Copy: Clone { }
 
 impl Copy for MyType { }
 ```
+
+---
+
+<style scoped>
+section {
+    padding-top: 0;
+}
+</style>
+
+# Copy
+
+```rust
+#[derive(Debug)]
+struct NonCopyable;
+
+#[derive(Debug, Copy, Clone)]
+struct Copyable;
+
+fn main() {
+    let x1 = NonCopyable;
+    let y1 = x1; // `x1` has moved into `y1` and can no longer be used:
+    // println!("{:?}", x1); // error: use of moved value
+    
+    let x2 = Copyable;
+    let y2 = x2; // `y2` is now a copy of `x2`, which is still valid
+    println!("{:?}", x2);
+}
+```
+
+Trait `Copy` implementují například všechny celočíselné i desetinné typy, `bool` či `char`.
 
 ---
 
