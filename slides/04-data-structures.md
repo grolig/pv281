@@ -156,7 +156,8 @@ where T: Debug + 'a
 
 # Utility traity
 
-Důležité traity, které jsou součástí standardní knihovny. 
+Důležité traity, které jsou součástí standardní knihovny.
+<br>
 Je vhodné je znát, abychom psali idiomatický kód (tj. takový kód, který je dostateně _Rustic_).
 
 ---
@@ -221,7 +222,7 @@ Dropping DataHolder with data `my stuff`!
 
 V Rustu existují typy _sized_ a _unsized_. S _unsized_ se musí pracovat přes referenci, nemohou být uložené do proměnné. 
 
-Příkladem _unsized_ je `dyn Trait` (např. `dyn Write`)
+Příkladem _unsized_ je `dyn Trait` (např. `dyn Write`), se kterým jsme se setkali na minulé přednášce.
 
 ---
 
@@ -311,6 +312,8 @@ Trait `Copy` implementují například všechny celočíselné i desetinné typy
 
 Poskytuje výchozí hodnotu.
 
+Používá se pro metody jako `Option::unwrap_or_default()`.
+
 ```rust
 trait Default {
     fn default() -> Self;
@@ -330,7 +333,7 @@ impl Default for String {
 # From & Into
 
 Slouží pro konverzi mezi typy. 
-Při správné implementaci ```From``` je ```Into``` automaticky implementováno.
+Při správné implementaci `From` je `Into` automaticky implementováno.
 
 ```rust
 trait Into<T>: Sized {
@@ -415,7 +418,7 @@ pub trait Iterator {
 
 # Rychlost iterátoru
 
-Iterátory poskytují stejně rychlý (ne-li rychlejší) kód jako normální for cyklus.
+Iterátory poskytují stejně rychlý (ne-li rychlejší) kód jako normální `for` cyklus.
 
 Jednoduché srovnání najdete v Rust book:  https://doc.rust-lang.org/book/ch13-04-performance.html
 
@@ -433,7 +436,7 @@ fn main() {
     let iterator = values.iter();
 
     // `.iter()` lze využít i ve for cyklu
-    for value in iterator {
+    for value in values.iter() {
         println!("Got: {}", value);
     }
 }
@@ -443,12 +446,13 @@ fn main() {
 
 # Iterovatelné typy
 
-Iterovatelný (_Iterable_) je takový typ, který implementuje `IntoIterator`. Pomocí jeho metody ```into_iter()``` získáme iterátor.
+Iterovatelný (_Iterable_) je takový typ, který implementuje `IntoIterator`. Pomocí jeho metody `into_iter()` získáme iterátor.
 
-Poznámka: v Rustu je `for cyklus` syntaktický cukr pro volání `into_iter()`, proto je možné napsat následující kód bez vytvoření iterátoru:
+Poznámka: v Rustu je cyklus `for` syntaktický cukr pro volání `into_iter()`, proto je možné napsat následující kód bez vytvoření iterátoru:
 
 ```rust
 let values = vec![1, 2, 3, 4, 5];
+
 for x in values {
     println!("{x}");
 }
