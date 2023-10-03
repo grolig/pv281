@@ -1555,6 +1555,8 @@ fn main() -> io::Result<()> {
 
 # Synchronizace na disk
 
+Použijeme, pokud chceme počkat (_blokující volání_), dokud systém nedokončí synchronizaci souborového systému.
+
 ```rust
 use std::fs::File;
 use std::io::prelude::*;
@@ -1573,6 +1575,8 @@ fn main() -> std::io::Result<()> {
 
 # Flush bufferu
 
+Vynucení zápisu z bufferu, Rust jej volá i v metodě traitu `Drop`.
+
 ```rust
 use std::io::prelude::*;
 use std::io::BufWriter;
@@ -1587,6 +1591,8 @@ fn main() -> std::io::Result<()> {
     Ok(())
 }
 ```
+
+Poznámka: `File::flush` nic nedělá a jen vrací `Ok(())`.
 
 ---
 
