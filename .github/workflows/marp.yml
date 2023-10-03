@@ -1,0 +1,33 @@
+name: build
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+#env:
+
+jobs:
+  # Checks syntax formatting.
+  convert:
+    name: Convert to PDF
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./slides
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        name: Use Node.js
+        with:
+          node-version: '20.x'
+      - run: "npm ci"
+      - run: "npx marp --html --pdf --pdf-outlines --pdf-outlines.pages=false -I . -o dist"
+      - uses: actions/upload-artifact@v3
+        name: Archive built PDFs
+        with:
+          name: pv281-slide-pdfs
+          path: slides/dist/[0-1]*.pdf
