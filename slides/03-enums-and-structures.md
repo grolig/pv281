@@ -325,11 +325,11 @@ fn main() {
 
     match x {
         Some(50) => println!("Got 50"),
-        Some(y) => println!("Matched, y = {:?}", y),
-        _ => println!("Default case, x = {:?}", x),
+        Some(y) => println!("Matched, y = {}", y),
+        _ => println!("Default case"),
     }
 
-    println!("at the end: x = {:?}, y = {:?}", x, y);
+    println!("at the end: y = {}", y);
 }
 ```
 
@@ -339,17 +339,17 @@ fn main() {
 
 ```rust 
 fn main() {
-    let x = Some(5);
+    let x = Some(10);
     let y = 10;
 
     match x {
         Some(50) => println!("Got 50"),
-        Some(a) if a == y => println!("Got y as a = {:?}", y),
-        Some(y) => println!("Matched, y = {:?}", y),
-        _ => println!("Default case, x = {:?}", x),
+        Some(a) if a == y => println!("Got y as a = {}", a),
+        Some(y) => println!("Matched, y = {}", y),
+        _ => println!("Default case"),
     }
 
-    println!("at the end: x = {:?}, y = {:?}", x, y);
+    println!("at the end: y = {}", y);
 }
 ```
 
