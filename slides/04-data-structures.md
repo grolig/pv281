@@ -14,8 +14,12 @@ paginate: true
 
 1. Generika
 2. Utility traity
-3. Vektory a iterátory
+3. Vektory, iterátory a closures
 4. Datové struktury
+
+---
+
+# <!--fit--> Generika
 
 ---
 
@@ -143,6 +147,10 @@ where T: Debug + 'a
     println!("`print_ref`: t is {:?}", t);
 }
 ```
+
+---
+
+# <!--fit--> Utility traity
 
 ---
 
@@ -327,7 +335,8 @@ let smaller: i32 = huge.try_into().unwrap_or(i32::MAX);
 
 ---
 
-# <!--fit--> Vektory a iterátory
+# <!--fit--> Vektory, iterátory
+# <!--fit--> a closures
 
 ---
 
