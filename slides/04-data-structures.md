@@ -460,6 +460,17 @@ for x in values {
 
 ---
 
+# Možnosti vzniku iterátoru
+
+`.iter()`: prvky iterátoru budou reference (`&T`)
+
+`.iter_mut()`: prvky iterátoru budou mutable reference (`&mut T`)
+
+`.into_iter()`: iterátor se stane vlastníkem prvků (`T`),
+původní "kolekce" se zkonzumuje
+
+---
+
 # Klonování iterátoru
 
 Metoda `cloned()` aplikuje na každý prvek metodu `clone()` z traitu `Clone`.
