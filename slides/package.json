@@ -5,16 +5,16 @@
   "main": "index.js",
   "scripts": {
     "build": "rimraf dist && npm run -s og-image && npm run -s deck",
-    "deck": "marp --html --no-stdin 06-enums-and-structures.md -o dist/index.html && cpy \"assets/**/*\" dist/assets",
+    "deck": "marp --html --no-stdin 03-enums-and-structures.md -o dist/index.html && cpy \"assets/**/*\" dist/assets",
     "now-build": "npm run -s deck",
     "og-image": "marp --html 03-enums-and-structures.md -o dist/og-image.jpg",
     "start": "marp -s --html .",
-    "preview": "marp -ps --html ."
+    "preview": "CHROME_PATH=/usr/bin/chromium-browser marp -ps --html ."
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@marp-team/marp-cli": "^1.4.2",
+    "@marp-team/marp-cli": "^3.3.0",
     "@marp-team/marp-core": "^2.2.0",
     "markdown-it-plantuml": "^1.4.1",
     "markdown-it-named-code-blocks": "^0.2.0"
