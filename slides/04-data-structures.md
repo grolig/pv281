@@ -339,6 +339,28 @@ Trait `Copy` implementují například všechny celočíselné i desetinné typy
 
 ---
 
+# Copy - příklad použití
+
+Může se hodit při použití newtype patternu:
+
+```rust
+#[derive(Copy, Clone)]
+struct Id(u64);
+```
+
+Pro `y: &Id` jsou pak tyto zápisy ekvivalentní:
+
+
+```rust
+let x: Id = *y;
+```
+
+```rust
+let x: Id = y.clone();
+```
+
+---
+
 # Default
 
 Poskytuje výchozí hodnotu.
