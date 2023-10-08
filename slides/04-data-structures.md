@@ -138,24 +138,25 @@ where T: Display + Clone,
 
 # Generika a lifetime
 
+Je možné vynutit lifetime generických typů:
+
 ```rust
-// Funkce bere referenci na `T`,
-// kdy `T` implementuje `Debug` a všechny reference v `T` žijí déle než `'a`. 
-// Také `'a` žije déle než funkce.
-fn print_ref<'a, T>(t: &'a T)
-where T: Debug + 'a
-{
-    println!("`print_ref`: t is {:?}", t);
+fn max<'a, T: PartialOrd>(a: &'a T, b: &'a T) -> &'a T {
+    if a < b {
+        return b;
+    }
+    a
 }
 ```
 
 ---
 
+# Generika a lifetime
 
-# Generika a lifetime - příklad
+(V tomto případě není nutné brát reference. Pokud `T` implementuje PartialOrd, pak ho implementuje i `&T`. Je pak na uživateli zda předá referenci, nebo vlastněnou hodnotu.)
 
 ```rust
-fn max<'a, T: PartialOrd>(a: &'a T, b: &'a T) -> &'a T {
+fn max<T: PartialOrd>(a: T, b: T) -> T {
     if a < b {
         return b;
     }
