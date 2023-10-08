@@ -363,17 +363,19 @@ Poskytuje výchozí hodnotu.
 trait Default {
     fn default() -> Self;
 }
-```
 
-```rust
 impl Default for String {
     fn default() -> String {
         String::new()
     }
 }
 ```
-Používá se pro metody jako `Option::unwrap_or_default()`.
 
+---
+
+# Default
+
+Používá se pro metody jako `Option::unwrap_or_default()`.
 
 ```rust
 let value_option: Option<String> = ...;
