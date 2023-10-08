@@ -719,7 +719,7 @@ Výsledkem je nový iterátor, jehož prvky tvoří podmnožinu prvků původní
 fn main() {
     let a = [1, 4, 2, 3];
 
-    let sum = a.iter()
+    let divisible_by_two = a.iter()
         .cloned() // duplikuje položky
         .inspect(|x| println!("about to filter: {}", x))
         .filter(|x| x % 2 == 0)
