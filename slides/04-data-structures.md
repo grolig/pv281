@@ -15,7 +15,7 @@ paginate: true
 1. Generika
 2. Utility traity
 3. Vektory, iterátory a closures
-4. Datové struktury
+4. Datové struktury - `std::collections`
 
 ---
 
@@ -98,12 +98,13 @@ fn main() {
 
     let mixed = first.mixup(second);
     println!("mixed.x = {}, mixed.y = {}", mixed.x, mixed.y);
+    // mixed.x = 5, mixed.y = c
 }
 ```
 
 ---
 
-# Generika u metod – traity
+# Generika u metod – trait bound
 
 ```rust
 /// Assume the list parameter is not empty. 
@@ -137,14 +138,29 @@ where T: Display + Clone,
 
 # Generika a lifetime
 
+Je možné vynutit lifetime generických typů:
+
 ```rust
-// Funkce bere referenci na `T`,
-// kdy `T` implementuje `Debug` a všechny reference v `T` žijí déle než `'a`. 
-// Také `'a` žije déle než funkce.
-fn print_ref<'a, T>(t: &'a T)
-where T: Debug + 'a
-{
-    println!("`print_ref`: t is {:?}", t);
+fn max<'a, T: PartialOrd>(a: &'a T, b: &'a T) -> &'a T {
+    if a < b {
+        return b;
+    }
+    a
+}
+```
+
+---
+
+# Generika a lifetime
+
+(V tomto případě není nutné brát reference. Pokud `T` implementuje PartialOrd, pak ho implementuje i `&T`. Je pak na uživateli zda předá referenci, nebo vlastněnou hodnotu.)
+
+```rust
+fn max<T: PartialOrd>(a: T, b: T) -> T {
+    if a < b {
+        return b;
+    }
+    a
 }
 ```
 
@@ -179,8 +195,6 @@ trait Drop {
 
 <!-- _class: split -->
 
-<div class=left-column>
-
 ```rust
 struct DataHolder {
     data: String,
@@ -203,9 +217,6 @@ fn main() {
 }
 ```
 
-</div>
-<div class=right-column>
-
 ```shell
 $ cargo run
 
@@ -213,7 +224,6 @@ DataHolders created.
 Dropping DataHolder with data `my stuff`!
 ```
 
-</div>
 
 
 ---
@@ -247,9 +257,22 @@ fn generic_function<T: ?Sized>(t: &T)  { /* ... */ }
 
 Umožní explicitní vytvoření hluboké kopie.
 
-Výchozí implementace jde vytvořit přes `#[derive(Clone)]`: volá `.clone()` nad všemi položkami struktury. Vlastní implementace dává kontrolu nad procesem kopírování.
+Lze odvodit pomocí `#[derive(Clone)]`:
 
-Operace může být drahá časově i paměťově.
+```rust
+#[derive(Clone)]
+struct MyStruct {
+    ...
+}
+```
+
+Výchozí implementace volá `.clone()` nad všemi položkami struktury (může být drahé časově i paměťově).
+
+---
+
+### Clone - vlastní implementace a `clone_from()`
+
+Definice traitu `Clone`:
 
 ```rust
 trait Clone: Sized {
@@ -259,6 +282,8 @@ trait Clone: Sized {
     }
 }
 ```
+
+Vlastní implementace dává kontrolu nad procesem kopírování. Použití `clone_from()` šetří u collections alokace.
 
 ---
 
@@ -308,24 +333,53 @@ Trait `Copy` implementují například všechny celočíselné i desetinné typy
 
 ---
 
+# Copy - příklad použití
+
+Může se hodit při použití newtype patternu:
+
+```rust
+#[derive(Copy, Clone)]
+struct Id(u64);
+```
+
+Pro `y: &Id` jsou pak tyto zápisy ekvivalentní:
+
+
+```rust
+let x: Id = *y;
+```
+
+```rust
+let x: Id = y.clone();
+```
+
+---
+
 # Default
 
 Poskytuje výchozí hodnotu.
-
-Používá se pro metody jako `Option::unwrap_or_default()`.
 
 ```rust
 trait Default {
     fn default() -> Self;
 }
-```
 
-```rust
 impl Default for String {
     fn default() -> String {
         String::new()
     }
 }
+```
+
+---
+
+# Default
+
+Používá se pro metody jako `Option::unwrap_or_default()`.
+
+```rust
+let value_option: Option<String> = ...;
+let value: String = value_option.unwrap_or_default();
 ```
 
 ---
@@ -341,8 +395,25 @@ trait Into<T>: Sized {
 }
 
 trait From<T>: Sized {
-    fn from(other: T) -> Self;
+    fn from(value: T) -> Self;
 }
+```
+
+---
+
+# From & Into - příklad
+
+Použití s naším newtype `Id`:
+```rust
+impl From<u64> for Id {
+    fn from(value: u64) -> Self {
+        Self(value)
+    }
+}
+
+...
+
+let user_id: Id = 42.into();
 ```
 
 ---
@@ -364,6 +435,21 @@ pub trait TryInto<T>: Sized {
 
 ```rust
 let smaller: i32 = huge.try_into().unwrap_or(i32::MAX);
+```
+
+---
+
+## TryFrom & Into - příklad použití
+
+```rust
+struct Timestamp {...}
+```
+
+Konverze ze `String` může selhat, konverze na `String` nikoliv: 
+
+```rust
+impl TryFrom<String> for Timestamp {...}
+impl Into<String> for Timestamp {...}
 ```
 
 ---
@@ -460,6 +546,20 @@ for x in values {
 
 ---
 
+# Iterovatelné typy
+
+Obdobně si lze zjednodušit zápis iterování přes reference (není nutné volat `.iter()`):
+
+```rust
+let values = vec![1, 2, 3, 4, 5];
+
+for x in &values {
+    println!("{x}");
+}
+```
+
+---
+
 # Možnosti vzniku iterátoru
 
 `.iter()`: prvky iterátoru budou reference (`&T`)
@@ -471,7 +571,7 @@ původní "kolekce" se zkonzumuje
 
 ---
 
-# Klonování iterátoru
+# Klonování prvků v iterátoru
 
 Metoda `cloned()` aplikuje na každý prvek metodu `clone()` z traitu `Clone`.
 
@@ -615,7 +715,7 @@ Výsledkem je nový iterátor, jehož prvky tvoří podmnožinu prvků původní
 fn main() {
     let a = [1, 4, 2, 3];
 
-    let sum = a.iter()
+    let divisible_by_two = a.iter()
         .cloned() // duplikuje položky
         .inspect(|x| println!("about to filter: {}", x))
         .filter(|x| x % 2 == 0)
@@ -838,6 +938,8 @@ fn sum_of_squares(input: &[i32]) -> i32 {
 
 # <!--fit--> Datové struktury
 
+Modul `std::collections`
+
 ---
 
 # Dvousměrný vektor 
@@ -847,7 +949,7 @@ Využití:
 2. Potřebujeme frontu.
 3. Potřebujeme obousměrnou frontu.
 
-Je implementován jako _ring buffer_, tj. nemusí zabírat kontinuální prostor v paměti. Pokud chceme dělat slice, tak potřebujeme kontinuální prostor – získáme ho metodou `make_contiguous()`.
+Je implementován jako _ring buffer_, tj. nemusí zabírat kontinuální prostor v paměti. Pro transformaci na kontinuální prostor můžeme použít metodu `make_contiguous()` (vhodné třeba pro efektivní sorting).
 
 ---
 
@@ -864,14 +966,14 @@ fn main() {
     use std::collections::VecDeque;
 
     let mut buf = VecDeque::new();
-    buf.push_back(3);
-    buf.push_back(4);
-    buf.push_back(5);
-    buf.push_front(2);
+    buf.push_back(3);  // [3]
+    buf.push_back(4);  // [3, 4]
+    buf.push_back(5);  // [3, 4, 5]
+    buf.push_front(2); // [2, 3, 4, 5]
     
     if let Some(elem) = buf.get_mut(2) {
         *elem = 7;
-    }
+    }                  // [2, 3, 7, 5]
 
     assert_eq!(d.pop_front(), Some(2));
     assert_eq!(buf[1], 7);
