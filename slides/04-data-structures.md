@@ -953,7 +953,7 @@ Využití:
 2. Potřebujeme frontu.
 3. Potřebujeme obousměrnou frontu.
 
-Je implementován jako _ring buffer_, tj. nemusí zabírat kontinuální prostor v paměti. Pokud chceme dělat slice, tak potřebujeme kontinuální prostor – získáme ho metodou `make_contiguous()`.
+Je implementován jako _ring buffer_, tj. nemusí zabírat kontinuální prostor v paměti. Pro transformaci na kontinuální prostor můžeme použít metodu `make_contiguous()` (vhodné třeba pro efektivní sorting).
 
 ---
 
