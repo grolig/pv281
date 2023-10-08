@@ -263,9 +263,22 @@ fn generic_function<T: ?Sized>(t: &T)  { /* ... */ }
 
 Umožní explicitní vytvoření hluboké kopie.
 
-Výchozí implementace jde vytvořit přes `#[derive(Clone)]`: volá `.clone()` nad všemi položkami struktury. Vlastní implementace dává kontrolu nad procesem kopírování.
+Lze odvodit pomocí `#[derive(Clone)]`:
 
-Operace může být drahá časově i paměťově.
+```rust
+#[derive(Clone)]
+struct MyStruct {
+    ...
+}
+```
+
+Výchozí implementace volá `.clone()` nad všemi položkami struktury (může být drahé časově i paměťově).
+
+---
+
+### Clone - vlastní implementace a `clone_from()`
+
+Definice traitu `Clone`:
 
 ```rust
 trait Clone: Sized {
@@ -275,6 +288,8 @@ trait Clone: Sized {
     }
 }
 ```
+
+Vlastní implementace dává kontrolu nad procesem kopírování. Použití `clone_from()` šetří u collections alokace.
 
 ---
 
