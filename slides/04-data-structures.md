@@ -365,8 +365,6 @@ let x: Id = y.clone();
 
 Poskytuje výchozí hodnotu.
 
-Používá se pro metody jako `Option::unwrap_or_default()`.
-
 ```rust
 trait Default {
     fn default() -> Self;
@@ -379,6 +377,13 @@ impl Default for String {
         String::new()
     }
 }
+```
+Používá se pro metody jako `Option::unwrap_or_default()`.
+
+
+```rust
+let value_option: Option<String> = ...;
+let value: String = value_option.unwrap_or_default();
 ```
 
 ---
