@@ -98,6 +98,7 @@ fn main() {
 
     let mixed = first.mixup(second);
     println!("mixed.x = {}, mixed.y = {}", mixed.x, mixed.y);
+    // mixed.x = 5, mixed.y = c
 }
 ```
 
