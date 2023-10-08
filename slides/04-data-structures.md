@@ -443,6 +443,21 @@ let smaller: i32 = huge.try_into().unwrap_or(i32::MAX);
 
 ---
 
+## TryFrom & Into - příklad použití
+
+```rust
+struct Timestamp {...}
+```
+
+Konverze ze `String` může selhat, konverze na `String` nikoliv: 
+
+```rust
+impl TryFrom<String> for Timestamp {...}
+impl Into<String> for Timestamp {...}
+```
+
+---
+
 # <!--fit--> Vektory, iterátory
 # <!--fit--> a closures
 
