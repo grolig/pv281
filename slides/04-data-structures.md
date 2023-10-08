@@ -399,8 +399,25 @@ trait Into<T>: Sized {
 }
 
 trait From<T>: Sized {
-    fn from(other: T) -> Self;
+    fn from(value: T) -> Self;
 }
+```
+
+---
+
+# From & Into - příklad
+
+Použití s naším newtype `Id`:
+```rust
+impl From<u64> for Id {
+    fn from(value: u64) -> Self {
+        Self(value)
+    }
+}
+
+...
+
+let user_id: Id = 42.into();
 ```
 
 ---
