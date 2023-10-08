@@ -104,7 +104,7 @@ fn main() {
 
 ---
 
-# Generika u metod – traity
+# Generika u metod – trait bound
 
 ```rust
 /// Assume the list parameter is not empty. 
