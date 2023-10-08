@@ -550,6 +550,20 @@ for x in values {
 
 ---
 
+# Iterovatelné typy
+
+Obdobně si lze zjednodušit zápis iterování přes reference (není nutné volat `.iter()`):
+
+```rust
+let values = vec![1, 2, 3, 4, 5];
+
+for x in &values {
+    println!("{x}");
+}
+```
+
+---
+
 # Možnosti vzniku iterátoru
 
 `.iter()`: prvky iterátoru budou reference (`&T`)
