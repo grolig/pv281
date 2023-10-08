@@ -15,7 +15,7 @@ paginate: true
 1. Generika
 2. Utility traity
 3. Vektory, iterátory a closures
-4. Datové struktury
+4. Datové struktury - `std::collections`
 
 ---
 
@@ -837,6 +837,8 @@ fn sum_of_squares(input: &[i32]) -> i32 {
 ---
 
 # <!--fit--> Datové struktury
+
+Modul `std::collections`
 
 ---
 
