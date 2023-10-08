@@ -575,7 +575,7 @@ původní "kolekce" se zkonzumuje
 
 ---
 
-# Klonování iterátoru
+# Klonování prvků v iterátoru
 
 Metoda `cloned()` aplikuje na každý prvek metodu `clone()` z traitu `Clone`.
 
