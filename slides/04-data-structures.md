@@ -151,6 +151,20 @@ where T: Debug + 'a
 
 ---
 
+
+# Generika a lifetime - příklad
+
+```rust
+fn max<'a, T: PartialOrd>(a: &'a T, b: &'a T) -> &'a T {
+    if a < b {
+        return b;
+    }
+    a
+}
+```
+
+---
+
 # <!--fit--> Utility traity
 
 ---
