@@ -191,9 +191,11 @@ trait Drop {
 
 ---
 
+<!-- _class: split -->
+
 ### Implementace Drop
 
-<!-- _class: split -->
+<div class=left-column>
 
 ```rust
 struct DataHolder {
@@ -217,6 +219,9 @@ fn main() {
 }
 ```
 
+</div>
+<div class=right-column>
+
 ```shell
 $ cargo run
 
@@ -224,7 +229,7 @@ DataHolders created.
 Dropping DataHolder with data `my stuff`!
 ```
 
-
+</div>
 
 ---
 
