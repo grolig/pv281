@@ -868,12 +868,6 @@ fn main() {
 
 ---
 
-# Pro side efekty je vhodnější použít for cyklus...
-
-...pokud se nejedná o poslední volání v dlouhém řetězci metod iterátorů, pak se nabízí metoda `for_each()`.
-
----
-
 # Collect
 
 Některé typy umožňují převod na kolekci, často použivaný je převod na vektor. K tomu slouží metoda `collect()`.
@@ -890,6 +884,12 @@ trait FromIterator<A>: Sized {
     fn from_iter<T: IntoIterator<Item=A>>(iter: T) -> Self;
 }
 ```
+
+---
+
+# Pro side efekty je vhodnější použít for cyklus...
+
+...pokud se nejedná o poslední volání v dlouhém řetězci metod iterátorů, pak se nabízí metoda `for_each()`.
 
 ---
 
