@@ -12,26 +12,10 @@ paginate: true
 
 # Obsah
 
-1. Týmové projekty
-2. Plánování procesů
-3. Paralelismus v Rustu
-4. Asynchronní programování v Rustu
-5. Perftesting
-TODO: add output of Criterion
-
----
-
-# Týmové projekty
-
-**Témata jsou dostupná v ISe v Rozpisech**, bližší informace v Interaktivní osnově.
-
-**Přihlašování je dnes od 20:00** pro jednoho z týmu, zítra od 20:00 pro všechny z týmu. Přihlašujte se jen na jedno téma.
-
-**Vlastní nápady na témata konzultujte se svým cvičícím**,
-máte na to 2 týdny.
-
-**Obhajoby budou během** celého **zkouškového období**,
-vaše obhajoba je vaším deadlinem na projekt.
+1. Plánování procesů
+2. Paralelismus v Rustu
+3. Asynchronní programování v Rustu
+4. Perftesting
 
 ---
 
