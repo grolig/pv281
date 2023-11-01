@@ -12,7 +12,7 @@ paginate: true
 
 # Obsah
 
-// TODO @grolig: check your git stash, add Redis to "Ukázky implementace"
+[//]: # (TODO @grolig: check your git stash, add Redis to "Ukázky implementace")
 1. Tokio
 2. Serde
 3. Síťové programování
