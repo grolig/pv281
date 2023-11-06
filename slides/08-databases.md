@@ -12,29 +12,12 @@ paginate: true
 
 # Obsah
 
-1. Velké domácí úkoly
-2. Docker a PlantUml
-3. Přístupy pro práci s databází
-4. Práce s proměnnými prostředí
-5. SQLx
-6. Práce s časem
-7. Redis
-
----
-
-# Velké domácí úkoly
-
-Tento týden **vyjde první ze čtyř velkých domácích úkolů**.
-
-Zadání i řešení budou komplexnější,
-bude možný větší bodový zisk – **až 8 bodů**.
-
-Úkoly nemusí mít kostru ani testy, cvičící budou hodnotit kvalitu kódu, návrhu i implementace.
-
-**Termíny pro odevzdání jsou individuální pro každou skupinu**.
-
-Více informací v [Interaktivní osnově](https://is.muni.cz/auth/el/fi/podzim2022/PV281/index.qwarp?prejit=9747522).
-
+1. Docker a PlantUml
+2. Přístupy pro práci s databází
+3. Práce s proměnnými prostředí
+4. SQLx
+5. Práce s časem
+6. Redis
 
 ---
 
