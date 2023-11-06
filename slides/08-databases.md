@@ -527,10 +527,7 @@ sqlx::migrate!("db/migrations") // <- Cesta ke složce s migracemi nebo ke konkt
 
 ### Offline mode
 
-1. Potřeba přidat offline feature v Cargo.toml:
-`sqlx = { features = [ "offline", ... ] }`
-
-2. Potřeba uložit metadata databáze do souboru `sqlx-data.json`:
+Potřeba uložit metadata databáze do souboru `sqlx-data.json`:
 `cargo sqlx prepare`
 
 #### Poznámky
