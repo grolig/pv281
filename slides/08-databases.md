@@ -413,7 +413,8 @@ Načteme následně pomocí výše zmíněných metod.
 
 SQLx je crate pro komunikaci s databází, poskytující kontolu dotazu za kompilace.
 
-Podporuje PostgreSQL, MySQL, SQLite a MSSQL.
+Podporuje PostgreSQL, MySQL a SQLite.
+Dříve do verze 0.7 i MSSQL.
 
 Podporuje různé asynchronní runtimy (async-std / tokio / actix) a TLS backendy (native-tls, rustls).
 
