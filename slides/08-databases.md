@@ -413,7 +413,8 @@ Načteme následně pomocí výše zmíněných metod.
 
 SQLx je crate pro komunikaci s databází, poskytující kontolu dotazu za kompilace.
 
-Podporuje PostgreSQL, MySQL, SQLite a MSSQL.
+Podporuje PostgreSQL, MySQL a SQLite.
+Dříve do verze 0.7 i MSSQL.
 
 Podporuje různé asynchronní runtimy (async-std / tokio / actix) a TLS backendy (native-tls, rustls).
 
@@ -527,10 +528,7 @@ sqlx::migrate!("db/migrations") // <- Cesta ke složce s migracemi nebo ke konkt
 
 ### Offline mode
 
-1. Potřeba přidat offline feature v Cargo.toml:
-`sqlx = { features = [ "offline", ... ] }`
-
-2. Potřeba uložit metadata databáze do souboru `sqlx-data.json`:
+Potřeba uložit metadata databáze do souboru `sqlx-data.json`:
 `cargo sqlx prepare`
 
 #### Poznámky
