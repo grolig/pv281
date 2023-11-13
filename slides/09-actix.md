@@ -15,10 +15,9 @@ paginate: true
 1. Architektury webových aplikací
 2. Actor pattern & Actix
 3. Šablony
-4. Yew
-5. REST API
-6. CORS & Autentizace
-7. Logování & Tracing
+4. REST API
+5. CORS & Autentizace
+6. Logování & Tracing
 
 ---
 
@@ -135,6 +134,80 @@ Poznámka: méně časté jsou metody CONNECT, TRACE, PATCH.
 403   Forbidden                       přihlášený nemá přístup
 404   Not Found                       stránka neexistuje
 500   Internal Server Error           nějaká chyba u nás
+```
+
+---
+
+# Richardson Maturity Model
+
+---
+
+# Level 0
+
+```
+POST /appointmentService HTTP/1.1
+```
+
+```
+{
+  "openSlotRequest": {
+    "date": "2010-01-04", 
+    "doctor": "mjones"
+  }
+}
+```
+
+---
+
+# Level 1: Resources
+
+```
+POST /doctors/mjones HTTP/1.1
+```
+
+```
+{
+  "openSlotRequest": {
+    "date": "2010-01-04"
+  }
+}
+```
+
+---
+
+# Level 2: Verbs
+
+```
+GET /doctors/mjones/slots?date=20100104&status=open HTTP/1.1
+```
+
+---
+
+# Level 3 - Hypermedia Controls
+
+```
+GET /doctors/mjones/slots?date=20100104&status=open HTTP/1.1
+```
+
+There is no standard, how to represent hypermedia controls. You can use ATOM (rfc4287).
+
+```
+{
+	"openSlotList": {
+		"slot": [
+			{
+				"link": {
+					"rel": "/linkrels/slot/book",
+					"uri": "/slots/1234"
+				},
+				"id": "1234",
+				"doctor": "mjones",
+				"start": "1400",
+				"end": "1450"
+			}
+		]
+	}
+}
 ```
 
 ---
@@ -648,139 +721,6 @@ async fn index(form: web::Form<FormData>) -> HttpResponse {
 ```
 
 ---
-
-# <!--fit--> Yew
-
----
-
-# Yew
-
-```rust
-use actix_web::{web, App, HttpServer, Responder};
-use yew::prelude::*;
-use yew::ServerRenderer;
-
-#[function_component]
-fn App() -> Html {
-    html! {<div>{"Hello, World!"}</div>}
-}
-
-#[actix_web::main]
-async fn main() -> std::io::Result<()> {
-    let renderer = ServerRenderer::<App>::new();
-    let rendered = renderer.render().await;
-
-    HttpServer::new(|| {
-        App::new().route("/", web::get().too(|| async { HttpResponse::Ok().body(rendered) }))
-    })
-    .bind(("127.0.0.1", 8080))?
-    .run()
-    .await
-}
-```
-
----
-
-# Yew html
-
-```rust
-use yew::prelude::*;
-
-let header_text = "Hello world".to_string();
-let header_html: Html = html! {
-    <h1>{header_text}</h1>
-};
-
-let count: usize = 5;
-let counter_html: Html = html! {
-    <p>{"My age is: "}{count}</p>
-};
-
-let combined_html: Html = html! {
-    <div>{header_html}{counter_html}</div>
-};
-```
-
----
-
-# Yew fragment
-
-```rust
-use yew::html;
-
-html! {
-    <>
-        <div></div>
-        <p></p>
-    </>
-};
-```
-
----
-
-# Yew CSS třídy
-
-```rust
-use yew::{classes, html};
-
-html! {
-  <div class={classes!("class-1", "class-2")}></div>
-};
-```
-
----
-
-# Yew komponenty
-
-```rust
-use yew::{function_component, html, Html, Properties};
-
-#[derive(Properties, PartialEq)]
-pub struct Props {
-    pub text: &str,
-    pub is_loading: bool,
-}
-
-#[function_component]
-fn HelloWorld(props: &Props) -> Html {
-    html! { <>{props.text}{props.is_loading.clone()}</> }
-}
-
-// Then supply the prop
-#[function_component]
-fn App() -> Html {
-    html! {<HelloWorld is_loading={true} />}
-}
-
-```
-
----
-
-# Yew render s propsy
-
-```rust
-#[actix_web::main]
-async fn main() -> std::io::Result<()> {
-    let loading_test = String::from("Loading: ");
-
-    let renderer = ServerRenderer::<App>::with_props(move || Props {
-        text: loading_test,
-        is_loading: true,
-    });
-
-    let rendered = renderer.render().await;
-
-    HttpServer::new(|| {
-        App::new().route("/", web::get().too(|| async { HttpResponse::Ok().body(rendered) }))
-    })
-    .bind(("127.0.0.1", 8080))?
-    .run()
-    .await
-}
-```
-
----
-
 
 # <!--fit--> REST API
 
