@@ -22,12 +22,16 @@ paginate: true
 
 # AJAX (Asynchronous Javascript and XML)
 
-
 Pojďme se podívat 10 let zpátky:
 - místo celé stránky posíláme pouze vykreslené části
 - není třeba překreslit celou stránku
 
 ---
+
+# Kdy se mi to bude hodit?
+
+---
+
 # Instalace přes npm
 
 ```sh
@@ -662,21 +666,4 @@ async fn index(session: Session) -> Result<impl Responder> {
 
 ---
 
-# Získání session
-
-```rust
-use actix_session::Session;
-
-#[get("/")]
-async fn index(session: Session) -> Result<impl Responder> {
-    // access session data
-    if let Some(count) = session.get::<i32>("counter")? {
-        session.insert("counter", count + 1)?;
-    } else {
-        session.insert("counter", 1)?;
-    }
-
-    let count = session.get::<i32>("counter")?.unwrap();
-    Ok(format!("Counter: {}", count))
-}
-```
+# And that's it
