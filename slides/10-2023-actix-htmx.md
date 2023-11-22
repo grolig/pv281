@@ -62,13 +62,13 @@ Response je vykreslená v elementu, který provedl request.
 
 # Requesty
 
-|Atribut|Typ requestu|
-|---|---|
-|[hx-get](https://htmx.org/attributes/hx-get/)|Provede `GET` na URL|
-|[hx-post](https://htmx.org/attributes/hx-post/)|Provede `POST` na URL|
-|[hx-put](https://htmx.org/attributes/hx-put/)|Provede `PUT` na URL|
-|[hx-patch](https://htmx.org/attributes/hx-patch/)|Provede `PATCH` na URL|
-|[hx-delete](https://htmx.org/attributes/hx-delete/)|Provede `DELETE` na URL|
+| Atribut                                             | Typ requestu            |
+|-----------------------------------------------------|-------------------------|
+| [hx-get](https://htmx.org/attributes/hx-get/)       | Provede `GET` na URL    |
+| [hx-post](https://htmx.org/attributes/hx-post/)     | Provede `POST` na URL   |
+| [hx-put](https://htmx.org/attributes/hx-put/)       | Provede `PUT` na URL    |
+| [hx-patch](https://htmx.org/attributes/hx-patch/)   | Provede `PATCH` na URL  |
+| [hx-delete](https://htmx.org/attributes/hx-delete/) | Provede `DELETE` na URL |
 
 ---
 
@@ -98,7 +98,7 @@ Pro změnu cíle pro vykreslení je nutné použít `hx-target`.
 Atributy (jako `hx-target`), které očekávají CSS selector, ve větši případů podporují rozšířenou syntaxi.
 
 `closest <CSS selector>` najde nejbližšího rodiče elementu
-`next <CSS selector>` najde element níže v DOMu (náledující)
+`next <CSS selector>` najde element níže v DOMu (následující)
 `previous <CSS selector>` najde element výše v DOMu (předcházející)
 `find <CSS selector>` najde nejbližšího potomka elementu
 
@@ -106,11 +106,11 @@ Atributy (jako `hx-target`), které očekávají CSS selector, ve větši příp
 
 # Swapping
 
-|Hodnota|Popis|
-|---|---|
-|`innerHTML`|výchozí nastavení - nahradí obsah elementu (potomky)|
-|`outerHTML`|nahradí celý element včetně potomků|
-|`none`|bez vypsání odpovědi|
+| Hodnota     | Popis                                                |
+|-------------|------------------------------------------------------|
+| `innerHTML` | výchozí nastavení - nahradí obsah elementu (potomky) |
+| `outerHTML` | nahradí celý element včetně potomků                  |
+| `none`      | bez vypsání odpovědi                                 |
 
 ---
 
@@ -126,6 +126,7 @@ Atributy (jako `hx-target`), které očekávají CSS selector, ve větši příp
 Standardně se loading indikátor použije potomek s třídou `htmx-indicator`. Jeho `opacity` se nastaví na 1. Element jde vybrat pomocí `hx-indicator="#indicator"`.
 
 ---
+
 # View Transition
 
 Využítím View Transitions API lze animatovat změny v rámci DOMu.
@@ -411,8 +412,6 @@ A nebo chytře rozdělit url komponenty (partial view) a URL stránky.
 
 ---
 
----
-
 # Šablony pomocí Askamy
 
 Jeden ze šablonovacích enginů. Šablony jsou kompilované s typovou kontrolou.
@@ -666,4 +665,8 @@ async fn index(session: Session) -> Result<impl Responder> {
 
 ---
 
-# And that's it
+# <!--fit--> Dotazy?
+
+---
+
+# <!--fit--> Děkuji za pozornost
