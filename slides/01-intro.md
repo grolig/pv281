@@ -145,7 +145,7 @@ Minimum pro úspěšné zakončení předmětu: **75**
 * programování v C, programovaní v managovaném jazyce (C# nebo Java), programování ve funkcionálním jazyce
 * práce s databází - aktivní znalost SQL a návrhu databáze
 * základní znalosti kolem REST rozhraní - endpointy, entity, znalost HTTP
-* znalost webobých technologií na úrovni PB138
+* znalost webových technologií na úrovni PB138
 
 ---
 
@@ -243,7 +243,7 @@ Tento seznam se už hodně natáhl, ale můžeme jmenovat:
 #### Bezpečnost
 
 V jazycích typu C vznikají problémy s manuální správou pamětí jako dangling pointer, dvojité uvolnění aj.
-V moderním C++ je spousta věcí řešena technikami jako je RAII nebo smartpointy.
+V moderním C++ je spousta věcí řešena technikami jako je RAII nebo smartpointery.
 Rozdílem je, že Rustu toto nemusí nehlídat člověk, ale řeší překladač.
 
 Cenou za to je doba překladu.
