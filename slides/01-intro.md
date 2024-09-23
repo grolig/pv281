@@ -30,7 +30,7 @@ paginate: true
 
 # Interaktivní osnova
 
-Primárním zdrojem informací během semestru je předmětová [Interaktivní osnova](https://is.muni.cz/auth/el/fi/podzim2023/PV281/index.qwarp).
+Primárním zdrojem informací během semestru je předmětová [Interaktivní osnova](https://is.muni.cz/auth/el/fi/podzim2024/PV281/index.qwarp).
 
 ---
 
@@ -39,7 +39,7 @@ Primárním zdrojem informací během semestru je předmětová [Interaktivní o
 **2h týdně**, vždy v pondělí v 18–20 hod.
 
 Přednášející:
-**Lukáš Grolig**, Ondřej Hrdlička, Ondřej Holub, Stanislav Zeman
+**Lukáš Grolig**, Stanislav Zeman, Marek Mišík, Marek Vrbka, Tomáš Sedláček, Adam Valt
 
 Během přednášky projdeme teorii a základní příklady.
 
@@ -47,15 +47,14 @@ Během přednášky projdeme teorii a základní příklady.
 
 ![w:128 h:128](./assets/is-logo.png)
 
-Přednášky jsou nahrávané a dostupné v ISu.
+Přednášky záznamy přednášek nejsou standardně dostupné.
 
-Dostupnost záznamů bude 14 dní po přednášce.
 
 ---
 
 ![w:512 h:256](./assets/twitch-logo.png)
 
-Stream přednášek na [Twitchi](https://www.twitch.tv/vexfalard).
+Stream přednášek pouze po předchozím oznámení na YT nebo Twitchi.
 
 ---
 
@@ -63,7 +62,7 @@ Stream přednášek na [Twitchi](https://www.twitch.tv/vexfalard).
 
 **2h** týdně, celkem 12 cvičení
 
-Cvičící: **Vrbka, Holub, Hrdlička, Chudíček & Mišík, Zeman, Adamove, Šlézar & Wehrenberg**
+Cvičící: **Petr Wehrenberg, Marek Mišík, Ondřej Hrdlička, Marek Vrbka, Petr Kadlec, Lukáš Chudíček, Miloš Hegr, Otakar Hirš**
 
 Na cvičení si zopakujete probranou látku a budete vypracovávat příklady s pomocí cvičících.
 
@@ -71,9 +70,7 @@ Na cvičení si zopakujete probranou látku a budete vypracovávat příklady s 
 
 # Poděkování
 
-Tomášovi Sedláčkovi a Ondrovi Hrdličkovi za pomoc s organizací předmětu.
-
-Katce Pitoňákové za přípravu prvního běhu předmětu.
+Ondrovi Hrdličkovi a ostatním za pomoc s organizací předmětu.
 
 ---
 
@@ -81,7 +78,7 @@ Katce Pitoňákové za přípravu prvního běhu předmětu.
 
 Organizační informace, diskuze k Rustu, pomoc s úkoly či projekty, hledání týmu, ...
 
-https://discord.gg/fJZxQMNgKf
+https://discord.gg/8yvsZu9ej4
 
 ---
 
@@ -112,7 +109,7 @@ Minimum pro úspěšné zakončení předmětu: **75**
 * Celkem **10 iterací**
 * Každá za **maximálně 5 bodů**
 * Každá z nich vás seznámí s konktrétní funkcionalitou Rustu
-* Automaticky testované, opravující kontroluje kvalitu kódu
+* Většinou automaticky testované, opravující kontroluje kvalitu kódu
 <br>
 * V základu máte 1 pokus na odevzdání
 * Po code review můžete, ale nemusíte využít možnost opravy získanou na základě aktivní účasti na cvičení
@@ -140,6 +137,15 @@ Minimum pro úspěšné zakončení předmětu: **75**
 * Na cvičeních za aktivitu
 * Za dobrovolné, bonusové podčásti iterací
 * Za špičkové zpracování úkolů/projektu a výrazné překročení rozsahu
+
+---
+
+# Očekávané znalosti?
+
+* programování v C, programovaní v managovaném jazyce (C# nebo Java), programování ve funkcionálním jazyce
+* práce s databází - aktivní znalost SQL a návrhu databáze
+* základní znalosti kolem REST rozhraní - endpointy, entity, znalost HTTP
+* znalost webobých technologií na úrovni PB138
 
 ---
 
@@ -327,7 +333,7 @@ Při paralelním programování často dochází k všemožným problémům. Rus
 
 Potřebuju jednoúčeloový rychle **naprasený tool**? Python.
 Bude to běžet v prohlížeči nebo je to **UI**? JS nebo TS.
-Můžu použít **managovaný jazyk**? Golang > C#, Kotlin > Java.
+Můžu použít **managovaný jazyk**? C# > Golang > Kotlin > Java.
 
 Jinak vyberu **Rust**!
 
@@ -457,11 +463,10 @@ Pokud máte homebrew, tak `brew install rustup`.
 ###### VS Code 
 s pluginem `rust-analyzer` - neinstalujte plugin jménem "Rust" (starý, deprekovaný, nahrazený)
 
+###### Jetbrains RustRover
+
 ###### Jetbrains CLion
 s pluginem `Intellij Rust`
-
-###### Jetbrains RustRover
-vyšel _Early Access_ od minulého týdne (09/2023)
 
 ---
 
@@ -773,6 +778,20 @@ fn main() {
 
     println!("The value of number is: {}", number);
 }
+```
+
+---
+
+# If let
+
+```
+   let number = Some(7);
+   let letter: Option<i32> = None;
+   let emoticon: Option<i32> = None;
+
+   if let Some(i) = number {
+       println!("Matched {:?}!", i);
+   }
 ```
 
 ---
