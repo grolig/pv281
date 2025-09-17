@@ -30,16 +30,16 @@ paginate: true
 
 # Interaktivní osnova
 
-Primárním zdrojem informací během semestru je předmětová [Interaktivní osnova](https://is.muni.cz/auth/el/fi/podzim2025/PV281/index.qwarp).
+Primárním zdrojem informací během semestru je předmětová [Interaktivní osnova](https://is.muni.cz/auth/el/fi/podzim2024/PV281/index.qwarp).
 
 ---
 
 # Přednášky
 
-**2h týdně**, vždy ve středu v 18–20 hod.
+**2h týdně**, vždy v pondělí v 18–20 hod.
 
 Přednášející:
-**Lukáš Grolig**, Stanislav Zeman, Marek Vrbka
+**Lukáš Grolig**, Stanislav Zeman, Marek Mišík, Marek Vrbka, Tomáš Sedláček, Adam Valt
 
 Během přednášky projdeme teorii a základní příklady.
 
@@ -47,7 +47,7 @@ Během přednášky projdeme teorii a základní příklady.
 
 ![w:128 h:128](./assets/is-logo.png)
 
-Záznamy přednášek budeme dělat, ale nebudeme poskytovat.
+Přednášky záznamy přednášek nejsou standardně dostupné.
 
 
 ---
@@ -62,9 +62,15 @@ Stream přednášek pouze po předchozím oznámení na YT nebo Twitchi.
 
 **2h** týdně, celkem 12 cvičení
 
-Cvičící: **Marek Vrbka, Marek Trtík, Adam Valt, Dominik Augustín**
+Cvičící: **Petr Wehrenberg, Marek Mišík, Ondřej Hrdlička, Marek Vrbka, Petr Kadlec, Lukáš Chudíček, Miloš Hegr, Otakar Hirš**
 
 Na cvičení si zopakujete probranou látku a budete vypracovávat příklady s pomocí cvičících.
+
+---
+
+# Poděkování
+
+Ondrovi Hrdličkovi a ostatním za pomoc s organizací předmětu.
 
 ---
 
@@ -72,7 +78,7 @@ Na cvičení si zopakujete probranou látku a budete vypracovávat příklady s 
 
 Organizační informace, diskuze k Rustu, pomoc s úkoly či projekty, hledání týmu, ...
 
-https://discord.gg/EzW7YjbFua
+https://discord.gg/8yvsZu9ej4
 
 ---
 
@@ -100,8 +106,8 @@ Minimum pro úspěšné zakončení předmětu: **75**
 ### Hodnocení
 ###### Iterace
 
-* Celkem **5 iterací**
-* Každá za **maximálně 8 bodů**
+* Celkem **10 iterací**
+* Každá za **maximálně 5 bodů**
 * Každá z nich vás seznámí s konktrétní funkcionalitou Rustu
 * Většinou automaticky testované, opravující kontroluje kvalitu kódu
 <br>
@@ -113,7 +119,7 @@ Minimum pro úspěšné zakončení předmětu: **75**
 ### Hodnocení
 ###### Týmový projekt
 
-* **60 bodů** za týmový projekt zakončený obhajobou ve zkouškovém
+* **50 bodů** za týmový projekt zakončený obhajobou ve zkouškovém
 <br>
 * **4členné**, výjimečně 3členné **týmy** – nikdy ne méně ani ne více
 * Týmy lze vytvářet **napříč seminárními skupinami**.
@@ -143,18 +149,6 @@ Minimum pro úspěšné zakončení předmětu: **75**
 
 ---
 
-# Použití AI v předmětu
-
-* Na úvodních úkolech zásadně nedoporučejeme používat
-* Důvod: Rust vás naučí priscipy použitelné jinde vedoucí k podstatně lepší kvalitě kódu a projektů 
-
-* Ve zbytku semestru je to OK
-* Pokud AI chcete použít, tak máte zákaz našeptávačů a jiných basic IDE integrací
-* Tvořte agenty, a ty potom odevzdávejte. Netvořte jednorázové prompty a fixy dalším promptem.
-* Pokud to není dobré upravte agenta, a nechte to udělat znova.
-
----
-
 # <!--fit--> Co za semestr probereme?
 
 ---
@@ -173,10 +167,10 @@ Minimum pro úspěšné zakončení předmětu: **75**
 # Probíraná látka
 
 * Práce s databází
-* Backendové aplikace s Axum
-* Síťové programování
-* Desktopové aplikace
-* Vývoj toolingu
+* RESTové služby v Actix
+* Server-side aplikace v Actix a HTMX
+* Desktopové aplikace v Tauri
+* gRPC protokol
 * Unsafe Rust, makra a foreign function interface
 
 ---
@@ -510,7 +504,7 @@ cargo run
 [package]
 name = "hello_world"
 version = "0.1.0"
-edition = "2024"
+edition = "2021"
 authors = ["Your Name <you@example.com>"]
 
 [dependencies]
