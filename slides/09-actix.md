@@ -895,40 +895,56 @@ async fn main() -> std::io::Result<()> {
 
 ---
 
-# Autentizace
+# Autentizace a session management
 
 ```rust
-use actix_web::*;
-use actix_identity::{Identity, CookieIdentityPolicy, IdentityService};
+use actix_identity::IdentityMiddleware;
+use actix_session::{storage::RedisSessionStore, SessionMiddleware};
+use actix_web::{cookie::Key, App, HttpResponse, HttpServer};
 
-async fn index(id: Identity) -> String {
-    // access request identity
-    if let Some(id) = id.identity() {
-        format!("Welcome! {}", id)
+#[actix_web::main]
+async fn main() {
+    let secret_key = Key::generate();
+    let redis_store = RedisSessionStore::new("redis://127.0.0.1:6379")
+        .await
+        .unwrap();
+
+    HttpServer::new(move || {
+        App::new()
+            .wrap(IdentityMiddleware::default())
+            .wrap(SessionMiddleware::new(
+                redis_store.clone(),
+                secret_key.clone(),
+            ))
+    })
+}
+```
+
+---
+
+# Autentizace a session management
+
+```rust
+#[get("/")]
+async fn index(user: Option<Identity>) -> impl Responder {
+    if let Some(user) = user {
+        format!("Welcome! {}", user.id().unwrap())
     } else {
         "Welcome Anonymous!".to_owned()
     }
 }
 
-async fn login(id: Identity) -> HttpResponse {
-    id.remember("User1".to_owned()); // <- remember identity
-    HttpResponse::Ok().finish()
+#[post("/login")]
+async fn login(request: HttpRequest) -> impl Responder {
+    // Verify user
+    Identity::login(&request.extensions(), "User1".into()).unwrap();
+    HttpResponse::Ok()
 }
 
-async fn logout(id: Identity) -> HttpResponse {
-    id.forget();                      // <- remove identity
-    HttpResponse::Ok().finish()
-}
-
-fn main() {
-    let app = App::new().wrap(IdentityService::new(
-        // <- create identity middleware
-        CookieIdentityPolicy::new(&[0; 32])    // <- create cookie identity policy
-              .name("auth-cookie")
-              .secure(false)))
-        .service(web::resource("/index.html").to(index))
-        .service(web::resource("/login.html").to(login))
-        .service(web::resource("/logout.html").to(logout));
+#[post("/logout")]
+async fn logout(user: Identity) -> impl Responder {
+    user.logout();
+    HttpResponse::Ok()
 }
 ```
 
