@@ -146,7 +146,7 @@ Minimum pro úspěšné zakončení předmětu: **75**
 # Použití AI v předmětu
 
 * Na úvodních úkolech zásadně nedoporučejeme používat
-* Důvod: Rust vás naučí priscipy použitelné jinde vedoucí k podstatně lepší kvalitě kódu a projektů 
+* Důvod: Rust vás naučí principy použitelné jinde vedoucí k podstatně lepší kvalitě kódu a projektů 
 
 * Ve zbytku semestru je to OK
 * Pokud AI chcete použít, tak máte zákaz našeptávačů a jiných basic IDE integrací

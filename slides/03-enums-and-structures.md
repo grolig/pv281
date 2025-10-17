@@ -14,87 +14,18 @@ paginate: true
 
 # Obsah
 
-1. Týmové projekty
-2. Enumy
-3. Pattern Matching
-4. Struktury
-5. Lifetimes
-6. Traity
-7. Ošetření chyb
-8. CLI aplikace
-9. Práce se soubory a stdin
+1. Enumy
+2. Pattern Matching
+3. Struktury
+4. Lifetimes
+5. Traity
+6. Ošetření chyb
+7. CLI aplikace
+8. Práce se soubory a stdin
 
 ---
 
 # <!--fit--> Týmové projekty
-
----
-
-# Zveřejnění projektů
-
-**Dnes** 2. 10. 2023 v 20:00.
-Naleznete je v ISu v Rozpisu `Týmové projekty`.
-
----
-
-# Spuštění přihlašování
-
-**Od pondělí 9. 10.** 2023 v 20:00 se může přihlásit 1 člen za tým.
-
-Od středy 11. 10. 2023 v 20:00 se můžou přihlásit i ostatní členové týmu.
-
----
-
-# Změny v přihlášení na projekt
-
-**Do 20. 11.** 2023 máte možnost bezproblémově měnit sestavy týmů.
-
-V případě problémů s týmem (během této doby i po ní) můžete kontaktovat koordinátora projektů Petra Wehrenberga.
-
----
-
-# Vlastní zadání projektu
-
-**Do 20. 11.** 2023 také můžete navrhovat vlastní zadání projektu.
-
-* Vaše zadání musí být explicitně schváleno vaším cvičícím.
-* Vaše zadání musí odpovídat náročností ostatním projektům. 
-  Pokud nebude, vrátíme vám ho se zpětnou vazbou a můžete ho vylepšit. 
-
----
-
-# Obhajoby
-
-Nejpozději do konce roku zveřejníme termíny obhajob,
-které pak **budou probíhat po celé zkouškové** období.
-
-Obhajoba je asi 20minutový online call, kde:
-- v rychlosti představíte projekt,
-- ukážete demo vaší aplikace
-- zodpovíte otázky k demu i kódu vaší aplikace
-
----
-
-# Novinka
-#### Odevzdání projektu
-
-Projekt odevzdáváte 3 dny před obhajobou.
-
-1. přidáte cvičících do repozitáře s projektem
-2. vytvoříte větev `project-submission` a už do ní nepřispíváte
-
----
-
-# Novinka
-#### Frontend jen v Rustu
-
-**Zakazujeme používat frameworky/knihovny z JavaScript/TypeScript** ekosystému pro tvorbu frontendu.
-
-Místo toho použijte crates dostupné v Rustu.
-
----
-
-# Dotazy k projektům?
 
 ---
 
